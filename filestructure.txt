@@ -1,0 +1,70 @@
+wp-helpdesk/
+│
+├── wp-helpdesk.php            # Plugin bootstrap
+├── uninstall.php
+├── composer.json              # Optional but recommended
+│
+├── /src
+│   ├── Core/
+│   │   ├── Plugin.php        # Main orchestrator
+│   │   ├── Loader.php
+│   │   ├── Activator.php     # DB setup
+│   │   └── Deactivator.php
+│   │
+│   ├── Database/
+│   │   ├── Migrations.php
+│   │   ├── Schema.php
+│   │   └── Repositories/
+│   │       ├── TicketRepository.php
+│   │       ├── UserRepository.php
+│   │       ├── TeamRepository.php
+│   │       └── AnalyticsRepository.php
+│   │
+│   ├── Models/
+│   │   ├── Ticket.php
+│   │   ├── Team.php
+│   │   ├── Client.php
+│   │   └── Corporation.php
+│   │
+│   ├── Services/
+│   │   ├── TicketService.php
+│   │   ├── AssignmentService.php
+│   │   ├── SLAService.php
+│   │   └── AnalyticsService.php
+│   │
+│   ├── Controllers/
+│   │   ├── Admin/
+│   │   │   ├── TicketController.php
+│   │   │   ├── TeamController.php
+│   │   │   └── AnalyticsController.php
+│   │   │
+│   │   └── Api/
+│   │       ├── TicketApiController.php
+│   │       └── AnalyticsApiController.php
+│   │
+│   ├── Views/
+│   │   ├── admin/
+│   │   │   ├── tickets/
+│   │   │   ├── teams/
+│   │   │   ├── clients/
+│   │   │   └── analytics/
+│   │   │
+│   │   └── frontend/
+│   │       ├── ticket-form.php
+│   │       └── ticket-list.php
+│   │
+│   ├── Routes/
+│   │   ├── RestRoutes.php
+│   │   └── AdminRoutes.php
+│   │
+│   └── Utils/
+│       ├── Validator.php
+│       └── Formatter.php
+│
+├── /assets
+│   ├── js/
+│   ├── css/
+│   └── build/
+│
+└── /templates
+    └── emails/
