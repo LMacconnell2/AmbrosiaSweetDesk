@@ -1,0 +1,25 @@
+.status {
+    padding: 4px 8px;
+    border-radius: 4px;
+    color: white;
+    font-size: 12px;
+}
+
+.status.open { background: #0073aa; }
+.status.pending { background: #ffb900; }
+.status.closed { background: #46b450; }
+
+.ticket-thread {
+    border: 1px solid #ddd;
+    padding: 10px;
+    margin: 20px 0;
+}
+
+.message {
+    margin-bottom: 10px;
+}
+
+.message.staff {
+    background: #f6f7f7;
+    padding: 10px;
+}
