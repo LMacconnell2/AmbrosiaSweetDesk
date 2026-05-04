@@ -5,7 +5,7 @@
 
 if (!defined('ABSPATH')) exit;
 
-require_once plugin_dir_path(__FILE__) . 'admin/AdminMenu.php';
+require_once plugin_dir_path(__FILE__) . 'src/views/admin/AdminMenu.php';
 
 function sweetdesk_init() {
     new SweetDesk\Admin\AdminMenu();
