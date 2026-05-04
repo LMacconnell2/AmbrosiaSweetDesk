@@ -37,10 +37,10 @@ class AdminMenu {
     }
 
     public function ticketsPage() {
-        include plugin_dir_path(__FILE__) . 'views/tickets/tickets-list.php';
+        include plugin_dir_path(__FILE__) . '/tickets/tickets-list.php';
     }
 
     public function analyticsPage() {
-        include plugin_dir_path(__FILE__) . 'views/tickets/analytics.php';
+        include plugin_dir_path(__FILE__) . '/tickets/analytics.php';
     }
 }
