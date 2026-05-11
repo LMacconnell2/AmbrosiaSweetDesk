@@ -9,12 +9,6 @@
 }
 
 :root {
-    --sidebar-bg: #111827;
-    --sidebar-text: #9ca3af;
-    --sidebar-active-bg: #2563eb;
-    --sidebar-active-text: #ffffff;
-    --sidebar-hover-bg: #1f2937;
-
     --page-bg: #f3f4f6;
     --surface: #ffffff;
     --border: #e5e7eb;
@@ -43,67 +37,9 @@ body {
     min-height: 100vh;
 }
 
-/* ── Sidebar ── */
-.sidebar {
-    width: 215px;
-    min-height: 100vh;
-    background: var(--sidebar-bg);
-    display: flex;
-    flex-direction: column;
-    flex-shrink: 0;
-    position: fixed;
-    top: 0;
-    left: 0;
-    bottom: 0;
-}
-
-.sidebar-logo {
-    padding: 22px 20px 18px;
-    font-size: 1.05rem;
-    font-weight: 700;
-    color: #ffffff;
-    letter-spacing: 0.01em;
-    border-bottom: 1px solid #1f2937;
-}
-
-.sidebar-nav {
-    list-style: none;
-    padding: 10px 0;
-    flex: 1;
-}
-
-.sidebar-nav li a {
-    display: flex;
-    align-items: center;
-    gap: 11px;
-    padding: 9px 20px;
-    text-decoration: none;
-    font-size: 0.875rem;
-    font-weight: 500;
-    color: var(--sidebar-text);
-    transition: background 0.15s, color 0.15s;
-}
-
-.sidebar-nav li a:hover {
-    background: var(--sidebar-hover-bg);
-    color: #e5e7eb;
-}
-
-.sidebar-nav li.active a {
-    background: var(--sidebar-active-bg);
-    color: var(--sidebar-active-text);
-}
-
-.sidebar-nav li a svg {
-    width: 16px;
-    height: 16px;
-    flex-shrink: 0;
-    opacity: 0.85;
-}
-
 /* ── Layout ── */
 .layout {
-    margin-left: 215px;
+    margin-left: 0;
     flex: 1;
     display: flex;
     min-height: 100vh;
