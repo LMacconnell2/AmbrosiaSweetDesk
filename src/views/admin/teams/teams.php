@@ -8,7 +8,7 @@
 <body>
 
   <!-- Sidebar -->
-  <aside class="sidebar">
+  <!-- <aside class="sidebar">
     <div class="sidebar-logo">SweetDesk</div>
     <ul class="sidebar-nav">
       <li>
@@ -54,7 +54,7 @@
         </a>
       </li>
     </ul>
-  </aside>
+  </aside> -->
 
   <!-- Main -->
   <main class="main">

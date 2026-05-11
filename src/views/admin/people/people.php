@@ -8,7 +8,7 @@
 <body>
 
   <!-- Sidebar -->
-  <aside class="sidebar">
+  <!-- <aside class="sidebar">
     <div class="sidebar-logo">SweetDesk</div>
     <ul class="sidebar-nav">
       <li><a href="">
@@ -40,7 +40,7 @@
         Settings
       </a></li>
     </ul>
-  </aside>
+  </aside> -->
 
   <div class="layout">
     <main class="main panel-open" id="mainContent">
