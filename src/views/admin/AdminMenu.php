@@ -70,6 +70,16 @@ class AdminMenu {
             'sweetdesk-teams',
             [$this, 'teamsPage']
         );
+
+        // Settings
+        add_submenu_page(
+            'sweetdesk',
+            'Settings',
+            'Settings',
+            'manage_options',
+            'sweetdesk-settings',
+            [$this, 'settingsPage']
+        );
     }
 
     public function enqueueAdminAssets($hook) {
@@ -83,7 +93,8 @@ class AdminMenu {
             'sweetdesk_page_sweetdesk-analytics',
             'sweetdesk_page_sweetdesk-clients',
             'sweetdesk_page_sweetdesk-people',
-            'sweetdesk_page_sweetdesk-teams'
+            'sweetdesk_page_sweetdesk-teams',
+            'sweetdesk_page_sweetdesk-settings'
         ];
 
         if (in_array($hook, $sweetdeskHooks)) {
@@ -192,6 +203,19 @@ class AdminMenu {
                 true
             );
         }
+
+        /*
+         * Settings page styles
+         */
+        if ($hook === 'sweetdesk_page_sweetdesk-settings') {
+
+            wp_enqueue_style(
+                'sweetdesk-settings',
+                plugin_dir_url(__FILE__) . '../../../assets/css/settings.css',
+                [],
+                '1.0.0'
+            );
+        }
     }
 
     public function ticketsPage() {
@@ -212,5 +236,9 @@ class AdminMenu {
 
     public function teamsPage() {
         include plugin_dir_path(__FILE__) . 'teams/teams.php';
+    }
+
+    public function settingsPage() {
+        include plugin_dir_path(__FILE__) . 'settings/settings.php';
     }
 }
