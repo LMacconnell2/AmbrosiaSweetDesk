@@ -8,7 +8,12 @@
 </head>
 <body>
 
-  <div class="settings-layout">
+  <main class="main">
+    <div class="page-header">
+      <h1 class="page-title">Settings</h1>
+    </div>
+
+    <div class="settings-layout">
 
     <!-- Left nav -->
     <aside class="settings-nav">
@@ -137,6 +142,8 @@
 
     </div>
   </div>
+
+  </main>
 
   <script src="settings.js"></script>
 </body>

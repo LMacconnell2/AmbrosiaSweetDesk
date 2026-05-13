@@ -37,14 +37,34 @@ body {
     min-height: 100vh;
 }
 
+/* ── Main content ── */
+.main {
+    margin-left: 0;
+    flex: 1;
+    padding: 36px 36px 48px;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.page-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 28px;
+}
+
+.page-title {
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
 /* ── Page-level wrapper ── */
 .settings-layout {
-    margin-left: 0;
     flex: 1;
     display: flex;
     gap: 24px;
-    padding: 36px 36px 48px;
-    min-height: 100vh;
     align-items: flex-start;
 }
 
