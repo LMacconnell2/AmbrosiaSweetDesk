@@ -96,6 +96,23 @@ class AdminMenu {
             );
         }
 
+        if ($hook === 'toplevel_page_sweetdesk') {
+            wp_enqueue_style(
+                'sweetdesk-tickets',
+                plugin_dir_url(__FILE__) . '../../../assets/css/tickets.css',
+                [],
+                '1.0.0'
+            );
+
+            wp_enqueue_script(
+                'sweetdesk-tickets',
+                plugin_dir_url(__FILE__) . '../../../assets/js/tickets.js',
+                [],
+                '1.0.0',
+                true
+            );
+        }
+
         /*
          * Clients page styles
          */
@@ -106,6 +123,14 @@ class AdminMenu {
                 plugin_dir_url(__FILE__) . '../../../assets/css/clients.css',
                 [],
                 '1.0.0'
+            );
+
+            wp_enqueue_script(
+                'sweetdesk-clients',
+                plugin_dir_url(__FILE__) . '../../../assets/js/clients.js',
+                [],
+                '1.0.0',
+                true
             );
         }
 
@@ -120,6 +145,14 @@ class AdminMenu {
                 [],
                 '1.0.0'
             );
+
+            wp_enqueue_script(
+                'sweetdesk-people',
+                plugin_dir_url(__FILE__) . '../../../assets/js/people.js',
+                [],
+                '1.0.0',
+                true
+            );
         }
 
         /*
@@ -132,6 +165,31 @@ class AdminMenu {
                 plugin_dir_url(__FILE__) . '../../../assets/css/teams.css',
                 [],
                 '1.0.0'
+            );
+
+            wp_enqueue_script(
+                'sweetdesk-teams',
+                plugin_dir_url(__FILE__) . '../../../assets/js/teams.js',
+                [],
+                '1.0.0',
+                true
+            );
+        }
+        if ($hook === 'sweetdesk_page_sweetdesk-analytics') {
+
+            wp_enqueue_style(
+                'sweetdesk-analytics',
+                plugin_dir_url(__FILE__) . '../../../assets/css/analytics.css',
+                [],
+                '1.0.0'
+            );
+
+            wp_enqueue_script(
+                'sweetdesk-analytics',
+                plugin_dir_url(__FILE__) . '../../../assets/js/analytics.js',
+                [],
+                '1.0.0',
+                true
             );
         }
     }
