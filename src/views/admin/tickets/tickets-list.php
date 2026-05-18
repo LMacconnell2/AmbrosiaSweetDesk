@@ -40,22 +40,46 @@
             <span>Filters:</span>
         </div>
 
-        <select>
-            <option>All Statuses</option>
-            <option>Open</option>
-            <option>In Progress</option>
-            <option>Pending</option>
-            <option>Closed</option>
-            <option>Resolved</option>
-        </select>
+        <div class="sweetdesk-ticket-query-builder">
 
-        <select>
-            <option>All Priorities</option>
-            <option>Urgent</option>
-            <option>High</option>
-            <option>Normal</option>
-            <option>Low</option>
-        </select>
+        <div class="sd-query-row">
+
+            <select class="sd-logic">
+                <option value="AND">AND</option>
+                <option value="OR">OR</option>
+            </select>
+
+            <select class="sd-field">
+                <option value="status">Status</option>
+                <option value="date_opened">Date Opened</option>
+                <option value="latest_response">Latest Response</option>
+                <option value="client">Client</option>
+                <option value="assignee">Assignee</option>
+                <option value="title">Search Text</option>
+            </select>
+
+            <select class="sd-operator"></select>
+
+            <div class="sd-value-container"></div>
+
+            <button class="sd-remove-filter">−</button>
+
+            <button class="sd-add-filter">+</button>
+
+        </div>
+        <div class="sweetdesk-ticket-sort">
+            <label>Sort By</label>
+            <select id="sd-sort-field">
+                <option value="date_opened">Open Date</option>
+                <option value="latest_response">Latest Response</option>
+                <option value="priority">Priority</option>
+            </select>
+
+            <select id="sd-sort-direction">
+                <option value="desc">Descending</option>
+                <option value="asc">Ascending</option>
+            </select>
+        </div>
     </div>
 
     <!-- Tickets Table -->
@@ -74,131 +98,7 @@
                 </tr>
             </thead>
 
-            <tbody>
-
-                <tr class="sd-ticket-row">
-                    <td>#1</td>
-                    <td>Login page not working</td>
-                    <td>
-                        <span class="sd-badge sd-status-open">
-                            Open
-                        </span>
-                    </td>
-                    <td>
-                        <span class="sd-badge sd-priority-urgent">
-                            Urgent
-                        </span>
-                    </td>
-                    <td>
-                        <span class="sd-pill">
-                            Acme Corp
-                        </span>
-                    </td>
-                    <td>John Doe</td>
-                </tr>
-
-                <tr class="sd-ticket-row">
-                    <td>#2</td>
-                    <td>Add export feature</td>
-                    <td>
-                        <span class="sd-badge sd-status-progress">
-                            In Progress
-                        </span>
-                    </td>
-                    <td>
-                        <span class="sd-badge sd-priority-normal">
-                            Normal
-                        </span>
-                    </td>
-                    <td>
-                        <span class="sd-pill">
-                            TechStart Inc
-                        </span>
-                    </td>
-                    <td>Jane Smith</td>
-                </tr>
-
-                <tr class="sd-ticket-row">
-                    <td>#3</td>
-                    <td>Update documentation</td>
-                    <td>
-                        <span class="sd-badge sd-status-pending">
-                            Pending
-                        </span>
-                    </td>
-                    <td>
-                        <span class="sd-badge sd-priority-low">
-                            Low
-                        </span>
-                    </td>
-                    <td class="sd-muted">No client</td>
-                    <td>Frontend Team</td>
-                </tr>
-
-                <tr class="sd-ticket-row">
-                    <td>#4</td>
-                    <td>Fix mobile layout</td>
-                    <td>
-                        <span class="sd-badge sd-status-closed">
-                            Closed
-                        </span>
-                    </td>
-                    <td>
-                        <span class="sd-badge sd-priority-high">
-                            High
-                        </span>
-                    </td>
-                    <td>
-                        <span class="sd-pill">
-                            Acme Corp
-                        </span>
-                    </td>
-                    <td>John Doe</td>
-                </tr>
-
-                <tr class="sd-ticket-row">
-                    <td>#5</td>
-                    <td>Customer needs clarification</td>
-                    <td>
-                        <span class="sd-badge sd-status-customer">
-                            Waiting on Customer
-                        </span>
-                    </td>
-                    <td>
-                        <span class="sd-badge sd-priority-normal">
-                            Normal
-                        </span>
-                    </td>
-                    <td>
-                        <span class="sd-pill">
-                            Globex Solutions
-                        </span>
-                    </td>
-                    <td>Jane Smith</td>
-                </tr>
-
-                <tr class="sd-ticket-row">
-                    <td>#6</td>
-                    <td>Security patch applied</td>
-                    <td>
-                        <span class="sd-badge sd-status-resolved">
-                            Resolved
-                        </span>
-                    </td>
-                    <td>
-                        <span class="sd-badge sd-priority-urgent">
-                            Urgent
-                        </span>
-                    </td>
-                    <td>
-                        <span class="sd-pill">
-                            TechStart Inc
-                        </span>
-                    </td>
-                    <td>Backend Team</td>
-                </tr>
-
-            </tbody>
+            <tbody id="sweetdesk-ticket-body"></tbody>
 
         </table>
 

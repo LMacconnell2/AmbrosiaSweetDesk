@@ -250,3 +250,8 @@ class AdminMenu {
         include plugin_dir_path(__FILE__) . 'settings/settings.php';
     }
 }
+
+require_once plugin_dir_path( __FILE__ ) .
+    'includes/class-api.php';
+
+SweetDesk_API::init();

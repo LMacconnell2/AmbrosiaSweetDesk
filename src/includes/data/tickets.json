@@ -1,0 +1,46 @@
+[
+    {
+        "id": 1,
+        "title": "Login page not working",
+        "status": "Open",
+        "priority": "Urgent",
+        "client": "Acme Corp",
+        "assignee": "John Doe",
+        "date_opened": "2026-05-12",
+        "latest_response": "2026-05-18",
+        "description": "Users are unable to log in after update."
+    },
+    {
+        "id": 2,
+        "title": "Add export feature",
+        "status": "In Progress",
+        "priority": "Normal",
+        "client": "TechStart Inc",
+        "assignee": "Jane Smith",
+        "date_opened": "2026-05-10",
+        "latest_response": "2026-05-17",
+        "description": "Need CSV export support."
+    },
+    {
+        "id": 3,
+        "title": "Update documentation",
+        "status": "Pending",
+        "priority": "Low",
+        "client": "",
+        "assignee": "Frontend Team",
+        "date_opened": "2026-05-01",
+        "latest_response": "2026-05-05",
+        "description": "Docs need updates."
+    },
+    {
+        "id": 4,
+        "title": "Fix mobile layout",
+        "status": "Closed",
+        "priority": "High",
+        "client": "Acme Corp",
+        "assignee": "John Doe",
+        "date_opened": "2026-04-28",
+        "latest_response": "2026-05-01",
+        "description": "Mobile spacing issue."
+    }
+]

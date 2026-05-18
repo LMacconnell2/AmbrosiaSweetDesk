@@ -540,3 +540,59 @@
 .sd-ticket-row {
     cursor: pointer;
 }
+
+/*
+|--------------------------------------------------------------------------
+|Filter section
+|--------------------------------------------------------------------------
+*/
+.sweetdesk-ticket-query-builder {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 16px;
+}
+
+.sd-query-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.sd-query-row select,
+.sd-query-row input {
+    min-width: 140px;
+}
+
+.sd-value-container {
+    display: flex;
+    gap: 8px;
+}
+
+.sd-add-filter,
+.sd-remove-filter {
+    width: 34px;
+    height: 34px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 18px;
+}
+
+.sd-add-filter {
+    background: #2271b1;
+    color: white;
+}
+
+.sd-remove-filter {
+    background: #d63638;
+    color: white;
+}
+
+.sweetdesk-ticket-sort {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 20px;
+}
