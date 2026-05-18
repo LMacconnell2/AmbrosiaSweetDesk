@@ -215,6 +215,14 @@ class AdminMenu {
                 [],
                 '1.0.0'
             );
+
+            wp_enqueue_script(
+                'sweetdesk-analytics',
+                plugin_dir_url(__FILE__) . '../../../assets/js/settings.js',
+                [],
+                '1.0.0',
+                true
+            );
         }
     }
 
