@@ -30,6 +30,10 @@
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"/></svg>
           Ticket Configuration
         </button>
+        <button class="nav-item" data-tab="integrations" onclick="switchTab('integrations')">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"/></svg>
+          Integrations
+        </button>
       </nav>
     </aside>
 
@@ -65,7 +69,21 @@
             <span class="setting-label">Email Notifications</span>
             <span class="setting-desc">Receive email updates for ticket assignments</span>
           </div>
-          <input type="checkbox" class="toggle-checkbox" id="toggle-email" checked onchange="toggleEmailConfig(this.checked)" />
+          <!--
+            role="switch" tells screen readers this is an on/off toggle.
+            aria-checked reflects the current state, updated by JS.
+            aria-labelledby points to the label text so screen readers announce it properly.
+            tabindex="0" makes it keyboard-focusable like a native input.
+          -->
+          <div class="toggle"
+               id="toggle-email"
+               role="switch"
+               aria-checked="true"
+               aria-labelledby="label-toggle-email"
+               tabindex="0"
+               data-onchange="toggleEmailConfig">
+            <div class="toggle-thumb"></div>
+          </div>
         </div>
 
         <!-- Email Integration (revealed when Email Notifications is checked) -->
@@ -92,7 +110,14 @@
             <span class="setting-label">Ticket Updates</span>
             <span class="setting-desc">Get notified when tickets you're assigned to are updated</span>
           </div>
-          <input type="checkbox" class="toggle-checkbox" id="toggle-tickets" checked />
+          <div class="toggle"
+               id="toggle-tickets"
+               role="switch"
+               aria-checked="true"
+               aria-labelledby="label-toggle-tickets"
+               tabindex="0">
+            <div class="toggle-thumb"></div>
+          </div>
         </div>
 
         <div class="setting-row">
@@ -100,7 +125,14 @@
             <span class="setting-label">Team Mentions</span>
             <span class="setting-desc">Notifications when someone mentions you or your team</span>
           </div>
-          <input type="checkbox" class="toggle-checkbox" id="toggle-mentions" checked />
+          <div class="toggle"
+               id="toggle-mentions"
+               role="switch"
+               aria-checked="true"
+               aria-labelledby="label-toggle-mentions"
+               tabindex="0">
+            <div class="toggle-thumb"></div>
+          </div>
         </div>
       </div>
 
@@ -129,15 +161,26 @@
         <div class="config-section">
           <h3 class="config-section-title">Custom Fields</h3>
           <ul class="config-list" id="fieldList">
-            <li class="config-item"><span>Estimated Hours</span><button class="btn-edit-link" onclick="editField(this)">Edit</button></li>
+            <li class="config-item" data-type="integer"><span>Estimated Hours</span><button class="btn-edit-link" onclick="editField(this)">Edit</button></li>
           </ul>
           <div class="add-row" id="addFieldRow" style="display:none;">
             <input type="text" id="newFieldInput" placeholder="Field name..." />
+            <select id="newFieldType" class="placeholder">
+              <option value="" disabled selected hidden>field type</option>
+              <option value="string">Text</option>
+              <option value="integer">Number</option>
+            </select>
             <button class="btn-add-confirm" onclick="confirmAddField()">Add</button>
             <button class="btn-add-cancel" onclick="cancelAddField()">Cancel</button>
           </div>
           <button class="btn-add-link" id="addFieldBtn" onclick="showAddField()">+ Add Custom Field</button>
         </div>
+      </div>
+
+      <!-- Integrations Tab -->
+      <div class="tab-panel" id="tab-integrations">
+        <h2 class="tab-title">Integrations</h2>
+        <p class="coming-soon">Coming soon.</p>
       </div>
 
     </div>
