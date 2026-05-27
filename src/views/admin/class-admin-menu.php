@@ -4,11 +4,11 @@ namespace SweetDesk\Admin;
 class AdminMenu {
 
     public function __construct() {
-        add_action('admin_menu', [$this, 'registerMenu']);
-        add_action('admin_enqueue_scripts', [$this, 'enqueueAdminAssets']);
+        // add_action('admin_menu', [$this, 'registerMenu']);
+        // add_action('admin_enqueue_scripts', [$this, 'enqueueAdminAssets']);
     }
 
-    public function registerMenu() {
+    public function register_menu() {
 
         // Main Menu
         add_menu_page(
@@ -82,7 +82,7 @@ class AdminMenu {
         );
     }
 
-    public function enqueueAdminAssets($hook) {
+    public function enqueue_admin_assets($hook) {
 
         /*
          * Base admin styles
@@ -103,7 +103,7 @@ class AdminMenu {
                 'sweetdesk-admin',
                 plugin_dir_url(__FILE__) . '../../../assets/css/admin.css',
                 [],
-                '1.0.0'
+                SWEETDESK_VERSION
             );
         }
 
@@ -112,14 +112,14 @@ class AdminMenu {
                 'sweetdesk-tickets',
                 plugin_dir_url(__FILE__) . '../../../assets/css/tickets.css',
                 [],
-                '1.0.0'
+                SWEETDESK_VERSION
             );
 
             wp_enqueue_script(
                 'sweetdesk-tickets',
                 plugin_dir_url(__FILE__) . '../../../assets/js/tickets.js',
                 [],
-                '1.0.0',
+                SWEETDESK_VERSION,
                 true
             );
         }
@@ -133,14 +133,14 @@ class AdminMenu {
                 'sweetdesk-clients',
                 plugin_dir_url(__FILE__) . '../../../assets/css/clients.css',
                 [],
-                '1.0.0'
+                SWEETDESK_VERSION
             );
 
             wp_enqueue_script(
                 'sweetdesk-clients',
                 plugin_dir_url(__FILE__) . '../../../assets/js/clients.js',
                 [],
-                '1.0.0',
+                SWEETDESK_VERSION,
                 true
             );
         }
@@ -154,14 +154,14 @@ class AdminMenu {
                 'sweetdesk-people',
                 plugin_dir_url(__FILE__) . '../../../assets/css/people.css',
                 [],
-                '1.0.0'
+                SWEETDESK_VERSION
             );
 
             wp_enqueue_script(
                 'sweetdesk-people',
                 plugin_dir_url(__FILE__) . '../../../assets/js/people.js',
                 [],
-                '1.0.0',
+                SWEETDESK_VERSION,
                 true
             );
         }
@@ -175,14 +175,14 @@ class AdminMenu {
                 'sweetdesk-teams',
                 plugin_dir_url(__FILE__) . '../../../assets/css/teams.css',
                 [],
-                '1.0.0'
+                SWEETDESK_VERSION
             );
 
             wp_enqueue_script(
                 'sweetdesk-teams',
                 plugin_dir_url(__FILE__) . '../../../assets/js/teams.js',
                 [],
-                '1.0.0',
+                SWEETDESK_VERSION,
                 true
             );
         }
@@ -192,14 +192,14 @@ class AdminMenu {
                 'sweetdesk-analytics',
                 plugin_dir_url(__FILE__) . '../../../assets/css/analytics.css',
                 [],
-                '1.0.0'
+                SWEETDESK_VERSION
             );
 
             wp_enqueue_script(
                 'sweetdesk-analytics',
                 plugin_dir_url(__FILE__) . '../../../assets/js/analytics.js',
                 [],
-                '1.0.0',
+                SWEETDESK_VERSION,
                 true
             );
         }
@@ -213,14 +213,14 @@ class AdminMenu {
                 'sweetdesk-settings',
                 plugin_dir_url(__FILE__) . '../../../assets/css/settings.css',
                 [],
-                '1.0.0'
+                SWEETDESK_VERSION
             );
 
             wp_enqueue_script(
                 'sweetdesk-analytics',
                 plugin_dir_url(__FILE__) . '../../../assets/js/settings.js',
                 [],
-                '1.0.0',
+                SWEETDESK_VERSION,
                 true
             );
         }
@@ -250,8 +250,3 @@ class AdminMenu {
         include plugin_dir_path(__FILE__) . 'settings/settings.php';
     }
 }
-
-require_once plugin_dir_path( __FILE__ ) .
-    'includes/class-api.php';
-
-SweetDesk_API::init();
