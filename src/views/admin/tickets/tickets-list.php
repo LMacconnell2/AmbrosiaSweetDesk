@@ -15,7 +15,7 @@
                 Export CSV
             </button>
 
-            <button class="sd-btn sd-btn-primary">
+            <button id="sd-new-ticket" class="sd-btn sd-btn-primary">
                 <span class="dashicons dashicons-plus-alt2"></span>
                 New Ticket
             </button>
@@ -186,4 +186,67 @@
 
     </div>
 
+</div>
+
+<div id="sweetdesk-new-ticket-modal" class="sd-modal-overlay">
+    <div class="sd-modal">
+        <div class="sd-modal-header">
+            <div>
+                <h2>Create New Ticket</h2>
+                <p>Fill in the ticket details below.</p>
+            </div>
+            <button id="sd-new-ticket-close" class="sd-modal-close">✕</button>
+        </div>
+
+        <div class="sd-modal-body">
+            <form id="sd-new-ticket-form" class="sd-modal-form">
+                <div class="sd-form-grid">
+                    <div class="sd-form-group">
+                        <label class="sd-label" for="sd-ticket-title">Title</label>
+                        <input id="sd-ticket-title" class="sd-input" type="text" required>
+                    </div>
+
+                    <div class="sd-form-group">
+                        <label class="sd-label" for="sd-ticket-status">Status</label>
+                        <select id="sd-ticket-status" class="sd-input" required>
+                            <option value="Open">Open</option>
+                            <option value="In Progress">In Progress</option>
+                            <option value="Pending">Pending</option>
+                            <option value="Closed">Closed</option>
+                        </select>
+                    </div>
+
+                    <div class="sd-form-group">
+                        <label class="sd-label" for="sd-ticket-priority">Priority</label>
+                        <select id="sd-ticket-priority" class="sd-input" required>
+                            <option value="Urgent">Urgent</option>
+                            <option value="High">High</option>
+                            <option value="Normal">Normal</option>
+                            <option value="Low">Low</option>
+                        </select>
+                    </div>
+
+                    <div class="sd-form-group">
+                        <label class="sd-label" for="sd-ticket-client">Client</label>
+                        <input id="sd-ticket-client" class="sd-input" type="text">
+                    </div>
+
+                    <div class="sd-form-group">
+                        <label class="sd-label" for="sd-ticket-assignee">Assignee</label>
+                        <input id="sd-ticket-assignee" class="sd-input" type="text">
+                    </div>
+                </div>
+
+                <div class="sd-form-group">
+                    <label class="sd-label" for="sd-ticket-description">Description</label>
+                    <textarea id="sd-ticket-description" class="sd-textarea" rows="5"></textarea>
+                </div>
+
+                <div class="sd-modal-footer">
+                    <button type="button" id="sd-new-ticket-cancel" class="sd-btn sd-btn-secondary">Cancel</button>
+                    <button type="submit" class="sd-btn sd-btn-primary">Create Ticket</button>
+                </div>
+            </form>
+        </div>
+    </div>
 </div>

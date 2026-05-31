@@ -8,9 +8,7 @@ document.addEventListener('DOMContentLoaded', () => {
         'sd-modal-close'
     );
 
-    const ticketRows = document.querySelectorAll(
-        '.sd-ticket-row'
-    );
+    const tbody = document.getElementById('sweetdesk-ticket-body');
 
     /*
     |--------------------------------------------------------------------------
@@ -18,12 +16,14 @@ document.addEventListener('DOMContentLoaded', () => {
     |--------------------------------------------------------------------------
     */
 
-    ticketRows.forEach((row) => {
+    tbody.addEventListener('click', (e) => {
+        const row = e.target.closest('.sd-ticket-row');
 
-        row.addEventListener('click', () => {
-            modal.classList.add('active');
-        });
+        if (!row) {
+            return;
+        }
 
+        modal.classList.add('active');
     });
 
     /*
@@ -56,6 +56,11 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     const tbody = document.getElementById('sweetdesk-ticket-body');
     const queryBuilder = document.querySelector('.sweetdesk-ticket-query-builder');
+    const newTicketButton = document.getElementById('sd-new-ticket');
+    const newTicketModal = document.getElementById('sweetdesk-new-ticket-modal');
+    const newTicketClose = document.getElementById('sd-new-ticket-close');
+    const newTicketForm = document.getElementById('sd-new-ticket-form');
+    const newTicketCancel = document.getElementById('sd-new-ticket-cancel');
 
     let tickets = [];
 
@@ -116,6 +121,51 @@ document.addEventListener('DOMContentLoaded', async () => {
         tickets = await response.json();
 
         renderTickets(tickets);
+    }
+
+    function openNewTicketModal() {
+        newTicketModal.classList.add('active');
+    }
+
+    function closeNewTicketModal() {
+        newTicketModal.classList.remove('active');
+        newTicketForm.reset();
+    }
+
+    function addNewTicket(event) {
+        event.preventDefault();
+
+        const title = document.getElementById('sd-ticket-title').value.trim();
+        const status = document.getElementById('sd-ticket-status').value;
+        const priority = document.getElementById('sd-ticket-priority').value;
+        const client = document.getElementById('sd-ticket-client').value.trim();
+        const assignee = document.getElementById('sd-ticket-assignee').value.trim();
+        const description = document.getElementById('sd-ticket-description').value.trim();
+
+        if (!title) {
+            return;
+        }
+
+        const id = tickets.length
+            ? Math.max(...tickets.map(ticket => ticket.id)) + 1
+            : 1;
+
+        const today = new Date().toISOString().split('T')[0];
+
+        tickets.push({
+            id,
+            title,
+            status,
+            priority,
+            client,
+            assignee,
+            description,
+            date_opened: today,
+            latest_response: today
+        });
+
+        applyFilters();
+        closeNewTicketModal();
     }
 
     function renderTickets(ticketData) {
@@ -365,6 +415,17 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
         }
     });
+
+    newTicketButton.addEventListener('click', openNewTicketModal);
+    newTicketClose.addEventListener('click', closeNewTicketModal);
+    newTicketCancel.addEventListener('click', closeNewTicketModal);
+    newTicketModal.addEventListener('click', (e) => {
+        if (e.target === newTicketModal) {
+            closeNewTicketModal();
+        }
+    });
+
+    newTicketForm.addEventListener('submit', addNewTicket);
 
     document
         .getElementById('sd-sort-field')

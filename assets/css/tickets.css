@@ -511,6 +511,48 @@
     color: #334155;
 }
 
+.sd-modal-form {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.sd-form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(220px, 1fr));
+    gap: 18px;
+}
+
+.sd-form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.sd-input,
+.sd-textarea {
+    width: 100%;
+    min-height: 48px;
+    padding: 12px 14px;
+    border: 1px solid #d4d4d8;
+    border-radius: 12px;
+    font-size: 15px;
+    background: white;
+    color: #0f172a;
+}
+
+.sd-textarea {
+    min-height: 120px;
+    resize: vertical;
+}
+
+.sd-modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
 /*
 |--------------------------------------------------------------------------
 | Labels
