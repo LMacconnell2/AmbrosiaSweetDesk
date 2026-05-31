@@ -11,9 +11,9 @@
   <main class="main">
     <div class="page-header">
       <h1 class="page-title">Teams</h1>
-      <button class="btn-primary">
+      <button class="btn-primary" id="sd-new-team">
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
-        Create Team
+        New Team
       </button>
     </div>
 
@@ -158,6 +158,51 @@
         <button class="btn-secondary" onclick="closeEditTeamModal()">Cancel</button>
         <button class="btn-primary">Save Changes</button>
       </div>
+    </div>
+  </div>
+
+  <!-- New Team Modal -->
+  <div class="modal-overlay" id="newTeamModal">
+    <div class="modal">
+      <div class="modal-header">
+        <h2>New Team</h2>
+        <button class="modal-close" id="new-team-close">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+        </button>
+      </div>
+      <form id="new-team-form">
+        <div class="form-group">
+          <label for="new-team-name">Team Name</label>
+          <input type="text" id="new-team-name" placeholder="Enter team name" />
+        </div>
+        <div class="form-group">
+          <label for="new-team-desc">Team Description</label>
+          <input type="text" id="new-team-desc" placeholder="Enter team description" />
+        </div>
+        <div class="form-group">
+          <label for="new-team-member-select">Add Team Members</label>
+          <div class="input-row">
+            <select id="new-team-member-select">
+              <option value="">Select a person</option>
+              <option value="John Doe">John Doe</option>
+              <option value="Jane Smith">Jane Smith</option>
+              <option value="Alice Williams">Alice Williams</option>
+              <option value="Bob Johnson">Bob Johnson</option>
+              <option value="Mike Chen">Mike Chen</option>
+              <option value="Sarah Davis">Sarah Davis</option>
+            </select>
+            <button type="button" class="btn-secondary" id="add-team-member">Add</button>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Selected Members</label>
+          <ul class="member-list" id="new-team-member-list"></ul>
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="btn-secondary" id="new-team-cancel">Cancel</button>
+          <button type="submit" class="btn-primary">Save Team</button>
+        </div>
+      </form>
     </div>
   </div>
 </body>
