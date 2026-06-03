@@ -350,6 +350,53 @@
 
 /*
 |--------------------------------------------------------------------------
+| Actions
+|--------------------------------------------------------------------------
+*/
+
+.sd-actions {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    justify-content: center;
+}
+
+.sd-action-btn {
+    border: none;
+    background: #f1f5f9;
+    border-radius: 8px;
+    padding: 8px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    color: #64748b;
+    transition: all 0.2s ease;
+}
+
+.sd-action-btn:hover {
+    background: #e2e8f0;
+    color: #0f172a;
+}
+
+.sd-edit-btn:hover {
+    color: #0073aa;
+}
+
+.sd-delete-btn:hover {
+    color: #dc2626;
+}
+
+.sd-action-btn svg {
+    width: 18px;
+    height: 18px;
+    stroke-width: 2;
+}
+
+/*
+|--------------------------------------------------------------------------
 | Row Hover
 |--------------------------------------------------------------------------
 */

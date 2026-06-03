@@ -95,6 +95,7 @@
                     <th>Priority ↕</th>
                     <th>Client ↕</th>
                     <th>Assignee ↕</th>
+                    <th>Actions</th>
                 </tr>
             </thead>
 

@@ -96,6 +96,17 @@ document.addEventListener('DOMContentLoaded', async () => {
 
                     <td>${ticket.assignee}</td>
 
+                    <td>
+                        <div class="sd-actions">
+                            <button class="sd-action-btn sd-edit-btn" title="Edit ticket">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-7.5-1.5l5.5-5.5a2.121 2.121 0 013 3l-5.5 5.5m-6-6h6"/></svg>
+                            </button>
+                            <button class="sd-action-btn sd-delete-btn" title="Delete ticket">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                            </button>
+                        </div>
+                    </td>
+
                 </tr>
             `;
         });
