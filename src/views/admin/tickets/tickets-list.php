@@ -102,3 +102,24 @@
             <tbody id="sweetdesk-ticket-body"></tbody>
 
         </table>
+    </div>
+
+    <!-- Delete Ticket Confirmation Modal -->
+    <div class="sd-modal-overlay" id="sd-delete-ticket-modal">
+        <div class="sd-modal sd-delete-modal">
+            <div class="sd-modal-header">
+                <h2>Delete Ticket</h2>
+                <button class="sd-modal-close" onclick="closeDeleteTicketModal()">
+                    ✕
+                </button>
+            </div>
+            <div class="sd-modal-body">
+                <p>Are you sure you want to delete ticket <strong id="sd-delete-ticket-title">#0</strong>? This action cannot be undone.</p>
+            </div>
+            <div class="sd-modal-footer">
+                <button type="button" class="sd-btn sd-btn-secondary" onclick="closeDeleteTicketModal()">Cancel</button>
+                <button type="button" class="sd-btn sd-btn-danger" onclick="confirmDeleteTicket()">Delete Ticket</button>
+            </div>
+        </div>
+    </div>
+</div>

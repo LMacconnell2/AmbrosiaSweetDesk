@@ -16,6 +16,28 @@ function openNewTeamModal() {
 function closeNewTeamModal() {
     document.getElementById('newTeamModal').style.display = 'none';
 }
+
+let teamToDelete = null;
+
+function openDeleteTeamModal(teamName) {
+    teamToDelete = teamName;
+    document.getElementById('delete-team-name').textContent = teamName;
+    document.getElementById('deleteTeamModal').style.display = 'flex';
+}
+
+function closeDeleteTeamModal() {
+    document.getElementById('deleteTeamModal').style.display = 'none';
+    teamToDelete = null;
+}
+
+function confirmDeleteTeam() {
+    if (teamToDelete) {
+        // TODO: Implement actual deletion logic here
+        console.log('Deleting team:', teamToDelete);
+    }
+    closeDeleteTeamModal();
+}
+
 function addTeamMember() {
     const select = document.getElementById('new-team-member-select');
     const list = document.getElementById('new-team-member-list');
@@ -62,6 +84,9 @@ document.getElementById('editTeamModal').addEventListener('click', function (e) 
 });
 document.getElementById('newTeamModal').addEventListener('click', function (e) {
     if (e.target === this) closeNewTeamModal();
+});
+document.getElementById('deleteTeamModal').addEventListener('click', function (e) {
+    if (e.target === this) closeDeleteTeamModal();
 });
 
 document.getElementById('sd-new-team').addEventListener('click', openNewTeamModal);

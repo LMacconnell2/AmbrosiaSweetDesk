@@ -330,6 +330,37 @@
 
 /*
 |--------------------------------------------------------------------------
+| Delete Modal
+|--------------------------------------------------------------------------
+*/
+
+.sd-modal.sd-delete-modal {
+    border: 2px solid #fecaca;
+    background: #fef2f2;
+}
+
+.sd-modal.sd-delete-modal .sd-modal-header h2 {
+    color: #dc2626;
+}
+
+.sd-btn-danger {
+    background: #dc2626;
+    color: white;
+    border: none;
+    border-radius: 14px;
+    padding: 14px 22px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+.sd-btn-danger:hover {
+    background: #b91c1c;
+}
+
+/*
+|--------------------------------------------------------------------------
 | Labels
 |--------------------------------------------------------------------------
 */
