@@ -1,5 +1,9 @@
 // ── Tab switching ──
 function switchTab(tab) {
+    if (tab === 'profile') {
+        window.location.href = '/wp-admin/profile.php';
+        return;
+    }
     document.querySelectorAll('.nav-item').forEach(btn => {
         btn.classList.toggle('active', btn.dataset.tab === tab);
     });
