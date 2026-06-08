@@ -18,11 +18,7 @@
     <!-- Left nav -->
     <aside class="settings-nav">
       <nav>
-        <button class="nav-item active" data-tab="profile" onclick="switchTab('profile')">
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
-          Profile
-        </button>
-        <button class="nav-item" data-tab="notifications" onclick="switchTab('notifications')">
+        <button class="nav-item active" data-tab="notifications" onclick="switchTab('notifications')">
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg>
           Notifications
         </button>
@@ -34,34 +30,22 @@
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"/></svg>
           Integrations
         </button>
+        <button class="nav-item" data-tab="licenses" onclick="switchTab('licenses')">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-id-card-icon lucide-id-card"><path d="M16 10h2"/><path d="M16 14h2"/><path d="M6.17 15a3 3 0 0 1 5.66 0"/><circle cx="9" cy="11" r="2"/><rect x="2" y="5" width="20" height="14" rx="2"/></svg>
+          Licenses
+        </button>
+        <button class="nav-item" data-tab="profile" onclick="switchTab('profile')">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+          Profile
+        </button>
       </nav>
     </aside>
 
     <!-- Right content -->
     <div class="settings-content">
 
-      <!-- Profile Tab -->
-      <div class="tab-panel active" id="tab-profile">
-        <h2 class="tab-title">Profile Settings</h2>
-        <div class="form-group">
-          <label for="profile-name">Full Name</label>
-          <input type="text" id="profile-name" placeholder="John Doe" />
-        </div>
-        <div class="form-group">
-          <label for="profile-email">Email Address</label>
-          <input type="email" id="profile-email" placeholder="john@ambrosia.dev" />
-        </div>
-        <div class="form-group">
-          <label for="profile-role">Role</label>
-          <input type="text" id="profile-role" placeholder="Developer" />
-        </div>
-        <div class="form-actions">
-          <button class="btn-primary">Save Changes</button>
-        </div>
-      </div>
-
       <!-- Notifications Tab -->
-      <div class="tab-panel" id="tab-notifications">
+      <div class="tab-panel active" id="tab-notifications">
         <h2 class="tab-title">Notification Settings</h2>
 
         <div class="setting-row" id="row-email-notifications">
@@ -181,6 +165,17 @@
       <div class="tab-panel" id="tab-integrations">
         <h2 class="tab-title">Integrations</h2>
         <p class="coming-soon">Coming soon.</p>
+      </div>
+
+      <!-- Licenses Tab -->
+      <div class="tab-panel" id="tab-licenses">
+        <h2 class="tab-title">Licenses</h2>
+        <p class="coming-soon">Coming soon.</p>
+      </div>
+
+      <!-- Profile Tab -->
+      <div class="tab-panel" id="tab-profile">
+        <p class="coming-soon">Redirecting to WordPress profile page...</p>
       </div>
 
     </div>

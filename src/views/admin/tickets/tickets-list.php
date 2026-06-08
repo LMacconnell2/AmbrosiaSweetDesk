@@ -15,7 +15,7 @@
                 Export CSV
             </button>
 
-            <button class="sd-btn sd-btn-primary">
+            <button id="sd-new-ticket" class="sd-btn sd-btn-primary">
                 <span class="dashicons dashicons-plus-alt2"></span>
                 New Ticket
             </button>
@@ -95,95 +95,31 @@
                     <th>Priority ↕</th>
                     <th>Client ↕</th>
                     <th>Assignee ↕</th>
+                    <th>Actions</th>
                 </tr>
             </thead>
 
             <tbody id="sweetdesk-ticket-body"></tbody>
 
         </table>
-
-        <!-- Ticket Details Modal -->
-<div
-    id="sweetdesk-ticket-modal"
-    class="sd-modal-overlay"
->
-
-    <div class="sd-modal">
-
-        <!-- Modal Header -->
-        <div class="sd-modal-header">
-
-            <div>
-                <h2 id="sd-modal-title">
-                    Login page not working
-                </h2>
-
-                <p id="sd-modal-id">
-                    Ticket #1
-                </p>
-            </div>
-
-            <button
-                id="sd-modal-close"
-                class="sd-modal-close"
-            >
-                ✕
-            </button>
-
-        </div>
-
-        <!-- Modal Body -->
-        <div class="sd-modal-body">
-
-            <div class="sd-modal-grid">
-
-                <div class="sd-modal-card">
-                    <span class="sd-label">Status</span>
-
-                    <span class="sd-badge sd-status-open">
-                        Open
-                    </span>
-                </div>
-
-                <div class="sd-modal-card">
-                    <span class="sd-label">Priority</span>
-
-                    <span class="sd-badge sd-priority-urgent">
-                        Urgent
-                    </span>
-                </div>
-
-                <div class="sd-modal-card">
-                    <span class="sd-label">Client</span>
-
-                    <p>Acme Corp</p>
-                </div>
-
-                <div class="sd-modal-card">
-                    <span class="sd-label">Assigned To</span>
-
-                    <p>John Doe</p>
-                </div>
-
-            </div>
-
-            <div class="sd-modal-description">
-
-                <span class="sd-label">
-                    Description
-                </span>
-
-                <p>
-                    Users are unable to log into the
-                    website after the latest update.
-                    The login form submits but returns
-                    a blank page.
-                </p>
-
-            </div>
-
-        </div>
-
     </div>
 
+    <!-- Delete Ticket Confirmation Modal -->
+    <div class="sd-modal-overlay" id="sd-delete-ticket-modal">
+        <div class="sd-modal sd-delete-modal">
+            <div class="sd-modal-header">
+                <h2>Delete Ticket</h2>
+                <button class="sd-modal-close" onclick="closeDeleteTicketModal()">
+                    ✕
+                </button>
+            </div>
+            <div class="sd-modal-body">
+                <p>Are you sure you want to delete ticket <strong id="sd-delete-ticket-title">#0</strong>? This action cannot be undone.</p>
+            </div>
+            <div class="sd-modal-footer">
+                <button type="button" class="sd-btn sd-btn-secondary" onclick="closeDeleteTicketModal()">Cancel</button>
+                <button type="button" class="sd-btn sd-btn-danger" onclick="confirmDeleteTicket()">Delete Ticket</button>
+            </div>
+        </div>
+    </div>
 </div>

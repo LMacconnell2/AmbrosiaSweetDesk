@@ -194,7 +194,7 @@ body {
 /* Card action buttons */
 .team-card-actions {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr 1fr 1fr;
     border-top: 1px solid var(--border);
     margin-top: auto;
 }
@@ -213,10 +213,11 @@ body {
     justify-content: center;
     gap: 6px;
     color: var(--text-primary);
+    border-right: 1px solid var(--border);
 }
 
-.team-card-actions button:first-child {
-    border-right: 1px solid var(--border);
+.team-card-actions button:last-child {
+    border-right: none;
 }
 
 .team-card-actions button:hover {
@@ -225,6 +226,14 @@ body {
 
 .team-card-actions button.email-btn {
     color: var(--accent);
+}
+
+.team-card-actions button.delete-btn {
+    color: #dc2626;
+}
+
+.team-card-actions button.delete-btn:hover {
+    background: #fef2f2;
 }
 
 .team-card-actions button svg {
@@ -344,4 +353,30 @@ body {
 
 .btn-secondary:hover {
     background: #f9fafb;
+}
+
+.btn-danger {
+    background: #dc2626;
+    color: #fff;
+    border: none;
+    border-radius: 7px;
+    padding: 8px 16px;
+    font-family: inherit;
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.15s;
+}
+
+.btn-danger:hover {
+    background: #b91c1c;
+}
+
+.modal.delete-modal {
+    border: 2px solid #fecaca;
+    background: #fef2f2;
+}
+
+.modal.delete-modal .modal-header h2 {
+    color: #dc2626;
 }

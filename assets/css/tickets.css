@@ -459,56 +459,48 @@
 
 /*
 |--------------------------------------------------------------------------
-| Grid
+| Footer
 |--------------------------------------------------------------------------
 */
 
-.sd-modal-grid {
-    display: grid;
-    grid-template-columns: repeat(
-        auto-fit,
-        minmax(220px, 1fr)
-    );
-
-    gap: 18px;
-
-    margin-bottom: 28px;
-}
-
-.sd-modal-card {
-    background: #f8fafc;
-
-    border-radius: 16px;
-
-    padding: 18px;
-}
-
-.sd-modal-card p {
-    margin-top: 10px;
-    font-size: 16px;
-    color: #0f172a;
+.sd-modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    padding: 20px 28px;
+    border-top: 1px solid #e2e8f0;
+    background: #fafafa;
 }
 
 /*
 |--------------------------------------------------------------------------
-| Description
+| Delete Modal
 |--------------------------------------------------------------------------
 */
 
-.sd-modal-description {
-    background: #f8fafc;
-
-    border-radius: 16px;
-
-    padding: 20px;
+.sd-modal.sd-delete-modal {
+    border: 2px solid #fecaca;
+    background: #fef2f2;
 }
 
-.sd-modal-description p {
-    margin-top: 12px;
+.sd-modal.sd-delete-modal .sd-modal-header h2 {
+    color: #dc2626;
+}
 
-    line-height: 1.7;
+.sd-btn-danger {
+    background: #dc2626;
+    color: white;
+    border: none;
+    border-radius: 14px;
+    padding: 14px 22px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
 
-    color: #334155;
+.sd-btn-danger:hover {
+    background: #b91c1c;
 }
 
 /*
@@ -529,6 +521,53 @@
     color: #64748b;
 
     margin-bottom: 12px;
+}
+
+/*
+|--------------------------------------------------------------------------
+| Actions
+|--------------------------------------------------------------------------
+*/
+
+.sd-actions {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    justify-content: center;
+}
+
+.sd-action-btn {
+    border: none;
+    background: #f1f5f9;
+    border-radius: 8px;
+    padding: 8px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    color: #64748b;
+    transition: all 0.2s ease;
+}
+
+.sd-action-btn:hover {
+    background: #e2e8f0;
+    color: #0f172a;
+}
+
+.sd-edit-btn:hover {
+    color: #0073aa;
+}
+
+.sd-delete-btn:hover {
+    color: #dc2626;
+}
+
+.sd-action-btn svg {
+    width: 18px;
+    height: 18px;
+    stroke-width: 2;
 }
 
 /*

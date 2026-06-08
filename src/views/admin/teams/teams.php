@@ -11,9 +11,9 @@
   <main class="main">
     <div class="page-header">
       <h1 class="page-title">Teams</h1>
-      <button class="btn-primary">
+      <button class="btn-primary" id="sd-new-team">
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
-        Create Team
+        New Team
       </button>
     </div>
 
@@ -45,6 +45,10 @@
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
             Email Team
           </button>
+          <button class="delete-btn" onclick="openDeleteTeamModal('Frontend Team')">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+            Delete
+          </button>
         </div>
       </div>
 
@@ -73,6 +77,10 @@
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
             Email Team
           </button>
+          <button class="delete-btn" onclick="openDeleteTeamModal('Backend Team')">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+            Delete
+          </button>
         </div>
       </div>
 
@@ -100,6 +108,10 @@
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
             Email Team
           </button>
+          <button class="delete-btn" onclick="openDeleteTeamModal('Client Success')">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+            Delete
+          </button>
         </div>
       </div>
 
@@ -126,6 +138,10 @@
           <button class="email-btn">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
             Email Team
+          </button>
+          <button class="delete-btn" onclick="openDeleteTeamModal('DevOps')">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+            Delete
           </button>
         </div>
       </div>
@@ -157,6 +173,70 @@
       <div class="modal-actions">
         <button class="btn-secondary" onclick="closeEditTeamModal()">Cancel</button>
         <button class="btn-primary">Save Changes</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- New Team Modal -->
+  <div class="modal-overlay" id="newTeamModal">
+    <div class="modal">
+      <div class="modal-header">
+        <h2>New Team</h2>
+        <button class="modal-close" id="new-team-close">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+        </button>
+      </div>
+      <form id="new-team-form">
+        <div class="form-group">
+          <label for="new-team-name">Team Name</label>
+          <input type="text" id="new-team-name" placeholder="Enter team name" />
+        </div>
+        <div class="form-group">
+          <label for="new-team-desc">Team Description</label>
+          <input type="text" id="new-team-desc" placeholder="Enter team description" />
+        </div>
+        <div class="form-group">
+          <label for="new-team-member-select">Add Team Members</label>
+          <div class="input-row">
+            <select id="new-team-member-select">
+              <option value="">Select a person</option>
+              <option value="John Doe">John Doe</option>
+              <option value="Jane Smith">Jane Smith</option>
+              <option value="Alice Williams">Alice Williams</option>
+              <option value="Bob Johnson">Bob Johnson</option>
+              <option value="Mike Chen">Mike Chen</option>
+              <option value="Sarah Davis">Sarah Davis</option>
+            </select>
+            <button type="button" class="btn-secondary" id="add-team-member">Add</button>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Selected Members</label>
+          <ul class="member-list" id="new-team-member-list"></ul>
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="btn-secondary" id="new-team-cancel">Cancel</button>
+          <button type="submit" class="btn-primary">Save Team</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Delete Team Confirmation Modal -->
+  <div class="modal-overlay" id="deleteTeamModal">
+    <div class="modal delete-modal">
+      <div class="modal-header">
+        <h2>Delete Team</h2>
+        <button class="modal-close" onclick="closeDeleteTeamModal()">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p>Are you sure you want to delete <strong id="delete-team-name">Team Name</strong>? This action cannot be undone.</p>
+      </div>
+      <div class="modal-actions">
+        <button type="button" class="btn-secondary" onclick="closeDeleteTeamModal()">Cancel</button>
+        <button type="button" class="btn-danger" onclick="confirmDeleteTeam()">Delete Team</button>
       </div>
     </div>
   </div>
