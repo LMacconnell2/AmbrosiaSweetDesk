@@ -1,6 +1,8 @@
 <?php
 
 class SweetDesk_Activator {
+    require_once SWEETDESK_PATH .
+    'database/class-installer.php';
 
     public static function activate() {
 
@@ -8,12 +10,8 @@ class SweetDesk_Activator {
             'Ambrosia SweetDesk plugin activated.'
         );
 
-        /*
-         * Future:
-         * - Create DB tables
-         * - Register CPTs
-         * - Flush rewrite rules
-         * - Seed defaults
-         */
+        SweetDesk_Installer::install();
+
+        flush_rewrite_rules();
     }
 }

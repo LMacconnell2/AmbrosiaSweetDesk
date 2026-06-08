@@ -14,6 +14,8 @@ class SweetDesk_Plugin {
 
         $this->define_admin_hooks();
 
+        $this->define_api_hooks();
+
         // $this->define_public_hooks();
     }
 
@@ -23,7 +25,7 @@ class SweetDesk_Plugin {
 
         // require_once SWEETDESK_PATH . 'public/class-public.php';
 
-        require_once SWEETDESK_PATH . 'src/includes/class-api.php';
+        require_once SWEETDESK_PATH . 'src/api/class-api.php';
 
         $this->loader = new SweetDesk_Loader();
     }

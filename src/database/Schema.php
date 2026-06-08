@@ -72,7 +72,39 @@ CREATE TABLE sweetdesk_ticket_meta (
 
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+CREATE TABLE sweetdesk_ticket_messages (
 
+    id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+
+    ticket_id BIGINT UNSIGNED NOT NULL,
+
+    person_id BIGINT UNSIGNED NULL,
+
+    reply_type VARCHAR(50) NOT NULL DEFAULT 'comment',
+
+    body LONGTEXT NOT NULL,
+
+    is_internal TINYINT(1) NOT NULL DEFAULT 0,
+
+    edited TINYINT(1) NOT NULL DEFAULT 0,
+
+    reply_to_id BIGINT UNSIGNED NULL,
+
+    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    updated_at DATETIME NOT NULL
+        DEFAULT CURRENT_TIMESTAMP
+        ON UPDATE CURRENT_TIMESTAMP,
+
+    INDEX idx_ticket_id (ticket_id),
+
+    INDEX idx_person_id (person_id),
+
+    INDEX idx_reply_to_id (reply_to_id),
+
+    INDEX idx_created_at (created_at)
+
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 /*
 |--------------------------------------------------------------------------
