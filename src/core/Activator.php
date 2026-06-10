@@ -9,40 +9,40 @@ class SweetDesk_Activator {
         require_once ABSPATH . 'wp-admin/includes/upgrade.php';
 
         require_once SWEETDESK_PATH .
-            'database/Schemas/activity-table.php';
+            'src/database/Schemas/activity-table.php';
 
         require_once SWEETDESK_PATH .
-            'database/Schemas/attachment-table.php';
+            'src/database/Schemas/attachment-table.php';
 
         require_once SWEETDESK_PATH . 
-                'database/Schemas/client-table.php';
+                'src/database/Schemas/client-table.php';
 
         require_once SWEETDESK_PATH . 
-                'database/Schemas/client-meta-table.php';
+                'src/database/Schemas/client-meta-table.php';
 
         require_once SWEETDESK_PATH . 
-                'database/Schemas/people-table.php';
+                'src/database/Schemas/people-table.php';
 
         require_once SWEETDESK_PATH . 
-                'database/Schemas/people-meta-table.php';
+                'src/database/Schemas/people-meta-table.php';
 
         require_once SWEETDESK_PATH . 
-                'database/Schemas/team-table.php';
+                'src/database/Schemas/team-table.php';
 
         require_once SWEETDESK_PATH . 
-                'database/Schemas/team-meta-table.php';
+                'src/database/Schemas/team-meta-table.php';
 
         require_once SWEETDESK_PATH . 
-                'database/Schemas/people-teams-table.php';
+                'src/database/Schemas/people-teams-table.php';
 
         require_once SWEETDESK_PATH . 
-                'database/Schemas/ticket-table.php';
+                'src/database/Schemas/ticket-table.php';
                 
         require_once SWEETDESK_PATH . 
-                'database/Schemas/ticket-meta-table.php';
+                'src/database/Schemas/ticket-meta-table.php';
 
         require_once SWEETDESK_PATH . 
-                'database/Schemas/ticket-messages-table.php';
+                'src/database/Schemas/ticket-messages-table.php';
 
 
         dbDelta(sweetdesk_create_client_table_sql());
