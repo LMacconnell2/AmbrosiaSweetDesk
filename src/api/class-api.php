@@ -5,10 +5,10 @@ class SweetDesk_API {
     public static function init() {
 
         require_once SWEETDESK_PATH .
-            'api/class-tickets-controller.php';
+            'src/api/routes/ticket-routes.php';
 
-        require_once SWEETDESK_PATH .
-            'api/class-clients-controller.php';
+        // require_once SWEETDESK_PATH .
+        //     'src/api/routes/client-routes.php';
 
         add_action(
             'rest_api_init',
@@ -18,10 +18,10 @@ class SweetDesk_API {
 
     public static function register_routes() {
 
-        $tickets = new SweetDesk_Tickets_Controller();
-        $tickets->register_routes();
+        (new SweetDesk_Ticket_Routes())
+            ->register_routes();
 
-        $clients = new SweetDesk_Clients_Controller();
-        $clients->register_routes();
+        // (new SweetDesk_Client_Routes())
+        //     ->register_routes();
     }
 }
