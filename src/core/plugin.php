@@ -1,6 +1,7 @@
 <?php
 
 require_once SWEETDESK_PATH . 'src/views/admin/class-admin-menu.php';
+require_once SWEETDESK_PATH . 'src/api/class-api.php';
 
 use SweetDesk\Admin\AdminMenu;
 
