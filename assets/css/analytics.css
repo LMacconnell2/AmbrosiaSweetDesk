@@ -4,284 +4,600 @@
 |--------------------------------------------------------------------------
 */
 
-.sweetdesk-analytics-page {
-    padding: 24px;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+.sd-analytics-page {
+    padding: 28px 32px 48px;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    color: #111827;
+    max-width: 100%;
 }
 
-/*
-|--------------------------------------------------------------------------
-| Header
-|--------------------------------------------------------------------------
-*/
+/* ── Header ── */
 
 .sd-analytics-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-
-    margin-bottom: 36px;
-    gap: 20px;
-
-    flex-wrap: wrap;
+    margin-bottom: 20px;
 }
 
-.sd-analytics-header h1 {
-    margin: 0;
-
-    font-size: 42px;
+.sd-page-title {
+    font-size: 1.75rem;
     font-weight: 700;
-
     color: #0f172a;
+    margin: 0;
 }
-
-/*
-|--------------------------------------------------------------------------
-| Export Button
-|--------------------------------------------------------------------------
-*/
 
 .sd-export-btn {
-    display: flex;
+    display: inline-flex;
     align-items: center;
-    gap: 10px;
-
-    border: none;
-
-    background: #2563eb;
-    color: white;
-
-    padding: 16px 24px;
-
-    border-radius: 16px;
-
-    font-size: 18px;
-    font-weight: 600;
-
+    gap: 8px;
+    background: #fff;
+    color: #374151;
+    border: 1.5px solid #cbd5e1;
+    padding: 9px 18px;
+    border-radius: 7px;
+    font-size: 0.9375rem;
+    font-weight: 500;
     cursor: pointer;
-
-    transition: background 0.2s ease;
+    transition: background 0.15s;
 }
 
 .sd-export-btn:hover {
-    background: #1d4ed8;
+    background: #f1f5f9;
 }
 
 .sd-export-btn .dashicons {
-    font-size: 20px;
+    font-size: 16px;
+    width: 16px;
+    height: 16px;
+    line-height: 1;
 }
 
-/*
-|--------------------------------------------------------------------------
-| Grid Layout
-|--------------------------------------------------------------------------
-*/
+/* ── Admin view toggle ── */
 
-.sd-analytics-grid {
-    display: grid;
-
-    grid-template-columns: repeat(
-        auto-fit,
-        minmax(420px, 1fr)
-    );
-
-    gap: 30px;
-}
-
-/*
-|--------------------------------------------------------------------------
-| Report Card
-|--------------------------------------------------------------------------
-*/
-
-.sd-report-card {
-    background: white;
-
-    border-radius: 20px;
-
+.sd-view-toggle {
+    display: inline-flex;
+    border: 1.5px solid #cbd5e1;
+    border-radius: 8px;
     overflow: hidden;
-
-    border: 2px solid transparent;
-
-    box-shadow:
-        0 1px 2px rgba(15, 23, 42, 0.05),
-        0 4px 12px rgba(15, 23, 42, 0.04);
-
-    transition:
-        transform 0.2s ease,
-        box-shadow 0.2s ease;
+    margin-bottom: 20px;
 }
 
-.sd-report-card:hover {
-    transform: translateY(-2px);
-
-    box-shadow:
-        0 10px 20px rgba(15, 23, 42, 0.08),
-        0 6px 10px rgba(15, 23, 42, 0.05);
+.sd-toggle-btn {
+    background: none;
+    border: none;
+    padding: 9px 22px;
+    font-family: inherit;
+    font-size: 0.9375rem;
+    font-weight: 500;
+    color: #64748b;
+    cursor: pointer;
+    transition: background 0.13s, color 0.13s;
 }
 
-/*
-|--------------------------------------------------------------------------
-| Card Header
-|--------------------------------------------------------------------------
-*/
-
-.sd-report-header {
-    padding: 26px 28px;
-
-    border-bottom: 1px solid;
+.sd-toggle-btn + .sd-toggle-btn {
+    border-left: 1.5px solid #cbd5e1;
 }
 
-.sd-report-header h2 {
-    margin: 0;
+.sd-toggle-btn.active {
+    background: #1e3a5f;
+    color: #fff;
+}
 
-    font-size: 22px;
+/* ── User selector ── */
+
+.sd-user-selector {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
+    padding: 11px 16px;
+    background: #f0f6ff;
+    border: 1px solid #bfdbfe;
+    border-radius: 8px;
+    font-size: 0.9375rem;
+    color: #1e3a5f;
+}
+
+.sd-user-selector-label {
+    font-weight: 500;
+}
+
+.sd-user-select {
+    font-family: inherit;
+    font-size: 0.9375rem;
+    border: 1.5px solid #93c5fd;
+    border-radius: 6px;
+    padding: 5px 10px;
+    color: #0f172a;
+    background: #fff;
+    outline: none;
+    cursor: pointer;
+}
+
+/* ── Date range ── */
+
+.sd-date-range {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 28px;
+    margin-top: 6px;
+    font-size: 0.9375rem;
+    color: #374151;
+}
+
+.sd-date-range-label {
+    font-weight: 500;
+    white-space: nowrap;
+    color: #1e3a5f;
+}
+
+.sd-date-input {
+    font-family: inherit;
+    font-size: 0.9375rem;
+    border: 1.5px solid #cbd5e1;
+    border-radius: 6px;
+    padding: 7px 11px;
+    color: #0f172a;
+    background: #fff;
+    outline: none;
+    transition: border-color 0.15s;
+    cursor: pointer;
+}
+
+.sd-date-input:focus {
+    border-color: #3b82f6;
+}
+
+.sd-date-sep {
+    color: #94a3b8;
+}
+
+/* ── Section subheaders ── */
+
+.sd-subheader {
+    font-size: 1.05rem;
     font-weight: 700;
+    color: #1e3a5f;
+    margin: 0 0 14px;
+    padding-bottom: 8px;
+    border-bottom: 2px solid #bfdbfe;
 }
 
-/*
-|--------------------------------------------------------------------------
-| Card Body
-|--------------------------------------------------------------------------
-*/
+/* ── Two-column row (Resolution Time + Feedback) ── */
 
-.sd-report-body {
+.sd-two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-bottom: 20px;
+    align-items: start;
+}
+
+/* ── Shared section card ── */
+
+.sd-section--full {
+    margin-bottom: 20px;
+}
+
+.sd-section {
+    background: #fff;
+    border: 1.5px solid #bfdbfe;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.sd-section-header {
+    padding: 14px 18px;
+    background: #1e3a5f;
+    border-bottom: none;
+}
+
+.sd-section-title {
+    font-size: 1rem;
+    font-weight: 700;
+    color: #fff;
+    margin: 0;
+    letter-spacing: 0.01em;
+}
+
+/* ── Stat blocks (big numbers — Tickets section) ── */
+
+.sd-stat-grid {
+    display: flex;
+    gap: 0;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.sd-stat-block {
+    flex: 1;
+    padding: 18px 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 5px;
+    border-right: 1px solid #e2e8f0;
+    text-decoration: none;
+    color: inherit;
+    background: #f8faff;
+}
+
+.sd-stat-block:last-child {
+    border-right: none;
+}
+
+.sd-stat-block.sd-stat-link {
+    transition: background 0.13s;
+    cursor: pointer;
+}
+
+.sd-stat-block.sd-stat-link:hover {
+    background: #eff6ff;
+}
+
+.sd-stat-label {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #64748b;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.sd-stat-value {
+    font-size: 2.25rem;
+    font-weight: 700;
+    color: #1e3a5f;
+    line-height: 1.1;
+}
+
+/* ── Oldest unresolved tickets ── */
+
+.sd-subsection {
+    padding: 14px 18px;
+}
+
+.sd-subsection-title {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #64748b;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin: 0 0 10px;
+}
+
+.sd-ticket-list {
     display: flex;
     flex-direction: column;
 }
 
-/*
-|--------------------------------------------------------------------------
-| Report Rows
-|--------------------------------------------------------------------------
-*/
+.sd-ticket-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 9px 10px;
+    border-radius: 6px;
+    text-decoration: none;
+    color: #0f172a;
+    transition: background 0.13s;
+    border-bottom: 1px solid #f1f5f9;
+    gap: 10px;
+}
+
+.sd-ticket-item:last-child {
+    border-bottom: none;
+}
+
+.sd-ticket-item:hover {
+    background: #eff6ff;
+}
+
+.sd-ticket-name {
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: #2563eb;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    min-width: 0;
+}
+
+.sd-ticket-age {
+    font-size: 0.85rem;
+    color: #64748b;
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+.sd-ticket-assignee {
+    font-size: 0.85rem;
+    color: #94a3b8;
+    white-space: nowrap;
+    flex-shrink: 0;
+    margin-left: auto;
+    margin-right: 16px;
+}
+
+/* ── Report rows (Resolution Time, Feedback) ── */
+
+.sd-report-rows {
+    display: flex;
+    flex-direction: column;
+}
 
 .sd-report-row {
     display: flex;
     justify-content: space-between;
-    align-items: center;
-
-    padding: 24px 28px;
-
-    border-bottom: 1px solid #e2e8f0;
-
-    font-size: 16px;
+    align-items: baseline;
+    padding: 13px 18px;
+    border-bottom: 1px solid #f1f5f9;
+    gap: 12px;
 }
 
 .sd-report-row:last-child {
     border-bottom: none;
 }
 
-.sd-report-row span {
-    color: #334155;
+.sd-row-label {
+    color: #475569;
+    font-weight: 500;
+    font-size: 0.9375rem;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-shrink: 0;
+}
+
+.sd-row-sublabel {
+    font-size: 0.85rem;
+    color: #94a3b8;
+    font-weight: 400;
+}
+
+.sd-row-indented {
+    background: #f8faff;
+}
+
+.sd-row-indented .sd-row-label {
+    padding-left: 14px;
+}
+
+.sd-row-value {
+    font-weight: 600;
+    font-size: 0.9375rem;
+    color: #0f172a;
+    text-decoration: none;
+    text-align: right;
+}
+
+.sd-row-link {
+    color: #2563eb;
+    cursor: pointer;
+    transition: color 0.13s;
+}
+
+.sd-row-link:hover {
+    color: #1d4ed8;
+    text-decoration: underline;
+}
+
+.sd-row-ticket-name {
+    font-weight: 400;
+    font-size: 0.85rem;
+    color: #64748b;
+}
+
+.sd-row-link:hover .sd-row-ticket-name {
+    color: #475569;
+}
+
+/* ── Recent Messages — full width below the grid ── */
+
+.sd-section--recent-messages {
+    border: 1.5px solid #bfdbfe;
+    border-radius: 10px;
+    overflow: hidden;
+    background: #fff;
+}
+
+.sd-section-header--messages {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    padding: 14px 20px;
+    background: #1e3a5f;
+}
+
+.sd-section-header--messages .sd-section-title {
+    color: #fff;
+}
+
+.sd-section-note {
+    font-size: 0.85rem;
+    color: #93c5fd;
+    margin: 3px 0 0;
+}
+
+.sd-messages-controls {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.sd-select {
+    font-family: inherit;
+    font-size: 0.9rem;
+    border: 1.5px solid #93c5fd;
+    border-radius: 6px;
+    padding: 5px 10px;
+    color: #0f172a;
+    background: #fff;
+    outline: none;
+    cursor: pointer;
+}
+
+/* ── Message list items ── */
+
+.sd-message-list {
+    display: flex;
+    flex-direction: column;
+}
+
+.sd-message-item {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 14px 20px;
+    border-bottom: 1px solid #f1f5f9;
+    text-decoration: none;
+    color: inherit;
+    transition: background 0.13s;
+    cursor: pointer;
+}
+
+.sd-message-item:last-child {
+    border-bottom: none;
+}
+
+.sd-message-item:hover {
+    background: #f8faff;
+}
+
+.sd-message-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.85rem;
+    color: #64748b;
+}
+
+.sd-message-author {
+    font-weight: 600;
+    color: #1e3a5f;
+    font-size: 0.9375rem;
+}
+
+.sd-message-source-badge {
+    display: inline-block;
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 99px;
+    margin-left: 7px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+.sd-message-source-badge--employee {
+    background: #dbeafe;
+    color: #1d4ed8;
+}
+
+.sd-message-source-badge--customer {
+    background: #e0f2fe;
+    color: #0369a1;
+}
+
+.sd-message-ticket {
+    font-size: 0.875rem;
+    color: #2563eb;
     font-weight: 500;
 }
 
-.sd-report-row strong {
-    font-size: 18px;
-    font-weight: 700;
+.sd-message-body {
+    font-size: 0.9375rem;
+    color: #374151;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
-/*
-|--------------------------------------------------------------------------
-| Green Card
-|--------------------------------------------------------------------------
-*/
+/* ── 2x2 grid variant for admin tickets view ── */
 
-.sd-green {
-    border-color: #86efac;
+.sd-stat-grid--2x2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    border-bottom: 1px solid #e2e8f0;
 }
 
-.sd-green .sd-report-header {
-    background: #f0fdf4;
-    border-color: #bbf7d0;
+.sd-stat-grid--2x2 .sd-stat-block {
+    border-right: 1px solid #e2e8f0;
+    border-bottom: 1px solid #e2e8f0;
 }
 
-.sd-green h2,
-.sd-green strong {
-    color: #15803d;
+.sd-stat-grid--2x2 .sd-stat-block:nth-child(2) {
+    border-right: none;
 }
 
-/*
-|--------------------------------------------------------------------------
-| Blue Card
-|--------------------------------------------------------------------------
-*/
-
-.sd-blue {
-    border-color: #93c5fd;
+.sd-stat-grid--2x2 .sd-stat-block:nth-child(3),
+.sd-stat-grid--2x2 .sd-stat-block:nth-child(4) {
+    border-bottom: none;
 }
 
-.sd-blue .sd-report-header {
-    background: #eff6ff;
-    border-color: #bfdbfe;
+.sd-stat-block--sub {
+    background: #f8faff;
 }
 
-.sd-blue h2,
-.sd-blue strong {
+.sd-stat-sublabel {
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: #94a3b8;
+    text-transform: none;
+    letter-spacing: 0;
+}
+
+.sd-stat-value--sub {
+    font-size: 1.6rem;
+    color: #475569;
+}
+
+/* ── Min/max rows: ticket name + score grouped on the right ── */
+
+.sd-row-value--minmax {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    max-width: 70%;
+    min-width: 0;
+}
+
+.sd-row-value--minmax .sd-row-ticket-name {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    text-align: right;
+    flex: 1;
+}
+
+.sd-row-value--minmax .sd-row-score {
+    flex-shrink: 0;
+    font-weight: 600;
     color: #2563eb;
+    white-space: nowrap;
 }
 
-/*
-|--------------------------------------------------------------------------
-| Purple Card
-|--------------------------------------------------------------------------
-*/
-
-.sd-purple {
-    border-color: #d8b4fe;
+.sd-row-value--minmax {
+    font-size: 0.9rem;
+    font-weight: 400;
 }
 
-.sd-purple .sd-report-header {
-    background: #faf5ff;
-    border-color: #e9d5ff;
+.sd-row-link:hover .sd-row-score {
+    color: #1d4ed8;
 }
 
-.sd-purple h2,
-.sd-purple strong {
-    color: #7e22ce;
+/* ── Feedback score denominator styling ── */
+
+.sd-score-main {
+    font-weight: 700;
+    color: inherit;
 }
 
-/*
-|--------------------------------------------------------------------------
-| Orange Card
-|--------------------------------------------------------------------------
-*/
-
-.sd-orange {
-    border-color: #fdba74;
-}
-
-.sd-orange .sd-report-header {
-    background: #fff7ed;
-    border-color: #fed7aa;
-}
-
-.sd-orange h2,
-.sd-orange strong {
-    color: #ea580c;
-}
-
-/*
-|--------------------------------------------------------------------------
-| Responsive
-|--------------------------------------------------------------------------
-*/
-
-@media (max-width: 768px) {
-
-    .sd-analytics-grid {
-        grid-template-columns: 1fr;
-    }
-
-    .sd-report-row {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 8px;
-    }
-
-    .sd-export-btn {
-        width: 100%;
-        justify-content: center;
-    }
+.sd-score-denom {
+    font-size: 0.8rem;
+    font-weight: 400;
+    color: #94a3b8;
 }
