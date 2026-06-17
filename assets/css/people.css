@@ -75,29 +75,43 @@ body {
     gap: 10px;
 }
 
-.btn-outline {
-    display: inline-flex;
-    align-items: center;
-    gap: 7px;
-    background: var(--surface);
-    color: var(--btn-outline-text);
-    border: 1.5px solid var(--btn-outline-border);
-    border-radius: 7px;
-    padding: 8px 14px;
-    font-family: inherit;
-    font-size: 0.84rem;
-    font-weight: 500;
+/* -- Buttons -- */
+.sd-btn {
+    border: none;
+    border-radius: 14px;
+    padding: 14px 22px;
+    font-size: 16px;
+    font-weight: 600;
     cursor: pointer;
-    transition: background 0.15s;
+
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    transition: all 0.2s ease;
 }
 
-.btn-outline:hover {
-    background: #f9fafb;
+.sd-btn .dashicons {
+    font-size: 18px;
 }
 
-.btn-outline svg {
-    width: 14px;
-    height: 14px;
+.sd-btn-secondary {
+    background: #ffffff;
+    border: 1px solid #d4d4d8;
+    color: #334155;
+}
+
+.sd-btn-secondary:hover {
+    background: #f8fafc;
+}
+
+.sd-btn-primary {
+    background: #2563eb;
+    color: white;
+}
+
+.sd-btn-primary:hover {
+    background: #1d4ed8;
 }
 
 /* ── Section blocks ── */
@@ -313,7 +327,7 @@ a.email-link:hover {
     width: var(--panel-width);
     background: var(--surface);
     border-left: 1px solid var(--border);
-    position: fixed;
+    position: absolute;
     top: 0;
     right: 0;
     bottom: 0;
