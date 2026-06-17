@@ -601,3 +601,33 @@
     font-weight: 400;
     color: #94a3b8;
 }
+
+/* Ambrosia theme overrides */
+:root{
+ --analytics-blue:#3853A3;
+ --analytics-blue-dark:#2B417F;
+ --analytics-magenta:#A91E58;
+ --analytics-magenta-dark:#891748;
+ --analytics-border:#D9E0EC;
+}
+
+.sd-page-title{color:#182235;}
+.sd-export-btn{border-color:#D9E0EC;}
+.sd-export-btn:hover{background:#F8FAFD;}
+.sd-view-toggle{border-color:#D9E0EC;}
+.sd-toggle-btn.active,
+.sd-section-header,
+.sd-section-header--messages{background:#3853A3;}
+.sd-user-selector{background:#EAF0FF;border-color:#C8D7FF;color:#2B417F;}
+.sd-section,
+.sd-section--recent-messages{border-color:#D9E0EC;box-shadow:0 1px 3px rgba(24,34,53,.04);}
+.sd-stat-value{color:#A91E58;}
+.sd-ticket-name,
+.sd-row-link,
+.sd-message-ticket{color:#3853A3;}
+.sd-row-link:hover{color:#2B417F;}
+.sd-row-indented,
+.sd-stat-block,
+.sd-stat-block--sub{background:#F9FAFC;}
+.sd-message-source-badge--employee{background:#EAF0FF;color:#3853A3;}
+.sd-message-source-badge--customer{background:#FCE8F0;color:#A91E58;}

@@ -9,24 +9,24 @@
 }
 
 :root {
-    --page-bg: #f3f4f6;
-    --surface: #ffffff;
-    --border: #e5e7eb;
+    --page-bg: #F5F7FA;
+    --surface: #FFFFFF;
+    --border: #D9E0EC;
 
-    --text-primary: #111827;
-    --text-secondary: #6b7280;
-    --text-muted: #9ca3af;
+    --text-primary: #182235;
+    --text-secondary: #55637A;
+    --text-muted: #8A94A6;
 
-    --accent: #2563eb;
-    --accent-hover: #1d4ed8;
+    --accent: #3853A3;
+    --accent-hover: #2B417F;
 
-    --btn-outline-border: #d1d5db;
-    --btn-outline-text: #374151;
+    --btn-outline-border: #C9D3E5;
+    --btn-outline-text: #55637A;
 
     --nav-width: 220px;
 
-    --toggle-checked: #d97706;
-    --toggle-unchecked: #d1d5db;
+    --toggle-checked: #A91E58;
+    --toggle-unchecked: #CBD5E1;
 }
 
 body {
@@ -122,6 +122,10 @@ body {
 
 .nav-item.active svg {
     color: #fff;
+}
+
+.nav-item.active:hover svg {
+    color: var(--text-primary);
 }
 
 /* ── Right content panel ── */
@@ -490,3 +494,11 @@ body {
     font-size: 0.875rem;
     color: var(--text-muted);
 }
+
+/* Ambrosia theme overrides */
+.nav-item:hover { background:#EEF3FF; color:#182235; }
+.tab-panel { box-shadow:0 1px 3px rgba(24,34,53,.04); }
+.email-config-inner { background:#F9FAFC; }
+.btn-edit-link,.btn-add-link { color:#A91E58; }
+.btn-edit-link:hover,.btn-add-link:hover { color:#891748; }
+.toggle:focus-visible { box-shadow:0 0 0 3px rgba(56,83,163,.25); }
