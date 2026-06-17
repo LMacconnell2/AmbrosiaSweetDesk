@@ -77,41 +77,44 @@ body {
 
 /* -- Buttons -- */
 .sd-btn {
-    border: none;
-    border-radius: 14px;
-    padding: 14px 22px;
-    font-size: 16px;
-    font-weight: 600;
-    cursor: pointer;
-
-    display: flex;
+    display: inline-flex;
     align-items: center;
-    gap: 10px;
-
-    transition: all 0.2s ease;
+    gap: 7px;
+    border-radius: 7px;
+    font-family: inherit;
+    cursor: pointer;
+    transition: background 0.15s;
 }
 
-.sd-btn .dashicons {
-    font-size: 18px;
+.sd-btn svg {
+    width: 16px;
+    height: 16px;
 }
 
 .sd-btn-secondary {
-    background: #ffffff;
-    border: 1px solid #d4d4d8;
-    color: #334155;
+    background: var(--surface);
+    color: var(--btn-outline-text);
+    border: 1.5px solid var(--btn-outline-border);
+    padding: 8px 14px;
+    font-size: 0.84rem;
+    font-weight: 500;
 }
 
 .sd-btn-secondary:hover {
-    background: #f8fafc;
+    background: #f9fafb;
 }
 
 .sd-btn-primary {
-    background: #2563eb;
-    color: white;
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    padding: 9px 16px;
+    font-size: 0.875rem;
+    font-weight: 600;
 }
 
 .sd-btn-primary:hover {
-    background: #1d4ed8;
+    background: var(--accent-hover);
 }
 
 /* ── Section blocks ── */
