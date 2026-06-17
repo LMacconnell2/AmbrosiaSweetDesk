@@ -77,29 +77,46 @@ body {
     gap: 10px;
 }
 
-.btn-outline {
+/* -- Buttons -- */
+.sd-btn {
     display: inline-flex;
     align-items: center;
     gap: 7px;
-    background: var(--surface);
-    color: var(--btn-outline-text);
-    border: 1.5px solid var(--btn-outline-border);
     border-radius: 7px;
-    padding: 8px 14px;
     font-family: inherit;
-    font-size: 0.84rem;
-    font-weight: 500;
     cursor: pointer;
     transition: background 0.15s;
 }
 
-.btn-outline:hover {
+.sd-btn svg {
+    width: 16px;
+    height: 16px;
+}
+
+.sd-btn-secondary {
+    background: var(--surface);
+    color: var(--btn-outline-text);
+    border: 1.5px solid var(--btn-outline-border);
+    padding: 8px 14px;
+    font-size: 0.84rem;
+    font-weight: 500;
+}
+
+.sd-btn-secondary:hover {
     background: #f9fafb;
 }
 
-.btn-outline svg {
-    width: 14px;
-    height: 14px;
+.sd-btn-primary {
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    padding: 9px 16px;
+    font-size: 0.875rem;
+    font-weight: 600;
+}
+
+.sd-btn-primary:hover {
+    background: var(--accent-hover);
 }
 
 /* ── Search & filters ── */
@@ -291,7 +308,7 @@ td.col-name {
     width: var(--panel-width);
     background: var(--surface);
     border-left: 1px solid var(--border);
-    position: fixed;
+    position: absolute;
     top: 0;
     right: 0;
     bottom: 0;
