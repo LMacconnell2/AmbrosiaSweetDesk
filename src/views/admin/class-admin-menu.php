@@ -122,6 +122,14 @@ class AdminMenu {
                 SWEETDESK_VERSION,
                 true
             );
+
+            wp_enqueue_script(
+                'sweetdesk-ticket-detail',
+                plugin_dir_url(__FILE__) . '../../../assets/js/ticket-detail.js',
+                [],
+                SWEETDESK_VERSION,
+                true
+            );
         }
 
         /*

@@ -1,23 +1,32 @@
-<div class="wrap">
-    <h1>Ticket #1024 - Login not working</h1>
-
-    <div class="ticket-meta">
-        <p>Status: <strong>Open</strong></p>
-        <p>Assigned: John Doe</p>
-    </div>
-
-    <div class="ticket-thread">
-        <div class="message">
-            <strong>Client:</strong>
-            <p>I cannot log into my account.</p>
-        </div>
-
-        <div class="message staff">
-            <strong>Support:</strong>
-            <p>We are looking into this issue.</p>
+<div class="wrap sweetdesk-ticket-detail">
+    <div class="sweetdesk-ticket-detail-header">
+        <div>
+            <h1 id="ticket-title">Ticket #1024 - Login not working</h1>
+            <div class="ticket-meta">
+                <p>Status: <strong id="ticket-status">Open</strong></p>
+                <p>Assigned: <span id="ticket-assignee">John Doe</span></p>
+            </div>
         </div>
     </div>
 
-    <textarea placeholder="Reply..."></textarea>
-    <button class="button button-primary">Send Reply</button>
+    <div class="sweetdesk-messages-section">
+        <h2>Messages & Activity</h2>
+        <div id="sweetdesk-messages-container" class="sweetdesk-messages-container">
+            <div class="sweetdesk-messages-loading">
+                <p>Loading messages...</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="sweetdesk-reply-section">
+        <h3>Leave a Reply</h3>
+        <textarea id="reply-body" placeholder="Write your reply here..." class="sweetdesk-reply-textarea"></textarea>
+        <div class="sweetdesk-reply-options">
+            <label>
+                <input type="checkbox" id="reply-internal"> 
+                Internal only (not visible to customer)
+            </label>
+        </div>
+        <button id="send-reply-btn" class="button button-primary">Send Reply</button>
+    </div>
 </div>
