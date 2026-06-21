@@ -56,13 +56,49 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     };
 
+    let currentPage = 1;
+    let totalPages = 1;
+
     async function loadTickets() {
 
-        const response = await fetch('./tickets.json');
+        try {
 
-        tickets = await response.json();
+            const params = buildApiParams();
 
-        renderTickets(tickets);
+            const response = await fetch(
+                `${window.location.origin}/wp-json/sweetdesk/v1/tickets?${params}`
+            );
+
+            if (!response.ok) {
+                throw new Error('Failed to load tickets');
+            }
+
+            const result = await response.json();
+
+            tickets = result.data || [];
+
+            totalPages =
+                result.pagination?.total_pages || 1;
+
+            currentPage =
+                result.pagination?.page || 1;
+
+            updatePagination();
+
+            renderTickets(tickets);
+
+        } catch (error) {
+
+            console.error(error);
+
+            tbody.innerHTML = `
+                <tr>
+                    <td colspan="7">
+                        Failed to load tickets.
+                    </td>
+                </tr>
+            `;
+        }
     }
 
 
@@ -70,6 +106,19 @@ document.addEventListener('DOMContentLoaded', async () => {
     function renderTickets(ticketData) {
 
         tbody.innerHTML = '';
+
+        if (!ticketData.length) {
+
+            tbody.innerHTML = `
+                <tr>
+                    <td colspan="7">
+                        No tickets found.
+                    </td>
+                </tr>
+            `;
+
+            return;
+        }
 
         ticketData.forEach(ticket => {
 
@@ -92,18 +141,30 @@ document.addEventListener('DOMContentLoaded', async () => {
                         </span>
                     </td>
 
-                    <td>${ticket.client || '—'}</td>
+                    <td>${ticket.client_id || '—'}</td>
 
-                    <td>${ticket.assignee}</td>
+                    <td>${ticket.assigned_to || '—'}</td>
 
                     <td>
                         <div class="sd-actions">
-                            <button class="sd-action-btn sd-edit-btn" title="Edit ticket">
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-7.5-1.5l5.5-5.5a2.121 2.121 0 013 3l-5.5 5.5m-6-6h6"/></svg>
+
+                            <button
+                                class="sd-action-btn sd-edit-btn"
+                                data-id="${ticket.id}"
+                            >
+                                Edit
                             </button>
-                            <button class="sd-action-btn sd-delete-btn" title="Delete ticket" onclick="openDeleteTicketModal(${ticket.id}, '${ticket.title}')">
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+
+                            <button
+                                class="sd-action-btn sd-delete-btn"
+                                onclick="openDeleteTicketModal(
+                                    ${ticket.id},
+                                    '${ticket.title}'
+                                )"
+                            >
+                                Delete
                             </button>
+
                         </div>
                     </td>
 
@@ -183,78 +244,9 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     function applyFilters() {
 
-        const rows = document.querySelectorAll('.sd-query-row');
+        currentPage = 1;
 
-        let filtered = [...tickets];
-
-        rows.forEach((row, index) => {
-
-            const logic = row.querySelector('.sd-logic').value;
-
-            const field = row.querySelector('.sd-field').value;
-
-            const operator = row.querySelector('.sd-operator').value;
-
-            const value = row.querySelector('.sd-value').value;
-
-            const results = tickets.filter(ticket => {
-
-                const ticketValue = (ticket[field] || '')
-                    .toString()
-                    .toLowerCase();
-
-                const compareValue = value.toLowerCase();
-
-                switch (operator) {
-
-                    case 'equals':
-                        return ticketValue === compareValue;
-
-                    case 'not equals':
-                        return ticketValue !== compareValue;
-
-                    case 'contains':
-                        return ticketValue.includes(compareValue);
-
-                    case 'before':
-                        return ticketValue < compareValue;
-
-                    case 'after':
-                        return ticketValue > compareValue;
-
-                    case 'on':
-                        return ticketValue === compareValue;
-
-                    default:
-                        return true;
-                }
-            });
-
-            if (index === 0) {
-
-                filtered = results;
-
-            } else {
-
-                if (logic === 'AND') {
-
-                    filtered = filtered.filter(ticket =>
-                        results.includes(ticket)
-                    );
-
-                } else {
-
-                    filtered = [
-                        ...new Set([
-                            ...filtered,
-                            ...results
-                        ])
-                    ];
-                }
-            }
-        });
-
-        applySorting(filtered);
+        loadTickets();
     }
 
     function applySorting(data) {
@@ -295,6 +287,81 @@ document.addEventListener('DOMContentLoaded', async () => {
         renderTickets(data);
     }
 
+    function buildApiParams() {
+
+        const params = new URLSearchParams();
+
+        params.append('page', currentPage);
+
+        params.append('per_page', 25);
+
+        const searchInput =
+            document.getElementById('sd-ticket-search');
+
+        if (searchInput.value.trim()) {
+
+            params.append(
+                'search',
+                searchInput.value.trim()
+            );
+        }
+
+        const rows =
+            document.querySelectorAll('.sd-query-row');
+
+        rows.forEach(row => {
+
+            const field =
+                row.querySelector('.sd-field').value;
+
+            const value =
+                row.querySelector('.sd-value')?.value;
+
+            if (!value) {
+                return;
+            }
+
+            switch (field) {
+
+                case 'status':
+                    params.append('status', value);
+                    break;
+
+                case 'priority':
+                    params.append('priority', value);
+                    break;
+
+                case 'assignee':
+                    params.append('assigned_to', value);
+                    break;
+            }
+        });
+
+        const sortField =
+            document.getElementById('sd-sort-field').value;
+
+        const sortDirection =
+            document.getElementById('sd-sort-direction').value;
+
+        const sortMap = {
+            date_opened: 'created_at',
+            latest_response: 'updated_at',
+            priority: 'priority'
+        };
+
+        params.append(
+            'sort',
+            sortMap[sortField] || 'created_at'
+        );
+
+        params.append(
+            'order',
+            sortDirection
+        );
+
+        return params.toString();
+    }
+
     queryBuilder.addEventListener('click', e => {
 
         if (e.target.classList.contains('sd-add-filter')) {
@@ -325,6 +392,24 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
         }
     });
+
+    function updatePagination() {
+
+        document.getElementById(
+            'sd-page-info'
+        ).textContent =
+            `Page ${currentPage} of ${totalPages}`;
+
+        document.getElementById(
+            'sd-prev-page'
+        ).disabled =
+            currentPage <= 1;
+
+        document.getElementById(
+            'sd-next-page'
+        ).disabled =
+            currentPage >= totalPages;
+    }
 
     document
         .getElementById('sd-sort-field')
@@ -368,4 +453,45 @@ document.addEventListener('DOMContentLoaded', async () => {
             closeDeleteTicketModal();
         }
     });
+
+    let searchTimeout;
+
+    document
+        .getElementById('sd-ticket-search')
+        .addEventListener('input', () => {
+
+            clearTimeout(searchTimeout);
+
+            searchTimeout = setTimeout(() => {
+
+                currentPage = 1;
+
+                loadTickets();
+
+            }, 500);
+        });
+
+    document
+        .getElementById('sd-prev-page')
+        .addEventListener('click', () => {
+
+            if (currentPage > 1) {
+
+                currentPage--;
+
+                loadTickets();
+            }
+        });
+
+    document
+        .getElementById('sd-next-page')
+        .addEventListener('click', () => {
+
+            if (currentPage < totalPages) {
+
+                currentPage++;
+
+                loadTickets();
+            }
+        });
 });

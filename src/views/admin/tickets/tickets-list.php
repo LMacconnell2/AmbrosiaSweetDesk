@@ -27,6 +27,7 @@
         <span class="dashicons dashicons-search"></span>
 
         <input
+            id="sd-ticket-search"
             type="text"
             placeholder="Search tickets..."
         >
@@ -102,6 +103,20 @@
             <tbody id="sweetdesk-ticket-body"></tbody>
 
         </table>
+    </div>
+    <!-- Tickets Pagination -->
+    <div class="sweetdesk-pagination">
+        <button id="sd-prev-page" class="sd-btn sd-btn-secondary">
+            Previous
+        </button>
+
+        <span id="sd-page-info">
+            Page 1
+        </span>
+
+        <button id="sd-next-page" class="sd-btn sd-btn-secondary">
+            Next
+        </button>
     </div>
 
     <!-- Delete Ticket Confirmation Modal -->
