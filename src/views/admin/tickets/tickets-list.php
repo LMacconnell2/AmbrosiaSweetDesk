@@ -137,4 +137,156 @@
             </div>
         </div>
     </div>
+<div class="sd-modal-overlay" id="sd-create-ticket-modal">
+<div class="sd-modal sd-ticket-modal">
+
+    <div class="sd-modal-header">
+        <h2>Create Ticket</h2>
+
+        <button
+            class="sd-modal-close"
+            onclick="closeTicketModal()"
+        >
+            ✕
+        </button>
+    </div>
+
+    <div class="sd-modal-body">
+
+        <div class="sd-form-grid">
+
+            <div class="sd-form-group">
+                <label>Title *</label>
+
+                <input
+                    type="text"
+                    id="sd-ticket-title"
+                    placeholder="Enter ticket title"
+                >
+            </div>
+
+            <div class="sd-form-group">
+                <label>Client *</label>
+
+                <select id="sd-ticket-client">
+                    <option value="">
+                        Select Client
+                    </option>
+                </select>
+            </div>
+
+            <div class="sd-form-group">
+                <label>Assignee</label>
+
+                <select id="sd-ticket-assignee">
+                    <option value="">
+                        Unassigned
+                    </option>
+                </select>
+            </div>
+
+            <div class="sd-form-group">
+                <label>Status</label>
+
+                <select id="sd-ticket-status">
+                    <option value="open">
+                        Open
+                    </option>
+
+                    <option value="pending">
+                        Pending
+                    </option>
+
+                    <option value="in_progress">
+                        In Progress
+                    </option>
+
+                    <option value="closed">
+                        Closed
+                    </option>
+                </select>
+            </div>
+
+            <div class="sd-form-group">
+                <label>Priority</label>
+
+                <select id="sd-ticket-priority">
+                    <option value="low">
+                        Low
+                    </option>
+
+                    <option value="normal" selected>
+                        Normal
+                    </option>
+
+                    <option value="high">
+                        High
+                    </option>
+
+                    <option value="urgent">
+                        Urgent
+                    </option>
+                </select>
+            </div>
+
+        </div>
+
+        <hr>
+
+        <div class="sd-form-group">
+            <label>Reply Type</label>
+
+            <select id="sd-ticket-reply-type">
+                <option value="public">
+                    Public
+                </option>
+
+                <option value="internal">
+                    Internal
+                </option>
+            </select>
+        </div>
+
+        <div class="sd-form-group">
+            <label>Initial Message *</label>
+
+            <textarea
+                id="sd-ticket-body"
+                rows="8"
+                placeholder="Describe the issue..."
+            ></textarea>
+        </div>
+
+        <div id="sd-custom-fields-container">
+
+            <!-- Future custom ticket fields -->
+
+        </div>
+
+    </div>
+
+    <div id="sd-ticket-thread"></div>
+
+    <div class="sd-modal-footer">
+
+        <button
+            type="button"
+            class="sd-btn sd-btn-secondary"
+            onclick="closeTicketModal()"
+        >
+            Cancel
+        </button>
+
+        <button
+            type="button"
+            class="sd-btn sd-btn-primary"
+            id="sd-save-ticket"
+        >
+            Create Ticket
+        </button>
+
+    </div>
+
+</div>
+    
 </div>
