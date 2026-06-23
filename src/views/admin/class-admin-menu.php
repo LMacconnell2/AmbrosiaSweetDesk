@@ -123,6 +123,15 @@ class AdminMenu {
                 true
             );
 
+            wp_localize_script(
+                'sweetdesk-tickets',
+                'SweetDesk',
+                [
+                    'apiUrl' => rest_url('sweetdesk/v1'),
+                    'nonce' => wp_create_nonce('wp_rest')
+                ]
+            );
+
             wp_enqueue_script(
                 'sweetdesk-ticket-detail',
                 plugin_dir_url(__FILE__) . '../../../assets/js/ticket-detail.js',
