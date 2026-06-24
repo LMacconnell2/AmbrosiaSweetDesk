@@ -935,4 +935,139 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     }
 
+    document
+        .getElementById('sd-export-json')
+        ?.addEventListener(
+            'click',
+            exportTickets
+        );
+
+    async function exportTickets() {
+
+        try {
+
+            const response =
+                await apiFetch(
+                    '/tickets/export'
+                );
+
+            const data =
+                await response.json();
+
+            const blob =
+                new Blob(
+                    [
+                        JSON.stringify(
+                            data,
+                            null,
+                            2
+                        )
+                    ],
+                    {
+                        type:
+                            'application/json'
+                    }
+                );
+
+            const url =
+                URL.createObjectURL(blob);
+
+            const link =
+                document.createElement('a');
+
+            link.href = url;
+
+            link.download =
+                `sweetdesk-export-${Date.now()}.json`;
+
+            document.body.appendChild(link);
+
+            link.click();
+
+            link.remove();
+
+            URL.revokeObjectURL(url);
+
+        } catch (error) {
+
+            console.error(error);
+
+            alert(
+                'Failed to export tickets.'
+            );
+        }
+    }
+
+    async function importTickets(event) {
+
+        const file =
+            event.target.files[0];
+
+        if (!file) {
+            return;
+        }
+
+        try {
+
+            const text =
+                await file.text();
+
+            const payload =
+                JSON.parse(text);
+
+            const response =
+                await apiFetch(
+                    '/tickets/import',
+                    {
+                        method: 'POST',
+                        body:
+                            JSON.stringify(
+                                payload
+                            )
+                    }
+                );
+
+            const result =
+                await response.json();
+
+            alert(
+                result.message ||
+                'Tickets imported successfully.'
+            );
+
+            await loadTickets();
+
+        } catch (error) {
+
+            console.error(error);
+
+            alert(
+                'Failed to import tickets.'
+            );
+        }
+
+        event.target.value = '';
+    }
+
+    document
+        .getElementById('sd-import-json')
+        ?.addEventListener(
+            'click',
+            () => {
+
+                document
+                    .getElementById(
+                        'sd-import-file'
+                    )
+                    .click();
+            }
+        );
+
+    document
+        .getElementById('sd-import-file')
+        ?.addEventListener(
+            'change',
+            importTickets
+        );
+
 });

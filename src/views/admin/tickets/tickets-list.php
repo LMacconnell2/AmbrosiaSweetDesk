@@ -5,14 +5,20 @@
         <h1>Tickets</h1>
 
         <div class="sweetdesk-header-actions">
-            <button class="sd-btn sd-btn-secondary">
+            <button
+                id="sd-import-json"
+                class="sd-btn sd-btn-secondary"
+            >
                 <span class="dashicons dashicons-upload"></span>
-                Import CSV
+                Import JSON
             </button>
 
-            <button class="sd-btn sd-btn-secondary">
+            <button
+                id="sd-export-json"
+                class="sd-btn sd-btn-secondary"
+            >
                 <span class="dashicons dashicons-download"></span>
-                Export CSV
+                Export JSON
             </button>
 
             <button id="sd-new-ticket" class="sd-btn sd-btn-primary">
@@ -286,6 +292,13 @@
         </button>
 
     </div>
+
+    <input
+        type="file"
+        id="sd-import-file"
+        accept=".json"
+        style="display:none;"
+    >
 
 </div>
     
