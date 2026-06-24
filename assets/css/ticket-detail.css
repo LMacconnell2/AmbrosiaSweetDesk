@@ -189,6 +189,40 @@
     margin-bottom: 12px;
 }
 
+.sweetdesk-message-body ul,
+.sweetdesk-message-body ol {
+    margin: 0 0 12px;
+    padding-left: 1.5em;
+}
+
+.sweetdesk-message-body blockquote {
+    margin: 0 0 12px;
+    padding-left: 12px;
+    border-left: 3px solid #e2e8f0;
+    color: #64748b;
+}
+
+.sweetdesk-message-body code,
+.sweetdesk-message-body pre {
+    padding: 2px 6px;
+    border-radius: 4px;
+    background: #f1f5f9;
+    font-family: Consolas, Monaco, monospace;
+    font-size: 0.9em;
+}
+
+.sweetdesk-message-body pre {
+    display: block;
+    padding: 12px;
+    margin: 0 0 12px;
+    overflow-x: auto;
+    white-space: pre-wrap;
+}
+
+.sweetdesk-message-body pre.ql-syntax {
+    background: #f8fafc;
+}
+
 /*
 |--------------------------------------------------------------------------
 | Nested Replies
@@ -238,24 +272,6 @@
     font-size: 18px;
     font-weight: 600;
     color: #0f172a;
-}
-
-.sweetdesk-reply-textarea {
-    width: 100%;
-    min-height: 120px;
-    padding: 12px;
-    border: 1px solid #d4d4d8;
-    border-radius: 8px;
-    font-family: inherit;
-    font-size: 15px;
-    resize: vertical;
-    margin-bottom: 16px;
-}
-
-.sweetdesk-reply-textarea:focus {
-    outline: none;
-    border-color: #2563eb;
-    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
 }
 
 .sweetdesk-visibility-badge.public {
