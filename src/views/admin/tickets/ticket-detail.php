@@ -49,7 +49,11 @@ $ticket_id = isset($_GET['ticket_id']) ? absint($_GET['ticket_id']) : 0;
                     Cancel
                 </button>
             </div>
-            <textarea id="reply-body" placeholder="Write your reply here..." class="sweetdesk-reply-textarea"></textarea>
+            <div
+                id="reply-body"
+                class="sweetdesk-quill-editor"
+                data-placeholder="Write your reply here..."
+            ></div>
             <div class="sweetdesk-reply-options">
                 <label>
                     <input type="checkbox" id="reply-internal">

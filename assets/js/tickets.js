@@ -562,6 +562,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 'Create Ticket';
 
             resetTicketForm();
+            initTicketModalEditor(true);
 
             return;
         }
@@ -573,6 +574,17 @@ document.addEventListener('DOMContentLoaded', async () => {
             'Save Changes';
 
         populateTicketForm(ticket);
+        initTicketModalEditor(false);
+    }
+
+    function initTicketModalEditor(clearContent = false) {
+        requestAnimationFrame(() => {
+            SweetDeskEditor.init('sd-ticket-body');
+
+            if (clearContent) {
+                SweetDeskEditor.setContent('sd-ticket-body', '');
+            }
+        });
     }
 
     function populateTicketForm(ticket) {
@@ -643,9 +655,10 @@ document.addEventListener('DOMContentLoaded', async () => {
             'sd-ticket-priority'
         ).value = 'normal';
 
-        document.getElementById(
-            'sd-ticket-body'
-        ).value = '';
+        SweetDeskEditor.setContent(
+            'sd-ticket-body',
+            ''
+        );
     }
 
     tbody.addEventListener('click', async e => {
@@ -692,6 +705,8 @@ document.addEventListener('DOMContentLoaded', async () => {
                     'sd-create-ticket-modal'
                 )
                 .classList.add('active');
+
+            initTicketModalEditor(false);
 
         } catch (error) {
 
@@ -827,6 +842,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     );
 
     function closeTicketModal() {
+        SweetDeskEditor.destroy('sd-ticket-body');
+
         document
             .getElementById('sd-create-ticket-modal')
             .classList.remove('active');
@@ -835,14 +852,14 @@ document.addEventListener('DOMContentLoaded', async () => {
     async function saveTicket() {
 
         const title = document.getElementById('sd-ticket-title').value.trim();
-        const message = document.getElementById('sd-ticket-body').value.trim();
+        const message = SweetDeskEditor.getContent('sd-ticket-body');
 
         if (!title) {
             alert('Title is required.');
             return;
         }
 
-        if (modalMode === 'create' && !message) {
+        if (modalMode === 'create' && SweetDeskEditor.isEmpty('sd-ticket-body')) {
             alert('Initial message is required.');
             return;
         }

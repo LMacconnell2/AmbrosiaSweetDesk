@@ -20,10 +20,19 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     await loadAndRenderMessages(ticketId);
+    initReplyEditor();
     setupReplySubmission(ticketId);
     setupReplyContextControls();
     updateReplyContextUI();
 });
+
+function initReplyEditor() {
+    SweetDeskEditor.init('reply-body', {
+        onCtrlEnter() {
+            document.getElementById('send-reply-btn')?.click();
+        }
+    });
+}
 
 async function apiFetch(endpoint, options = {}) {
     const response = await fetch(
@@ -273,7 +282,7 @@ function renderMessage(message, canSeeInternal) {
 
     const bodyDiv = document.createElement('div');
     bodyDiv.className = 'sweetdesk-message-body';
-    bodyDiv.innerHTML = escapeHtml(message.body).replace(/\n/g, '<br>');
+    bodyDiv.innerHTML = message.body || '';
     messageDiv.appendChild(bodyDiv);
 
     if (isMessageEdited(message) && message.updated_at !== message.created_at) {
@@ -311,7 +320,7 @@ function renderMessage(message, canSeeInternal) {
 }
 
 function truncateText(text, maxLength = 80) {
-    const normalized = text.replace(/\s+/g, ' ').trim();
+    const normalized = SweetDeskEditor.stripHtml(text);
 
     if (normalized.length <= maxLength) {
         return normalized;
@@ -329,10 +338,9 @@ function startReplyTo(message) {
     updateReplyContextUI();
     highlightActiveReplyTarget();
 
-    const bodyInput = document.getElementById('reply-body');
     const replySection = document.querySelector('.sweetdesk-reply-section');
 
-    bodyInput?.focus();
+    SweetDeskEditor.focus('reply-body');
     replySection?.scrollIntoView({
         behavior: 'smooth',
         block: 'nearest'
@@ -349,7 +357,6 @@ function updateReplyContextUI() {
     const context = document.getElementById('reply-context');
     const preview = document.getElementById('reply-context-preview');
     const title = document.getElementById('reply-section-title');
-    const bodyInput = document.getElementById('reply-body');
 
     if (!context || !preview || !title) {
         return;
@@ -359,10 +366,10 @@ function updateReplyContextUI() {
         context.hidden = true;
         preview.textContent = '';
         title.textContent = 'Leave a Reply';
-
-        if (bodyInput) {
-            bodyInput.placeholder = 'Write your reply here...';
-        }
+        SweetDeskEditor.setPlaceholder(
+            'reply-body',
+            'Write your reply here...'
+        );
 
         return;
     }
@@ -370,7 +377,10 @@ function updateReplyContextUI() {
     context.hidden = false;
     preview.textContent = activeReplyTo.preview;
     title.textContent = 'Reply to Message';
-    bodyInput.placeholder = 'Write your threaded reply...';
+    SweetDeskEditor.setPlaceholder(
+        'reply-body',
+        'Write your threaded reply...'
+    );
 }
 
 function highlightActiveReplyTarget() {
@@ -458,17 +468,16 @@ function showSuccessNotice(message) {
 
 function setupReplySubmission(ticketId) {
     const sendBtn = document.getElementById('send-reply-btn');
-    const bodyInput = document.getElementById('reply-body');
     const internalCheckbox = document.getElementById('reply-internal');
 
-    if (!sendBtn || !bodyInput) {
+    if (!sendBtn) {
         return;
     }
 
     sendBtn.addEventListener('click', async () => {
-        const body = bodyInput.value.trim();
+        const body = SweetDeskEditor.getContent('reply-body');
 
-        if (!body) {
+        if (SweetDeskEditor.isEmpty('reply-body')) {
             alert('Please enter a reply message');
             return;
         }
@@ -500,7 +509,7 @@ function setupReplySubmission(ticketId) {
                 throw new Error(result.message || 'Failed to post reply');
             }
 
-            bodyInput.value = '';
+            SweetDeskEditor.setContent('reply-body', '');
 
             if (internalCheckbox) {
                 internalCheckbox.checked = false;
@@ -516,12 +525,6 @@ function setupReplySubmission(ticketId) {
         } finally {
             sendBtn.disabled = false;
             sendBtn.textContent = originalText;
-        }
-    });
-
-    bodyInput.addEventListener('keydown', (e) => {
-        if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
-            sendBtn.click();
         }
     });
 }

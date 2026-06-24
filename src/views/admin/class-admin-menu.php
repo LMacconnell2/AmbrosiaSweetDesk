@@ -8,6 +8,52 @@ class AdminMenu {
         // add_action('admin_enqueue_scripts', [$this, 'enqueueAdminAssets']);
     }
 
+    private function enqueue_message_editor(
+        $script_handle,
+        $script_file,
+        $script_deps = []
+    ) {
+        $plugin_url = plugin_dir_url(__FILE__) . '../../../';
+
+        wp_enqueue_style(
+            'quill-snow',
+            $plugin_url . 'assets/vendor/quill/quill.snow.css',
+            [],
+            '1.3.7'
+        );
+
+        wp_enqueue_style(
+            'sweetdesk-quill-editor',
+            $plugin_url . 'assets/css/sweetdesk-editor.css',
+            ['quill-snow'],
+            SWEETDESK_VERSION
+        );
+
+        wp_enqueue_script(
+            'quill',
+            $plugin_url . 'assets/vendor/quill/quill.min.js',
+            [],
+            '1.3.7',
+            true
+        );
+
+        wp_enqueue_script(
+            'sweetdesk-editor',
+            $plugin_url . 'assets/js/sweetdesk-editor.js',
+            ['quill'],
+            SWEETDESK_VERSION,
+            true
+        );
+
+        wp_enqueue_script(
+            $script_handle,
+            $plugin_url . 'assets/js/' . $script_file,
+            array_merge(['sweetdesk-editor'], $script_deps),
+            SWEETDESK_VERSION,
+            true
+        );
+    }
+
     public function register_menu() {
 
         // Main Menu
@@ -141,12 +187,10 @@ class AdminMenu {
                 true
             );
 
-            wp_enqueue_script(
+            $this->enqueue_message_editor(
                 'sweetdesk-tickets',
-                plugin_dir_url(__FILE__) . '../../../assets/js/tickets.js',
-                ['sweetdesk-badge-helpers'],
-                SWEETDESK_VERSION,
-                true
+                'tickets.js',
+                ['sweetdesk-badge-helpers']
             );
 
             wp_localize_script(
@@ -290,12 +334,10 @@ class AdminMenu {
                 true
             );
 
-            wp_enqueue_script(
+            $this->enqueue_message_editor(
                 'sweetdesk-ticket-detail',
-                plugin_dir_url(__FILE__) . '../../../assets/js/ticket-detail.js',
-                ['sweetdesk-badge-helpers'],
-                SWEETDESK_VERSION,
-                true
+                'ticket-detail.js',
+                ['sweetdesk-badge-helpers']
             );
 
             wp_localize_script(

@@ -250,11 +250,11 @@
         <div class="sd-form-group">
             <label>Initial Message *</label>
 
-            <textarea
+            <div
                 id="sd-ticket-body"
-                rows="8"
-                placeholder="Describe the issue..."
-            ></textarea>
+                class="sweetdesk-quill-editor"
+                data-placeholder="Describe the issue..."
+            ></div>
         </div>
 
         <div id="sd-custom-fields-container">

@@ -1409,7 +1409,7 @@ class SweetDesk_Ticket_Service {
             get_current_user_id();
 
         $body =
-            sanitize_textarea_field(
+            wp_kses_post(
                 $data['body'] ?? ''
             );
 
@@ -1432,7 +1432,7 @@ class SweetDesk_Ticket_Service {
                 )
                 : null;
 
-        if (empty($body)) {
+        if (empty(trim(wp_strip_all_tags($body)))) {
 
             return [
                 'success' => false,
@@ -1694,7 +1694,7 @@ class SweetDesk_Ticket_Service {
         if (isset($data['body'])) {
 
             $message_updates['body'] =
-                sanitize_textarea_field(
+                wp_kses_post(
                     $data['body']
                 );
         }
