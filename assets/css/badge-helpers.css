@@ -1,0 +1,111 @@
+/*
+|--------------------------------------------------------------------------
+| Badges
+|--------------------------------------------------------------------------
+*/
+
+.sd-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 8px 14px;
+
+    border-radius: 999px;
+
+    font-size: 14px;
+    font-weight: 600;
+}
+
+/*
+|--------------------------------------------------------------------------
+| Status Colors
+|--------------------------------------------------------------------------
+*/
+
+.sd-status-open {
+    background: #dbeafe;
+    color: #1d4ed8;
+}
+
+.sd-status-progress {
+    background: #fef3c7;
+    color: #a16207;
+}
+
+.sd-status-pending {
+    background: #ede9fe;
+    color: #7e22ce;
+}
+
+.sd-status-closed {
+    background: #e2e8f0;
+    color: #334155;
+}
+
+.sd-status-customer {
+    background: #ffedd5;
+    color: #c2410c;
+}
+
+.sd-status-resolved {
+    background: #dcfce7;
+    color: #15803d;
+}
+
+/*
+|--------------------------------------------------------------------------
+| Priority Colors
+|--------------------------------------------------------------------------
+*/
+
+.sd-priority-urgent {
+    background: #fee2e2;
+    color: #dc2626;
+}
+
+.sd-priority-high {
+    background: #ffedd5;
+    color: #d97706;
+}
+
+.sd-priority-normal {
+    background: #fef3c7;
+    color: #a16207;
+}
+
+.sd-priority-low {
+    background: #f1f5f9;
+    color: #334155;
+}
+
+.sd-badge-default {
+    background: #f1f5f9;
+    color: #475569;
+}
+
+/*
+|--------------------------------------------------------------------------
+| Client Pill
+|--------------------------------------------------------------------------
+*/
+
+.sd-pill {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 8px 16px;
+
+    border-radius: 999px;
+
+    background: linear-gradient(
+        135deg,
+        #7c3aed,
+        #a21caf
+    );
+
+    color: white;
+    font-size: 14px;
+    font-weight: 600;
+}

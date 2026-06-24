@@ -166,11 +166,11 @@
             </div>
 
             <div class="sd-form-group">
-                <label>Client *</label>
+                <label>Client</label>
 
                 <select id="sd-ticket-client">
                     <option value="">
-                        Select Client
+                        No client (clients API not connected)
                     </option>
                 </select>
             </div>

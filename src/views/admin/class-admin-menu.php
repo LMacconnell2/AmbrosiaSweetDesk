@@ -80,6 +80,16 @@ class AdminMenu {
             'sweetdesk-settings',
             [$this, 'settingsPage']
         );
+
+        // Ticket detail — hidden from menu, reachable via ticket list links
+        add_submenu_page(
+            null,
+            'Ticket Detail',
+            'Ticket Detail',
+            'manage_options',
+            'sweetdesk-ticket-detail',
+            [$this, 'ticketDetailPage']
+        );
     }
 
     public function enqueue_admin_assets($hook) {
@@ -94,7 +104,8 @@ class AdminMenu {
             'sweetdesk_page_sweetdesk-clients',
             'sweetdesk_page_sweetdesk-people',
             'sweetdesk_page_sweetdesk-teams',
-            'sweetdesk_page_sweetdesk-settings'
+            'sweetdesk_page_sweetdesk-settings',
+            'admin_page_sweetdesk-ticket-detail'
         ];
 
         if (in_array($hook, $sweetdeskHooks)) {
@@ -109,16 +120,31 @@ class AdminMenu {
 
         if ($hook === 'toplevel_page_sweetdesk') {
             wp_enqueue_style(
-                'sweetdesk-tickets',
-                plugin_dir_url(__FILE__) . '../../../assets/css/tickets.css',
+                'sweetdesk-badge-helpers',
+                plugin_dir_url(__FILE__) . '../../../assets/css/badge-helpers.css',
                 [],
                 SWEETDESK_VERSION
+            );
+
+            wp_enqueue_style(
+                'sweetdesk-tickets',
+                plugin_dir_url(__FILE__) . '../../../assets/css/tickets-list.css',
+                ['sweetdesk-badge-helpers'],
+                SWEETDESK_VERSION
+            );
+
+            wp_enqueue_script(
+                'sweetdesk-badge-helpers',
+                plugin_dir_url(__FILE__) . '../../../assets/js/badge-helpers.js',
+                [],
+                SWEETDESK_VERSION,
+                true
             );
 
             wp_enqueue_script(
                 'sweetdesk-tickets',
                 plugin_dir_url(__FILE__) . '../../../assets/js/tickets.js',
-                [],
+                ['sweetdesk-badge-helpers'],
                 SWEETDESK_VERSION,
                 true
             );
@@ -128,16 +154,11 @@ class AdminMenu {
                 'SweetDesk',
                 [
                     'apiUrl' => rest_url('sweetdesk/v1'),
-                    'nonce' => wp_create_nonce('wp_rest')
+                    'nonce' => wp_create_nonce('wp_rest'),
+                    'ticketDetailBase' => admin_url(
+                        'admin.php?page=sweetdesk-ticket-detail&ticket_id='
+                    )
                 ]
-            );
-
-            wp_enqueue_script(
-                'sweetdesk-ticket-detail',
-                plugin_dir_url(__FILE__) . '../../../assets/js/ticket-detail.js',
-                [],
-                SWEETDESK_VERSION,
-                true
             );
         }
 
@@ -241,6 +262,53 @@ class AdminMenu {
                 true
             );
         }
+
+        /*
+         * Ticket Detail page styles
+         */
+        if ($hook === 'admin_page_sweetdesk-ticket-detail') {
+
+            wp_enqueue_style(
+                'sweetdesk-badge-helpers',
+                plugin_dir_url(__FILE__) . '../../../assets/css/badge-helpers.css',
+                [],
+                SWEETDESK_VERSION
+            );
+
+            wp_enqueue_style(
+                'sweetdesk-ticket-detail',
+                plugin_dir_url(__FILE__) . '../../../assets/css/ticket-detail.css',
+                ['sweetdesk-badge-helpers'],
+                SWEETDESK_VERSION
+            );
+
+            wp_enqueue_script(
+                'sweetdesk-badge-helpers',
+                plugin_dir_url(__FILE__) . '../../../assets/js/badge-helpers.js',
+                [],
+                SWEETDESK_VERSION,
+                true
+            );
+
+            wp_enqueue_script(
+                'sweetdesk-ticket-detail',
+                plugin_dir_url(__FILE__) . '../../../assets/js/ticket-detail.js',
+                ['sweetdesk-badge-helpers'],
+                SWEETDESK_VERSION,
+                true
+            );
+
+            wp_localize_script(
+                'sweetdesk-ticket-detail',
+                'SweetDesk',
+                [
+                    'apiUrl' => rest_url('sweetdesk/v1'),
+                    'nonce' => wp_create_nonce('wp_rest'),
+                    'canSeeInternal' => current_user_can('manage_options'),
+                    'ticketsUrl' => admin_url('admin.php?page=sweetdesk')
+                ]
+            );
+        }
     }
 
     public function ticketsPage() {
@@ -265,5 +333,9 @@ class AdminMenu {
 
     public function settingsPage() {
         include plugin_dir_path(__FILE__) . 'settings/settings.php';
+    }
+
+    public function ticketDetailPage() {
+        include plugin_dir_path(__FILE__) . 'tickets/ticket-detail.php';
     }
 }
