@@ -14,7 +14,6 @@ body {
     min-height: 100vh;
 }
 
-/* ── Main content ── */
 .main {
     margin-left: 0;
     flex: 1;
@@ -22,45 +21,6 @@ body {
     min-height: 100vh;
 }
 
-.page-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 28px;
-}
-
-.page-title {
-    font-size: 1.6rem;
-    font-weight: 700;
-    color: var(--text-primary);
-}
-
-.btn-primary {
-    display: inline-flex;
-    align-items: center;
-    gap: 7px;
-    background: var(--action);
-    color: #fff;
-    border: none;
-    border-radius: 7px;
-    padding: 9px 16px;
-    font-family: inherit;
-    font-size: 0.875rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: background 0.15s;
-}
-
-.btn-primary:hover {
-    background: var(--action-hover);
-}
-
-.btn-primary svg {
-    width: 15px;
-    height: 15px;
-}
-
-/* ── Team cards grid ── */
 .teams-grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
@@ -122,7 +82,6 @@ body {
     margin-top: 2px;
 }
 
-/* Members inner box */
 .team-members-box {
     margin: 0 14px 14px;
     background: var(--surface);
@@ -164,7 +123,6 @@ body {
     font-weight: 500;
 }
 
-/* Card action buttons */
 .team-card-actions {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
@@ -214,135 +172,10 @@ body {
     height: 14px;
 }
 
-/* ── Edit Team Modal ── */
-.modal-overlay {
-    display: none;
-    /* JS will toggle to flex */
-    position: fixed;
-    inset: 0;
-    background: rgba(0, 0, 0, 0.45);
-    z-index: 100;
-    align-items: center;
-    justify-content: center;
-}
-
 .modal {
-    background: var(--surface);
-    border-radius: 12px;
     width: 480px;
     max-width: 95vw;
     padding: 28px 28px 24px;
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.18);
-}
-
-.modal-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 20px;
-}
-
-.modal-header h2 {
-    font-size: 1.05rem;
-    font-weight: 700;
-}
-
-.modal-close {
-    background: none;
-    border: none;
-    cursor: pointer;
-    color: var(--text-muted);
-    padding: 4px;
-    border-radius: 4px;
-    display: flex;
-    align-items: center;
-}
-
-.modal-close:hover {
-    color: var(--text-primary);
-}
-
-.modal-close svg {
-    width: 18px;
-    height: 18px;
-}
-
-.form-group {
-    display: flex;
-    flex-direction: column;
-    gap: 5px;
-    margin-bottom: 14px;
-}
-
-.form-group label {
-    font-size: 0.8rem;
-    font-weight: 600;
-    color: var(--text-secondary);
-}
-
-.form-group input,
-.form-group textarea,
-.form-group select {
-    font-family: inherit;
-    font-size: 0.875rem;
-    border: 1.5px solid var(--border);
-    border-radius: 7px;
-    padding: 8px 11px;
-    color: var(--text-primary);
-    background: var(--surface);
-    outline: none;
-    transition: border-color 0.15s;
-}
-
-.form-group input:focus,
-.form-group textarea:focus,
-.form-group select:focus {
-    border-color: var(--action);
-}
-
-.form-group textarea {
-    resize: vertical;
-    min-height: 70px;
-}
-
-.modal-actions {
-    display: flex;
-    justify-content: flex-end;
-    gap: 10px;
-    margin-top: 20px;
-}
-
-.btn-secondary {
-    background: none;
-    border: 1.5px solid var(--btn-outline-border);
-    color: var(--btn-outline-text);
-    border-radius: 7px;
-    padding: 8px 16px;
-    font-family: inherit;
-    font-size: 0.875rem;
-    font-weight: 500;
-    cursor: pointer;
-}
-
-.btn-secondary:hover {
-    background: var(--surface-subtle);
-}
-
-.btn-danger {
-    background: var(--status-error);
-    color: #fff;
-    border: none;
-    border-radius: 7px;
-    padding: 8px 16px;
-    font-family: inherit;
-    font-size: 0.875rem;
-    font-weight: 500;
-    cursor: pointer;
-    transition: background 0.15s;
-}
-
-.btn-danger:hover {
-    background: var(--status-error-dark);
 }
 
 .modal.delete-modal {

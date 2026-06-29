@@ -17,10 +17,10 @@ function openEditPersonModal(name, role, email, phone, company, notes) {
     document.getElementById('edit-person-phone').value   = phone;
     document.getElementById('edit-person-company').value = company;
     document.getElementById('edit-person-notes').value   = notes;
-    document.getElementById('editPersonModal').style.display = 'flex';
+    document.getElementById('editPersonModal').classList.add('active');
 }
 function closeEditPersonModal() {
-    document.getElementById('editPersonModal').style.display = 'none';
+    document.getElementById('editPersonModal').classList.remove('active');
 }
 document.getElementById('editPersonModal').addEventListener('click', function(e) {
     if (e.target === this) closeEditPersonModal();

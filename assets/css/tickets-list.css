@@ -1,0 +1,207 @@
+/*
+|--------------------------------------------------------------------------
+| Tickets list — page-specific styles
+| Shared layout/buttons/tables/modals: ambrosia-components.css
+| Badges: badge-helpers.css
+|--------------------------------------------------------------------------
+*/
+
+.sd-ticket-title-link {
+    color: var(--text-primary);
+    font-weight: 600;
+    text-decoration: none;
+    transition: color 0.15s ease;
+}
+
+.sd-ticket-title-link:hover {
+    color: var(--link);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+}
+
+.sd-ticket-row {
+    cursor: pointer;
+}
+
+.sd-muted {
+    color: var(--text-muted) !important;
+    font-style: italic;
+}
+
+/* Query builder */
+.sweetdesk-ticket-query-builder {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.sd-query-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.sd-query-row select,
+.sd-query-row input {
+    font-family: inherit;
+    font-size: 0.84rem;
+    border: 1.5px solid var(--border);
+    border-radius: 7px;
+    padding: 7px 10px;
+    background: var(--surface);
+    color: var(--text-primary);
+    outline: none;
+    min-width: 120px;
+}
+
+.sd-query-row select:focus,
+.sd-query-row input:focus {
+    border-color: var(--action);
+}
+
+.sd-value-container {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.sd-add-filter,
+.sd-remove-filter {
+    width: 34px;
+    height: 34px;
+    border: none;
+    border-radius: 7px;
+    cursor: pointer;
+    font-size: 18px;
+    line-height: 1;
+}
+
+.sd-add-filter {
+    background: var(--chrome);
+    color: #fff;
+}
+
+.sd-add-filter:hover {
+    background: var(--chrome-hover);
+}
+
+.sd-remove-filter {
+    background: var(--status-error);
+    color: #fff;
+}
+
+.sd-remove-filter:hover {
+    background: var(--status-error-dark);
+}
+
+.sweetdesk-ticket-sort {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    font-size: 0.84rem;
+    color: var(--text-secondary);
+}
+
+.sweetdesk-ticket-sort label {
+    font-weight: 600;
+}
+
+.sweetdesk-ticket-sort select {
+    font-family: inherit;
+    font-size: 0.84rem;
+    border: 1.5px solid var(--border);
+    border-radius: 7px;
+    padding: 7px 10px;
+    background: var(--surface);
+    color: var(--text-primary);
+}
+
+/* Row actions */
+.sd-actions {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    justify-content: center;
+}
+
+.sd-action-btn {
+    border: none;
+    background: var(--surface-page);
+    border-radius: 7px;
+    padding: 8px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    color: var(--text-muted);
+    transition: all 0.15s ease;
+}
+
+.sd-action-btn:hover {
+    background: var(--border-light);
+    color: var(--text-primary);
+}
+
+.sd-edit-btn:hover {
+    color: var(--chrome);
+}
+
+.sd-delete-btn:hover {
+    color: var(--status-error);
+}
+
+.sd-action-btn svg {
+    width: 16px;
+    height: 16px;
+    stroke-width: 2;
+}
+
+/* Create / edit modal */
+.sd-form-divider {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 8px 0 16px;
+}
+
+.sd-ticket-thread-panel {
+    margin-top: 16px;
+    padding: 16px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: var(--surface-subtle);
+    max-height: 240px;
+    overflow-y: auto;
+}
+
+.sd-ticket-thread-panel:not([hidden]) {
+    display: block;
+}
+
+.sd-ticket-message {
+    padding: 12px 0;
+    border-bottom: 1px solid var(--border-light);
+}
+
+.sd-ticket-message:last-child {
+    border-bottom: none;
+}
+
+.sd-ticket-message .sd-message-meta {
+    font-size: 0.78rem;
+    color: var(--text-muted);
+    margin-bottom: 6px;
+}
+
+.sd-ticket-message .sd-message-body {
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+    line-height: 1.5;
+}
+
+.sd-ticket-modal {
+    max-width: 760px;
+}

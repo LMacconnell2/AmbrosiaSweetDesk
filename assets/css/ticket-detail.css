@@ -1,0 +1,293 @@
+/*
+|--------------------------------------------------------------------------
+| Ticket Detail Page
+|--------------------------------------------------------------------------
+*/
+
+.sd-back-link {
+    display: inline-flex;
+    align-items: center;
+    margin-bottom: 20px;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    text-decoration: none;
+    transition: color 0.15s ease;
+}
+
+.sd-back-link:hover {
+    color: var(--link);
+}
+
+#ticket-detail-notices .notice {
+    margin: 0 0 20px 0;
+}
+
+.sweetdesk-ticket-detail-header {
+    align-items: flex-start;
+    margin-bottom: 28px;
+}
+
+.sweetdesk-ticket-detail-header .page-title {
+    margin-bottom: 12px;
+}
+
+.ticket-metas {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    flex-wrap: wrap;
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+}
+
+.ticket-metas p {
+    margin: 0;
+}
+
+.ticket-metas span {
+    color: var(--text-primary);
+    font-weight: 600;
+}
+
+.sweetdesk-messages-container-wrap {
+    padding: 0;
+}
+
+.sweetdesk-messages-container {
+    padding: 20px;
+    min-height: 200px;
+}
+
+.sweetdesk-messages-loading,
+.sweetdesk-messages-empty {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 200px;
+    color: var(--text-muted);
+    font-size: 0.9rem;
+}
+
+.sweetdesk-messages-empty[hidden],
+.sweetdesk-messages-loading[hidden] {
+    display: none !important;
+}
+
+.sweetdesk-message-thread {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+}
+
+.sweetdesk-message {
+    padding: 16px;
+    border-left: 3px solid var(--border-light);
+    margin-left: 0;
+    position: relative;
+}
+
+.sweetdesk-message:not(:last-child) {
+    border-bottom: 1px solid var(--border-light);
+}
+
+.sweetdesk-message.is-internal {
+    background: var(--brand-magenta-50);
+    border-left-color: var(--brand-magenta-500);
+}
+
+.sweetdesk-message-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 12px;
+    flex-wrap: wrap;
+}
+
+.sweetdesk-message-author {
+    font-weight: 600;
+    color: var(--text-primary);
+    font-size: 0.9rem;
+}
+
+.sweetdesk-message-date {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+}
+
+.sweetdesk-visibility-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 3px 8px;
+    border-radius: 99px;
+    font-size: 0.68rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+.sweetdesk-visibility-badge.external,
+.sweetdesk-visibility-badge.public {
+    background: var(--brand-blue-100);
+    color: var(--chrome);
+}
+
+.sweetdesk-visibility-badge.internal {
+    background: var(--brand-magenta-100);
+    color: var(--action);
+}
+
+.sweetdesk-message-edited {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    font-style: italic;
+    margin-top: 8px;
+}
+
+.sweetdesk-message-body {
+    color: var(--text-secondary);
+    line-height: 1.6;
+    word-wrap: break-word;
+}
+
+.sweetdesk-message-body p {
+    margin: 0;
+}
+
+.sweetdesk-message-body p:not(:last-child) {
+    margin-bottom: 12px;
+}
+
+.sweetdesk-message-body ul,
+.sweetdesk-message-body ol {
+    margin: 0 0 12px;
+    padding-left: 1.5em;
+}
+
+.sweetdesk-message-body blockquote {
+    margin: 0 0 12px;
+    padding-left: 12px;
+    border-left: 3px solid var(--border);
+    color: var(--text-muted);
+}
+
+.sweetdesk-message-body code,
+.sweetdesk-message-body pre {
+    padding: 2px 6px;
+    border-radius: 4px;
+    background: var(--surface-page);
+    font-family: 'DM Mono', Consolas, Monaco, monospace;
+    font-size: 0.9em;
+}
+
+.sweetdesk-message-body pre {
+    display: block;
+    padding: 12px;
+    margin: 0 0 12px;
+    overflow-x: auto;
+    white-space: pre-wrap;
+}
+
+.sweetdesk-message-replies {
+    margin-top: 12px;
+    margin-left: 24px;
+    padding-left: 12px;
+    border-left: 2px solid var(--border-light);
+}
+
+.sweetdesk-message-replies .sweetdesk-message {
+    border-left-color: var(--border);
+    padding: 12px;
+}
+
+.sweetdesk-message-replies .sweetdesk-message.is-internal {
+    background: var(--brand-magenta-50);
+    border-left-color: var(--brand-magenta-200);
+}
+
+.sweetdesk-message-actions {
+    margin-top: 10px;
+}
+
+.sweetdesk-message-reply-btn {
+    background: none;
+    border: none;
+    padding: 0;
+    color: var(--link);
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.sweetdesk-message-reply-btn:hover {
+    color: var(--link-hover);
+    text-decoration: underline;
+}
+
+.sweetdesk-message.is-reply-target {
+    background: var(--brand-blue-50);
+    border-left-color: var(--chrome);
+}
+
+.sweetdesk-reply-context[hidden] {
+    display: none !important;
+}
+
+.sweetdesk-reply-context {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 12px;
+    padding: 10px 12px;
+    border: 1px solid var(--brand-blue-200);
+    border-radius: 8px;
+    background: var(--brand-blue-100);
+    color: var(--chrome-text);
+    font-size: 0.875rem;
+}
+
+.sweetdesk-reply-context-text {
+    min-width: 0;
+}
+
+.sweetdesk-reply-context-text span {
+    display: block;
+    margin-top: 4px;
+    color: var(--text-secondary);
+    font-style: italic;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.sweetdesk-reply-cancel {
+    flex-shrink: 0;
+    padding: 6px 10px;
+    font-size: 0.8rem;
+}
+
+.sweetdesk-reply-options {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 16px 0;
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+}
+
+.sweetdesk-reply-options label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    margin: 0;
+}
+
+.section-card-header--magenta {
+    background: var(--action);
+}
+
+.section-card-header--magenta h3 {
+    font-size: 1rem;
+}

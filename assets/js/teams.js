@@ -1,20 +1,20 @@
 function openEditTeamModal(name, desc) {
     document.getElementById('edit-team-name').value = name;
     document.getElementById('edit-team-desc').value = desc;
-    document.getElementById('editTeamModal').style.display = 'flex';
+    document.getElementById('editTeamModal').classList.add('active');
 }
 function closeEditTeamModal() {
-    document.getElementById('editTeamModal').style.display = 'none';
+    document.getElementById('editTeamModal').classList.remove('active');
 }
 function openNewTeamModal() {
     document.getElementById('new-team-name').value = '';
     document.getElementById('new-team-desc').value = '';
     document.getElementById('new-team-member-list').innerHTML = '';
     document.getElementById('new-team-member-select').value = '';
-    document.getElementById('newTeamModal').style.display = 'flex';
+    document.getElementById('newTeamModal').classList.add('active');
 }
 function closeNewTeamModal() {
-    document.getElementById('newTeamModal').style.display = 'none';
+    document.getElementById('newTeamModal').classList.remove('active');
 }
 
 let teamToDelete = null;
@@ -22,11 +22,11 @@ let teamToDelete = null;
 function openDeleteTeamModal(teamName) {
     teamToDelete = teamName;
     document.getElementById('delete-team-name').textContent = teamName;
-    document.getElementById('deleteTeamModal').style.display = 'flex';
+    document.getElementById('deleteTeamModal').classList.add('active');
 }
 
 function closeDeleteTeamModal() {
-    document.getElementById('deleteTeamModal').style.display = 'none';
+    document.getElementById('deleteTeamModal').classList.remove('active');
     teamToDelete = null;
 }
 

@@ -1,0 +1,43 @@
+.sweetdesk-quill-editor {
+    margin-bottom: 16px;
+    background: var(--surface);
+    border-radius: 8px;
+}
+
+.sweetdesk-quill-editor .ql-toolbar.ql-snow {
+    border: 1px solid var(--border);
+    border-radius: 8px 8px 0 0;
+    background: var(--surface-subtle);
+}
+
+.sweetdesk-quill-editor .ql-container.ql-snow {
+    border: 1px solid var(--border);
+    border-top: 0;
+    border-radius: 0 0 8px 8px;
+    font-family: inherit;
+    font-size: 0.9375rem;
+}
+
+.sweetdesk-quill-editor .ql-editor {
+    min-height: 120px;
+    line-height: 1.6;
+    color: var(--text-primary);
+}
+
+.sweetdesk-quill-editor .ql-editor.ql-blank::before {
+    color: var(--text-muted);
+    font-style: normal;
+}
+
+.sweetdesk-quill-editor:focus-within .ql-container.ql-snow,
+.sweetdesk-quill-editor:focus-within .ql-toolbar.ql-snow {
+    border-color: var(--action);
+}
+
+.sweetdesk-quill-editor:focus-within .ql-container.ql-snow {
+    box-shadow: 0 0 0 3px var(--focus-action);
+}
+
+.sd-modal-body .sweetdesk-quill-editor {
+    margin-top: 4px;
+}

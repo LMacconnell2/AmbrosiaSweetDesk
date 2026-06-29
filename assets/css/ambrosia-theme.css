@@ -112,6 +112,11 @@
     --ticket-priority-low-bg: var(--surface-page);
     --ticket-priority-low-text: var(--text-secondary);
 
+    /* Table headers */
+    --table-header-bg: var(--brand-blue-100);
+    --table-header-text: var(--chrome);
+    --table-header-border: var(--brand-blue-200);
+
     --overlay-bg: rgba(24, 34, 53, 0.55);
     --status-error-dark: #B91C1C;
     --status-error-border: #FECACA;

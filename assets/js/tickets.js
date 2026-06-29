@@ -22,10 +22,10 @@ document.addEventListener('DOMContentLoaded', async () => {
             operators: ['equals', 'not equals'],
             type: 'select',
             values: [
-                'Open',
-                'In Progress',
-                'Pending',
-                'Closed'
+                'open',
+                'in_progress',
+                'pending',
+                'closed'
             ]
         },
 
@@ -33,10 +33,10 @@ document.addEventListener('DOMContentLoaded', async () => {
             operators: ['equals', 'not equals'],
             type: 'select',
             values: [
-                'Urgent',
-                'High',
-                'Normal',
-                'Low'
+                'urgent',
+                'high',
+                'normal',
+                'low'
             ]
         },
 
@@ -131,6 +131,12 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 
 
+    function escapeHtml(text) {
+        const div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
+    }
+
     function renderTickets(ticketData) {
 
         tbody.innerHTML = '';
@@ -155,18 +161,21 @@ document.addEventListener('DOMContentLoaded', async () => {
 
                     <td>#${ticket.id}</td>
 
-                    <td>${ticket.title}</td>
-
                     <td>
-                        <span class="sd-badge">
-                            ${ticket.status}
-                        </span>
+                        <a
+                            class="sd-ticket-title-link"
+                            href="${SweetDesk.ticketDetailBase}${ticket.id}"
+                        >
+                            ${escapeHtml(ticket.title)}
+                        </a>
                     </td>
 
                     <td>
-                        <span class="sd-badge">
-                            ${ticket.priority}
-                        </span>
+                        ${renderBadge('status', ticket.status)}
+                    </td>
+
+                    <td>
+                        ${renderBadge('priority', ticket.priority)}
                     </td>
 
                     <td>${ticket.client_id || '—'}</td>
@@ -232,11 +241,15 @@ document.addEventListener('DOMContentLoaded', async () => {
 
                 const valueSelect = valueContainer.querySelector('.sd-value');
 
+                valueSelect.innerHTML = `
+                    <option value="">Any</option>
+                `;
+
                 config.values.forEach(value => {
 
                     valueSelect.innerHTML += `
                         <option value="${value}">
-                            ${value}
+                            ${value.replace(/_/g, ' ')}
                         </option>
                     `;
                 });
@@ -512,27 +525,10 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
         });
 
-    window.openTicketModal = function () {
+    window.openTicketModal = openTicketModal;
+    window.closeTicketModal = closeTicketModal;
 
-
-document
-    .getElementById('sd-create-ticket-modal')
-    .classList.add('active');
-
-
-};
-
-window.closeTicketModal = function () {
-
-
-document
-    .getElementById('sd-create-ticket-modal')
-    .classList.remove('active');
-
-
-};
-
-async function openTicketModal(
+    async function openTicketModal(
         mode = 'create',
         ticket = null
     ) {
@@ -550,6 +546,7 @@ async function openTicketModal(
         modal.classList.add('active');
 
         const title =
+            document.getElementById('sd-ticket-modal-title') ||
             modal.querySelector('h2');
 
         const saveButton =
@@ -566,6 +563,7 @@ async function openTicketModal(
                 'Create Ticket';
 
             resetTicketForm();
+            initTicketModalEditor(true);
 
             return;
         }
@@ -577,6 +575,17 @@ async function openTicketModal(
             'Save Changes';
 
         populateTicketForm(ticket);
+        initTicketModalEditor(false);
+    }
+
+    function initTicketModalEditor(clearContent = false) {
+        requestAnimationFrame(() => {
+            SweetDeskEditor.init('sd-ticket-body');
+
+            if (clearContent) {
+                SweetDeskEditor.setContent('sd-ticket-body', '');
+            }
+        });
     }
 
     function populateTicketForm(ticket) {
@@ -647,9 +656,18 @@ async function openTicketModal(
             'sd-ticket-priority'
         ).value = 'normal';
 
-        document.getElementById(
-            'sd-ticket-body'
-        ).value = '';
+        SweetDeskEditor.setContent(
+            'sd-ticket-body',
+            ''
+        );
+
+        const threadPanel =
+            document.getElementById('sd-ticket-thread');
+
+        if (threadPanel) {
+            threadPanel.innerHTML = '';
+            threadPanel.hidden = true;
+        }
     }
 
     tbody.addEventListener('click', async e => {
@@ -696,6 +714,8 @@ async function openTicketModal(
                     'sd-create-ticket-modal'
                 )
                 .classList.add('active');
+
+            initTicketModalEditor(false);
 
         } catch (error) {
 
@@ -749,6 +769,13 @@ async function openTicketModal(
             'sd-save-ticket'
         ).textContent =
             'Save Changes';
+
+        const modalTitle =
+            document.getElementById('sd-ticket-modal-title');
+
+        if (modalTitle) {
+            modalTitle.textContent = 'Edit Ticket';
+        }
     }
 
     function renderCustomFields(fields) {
@@ -799,6 +826,13 @@ async function openTicketModal(
 
         container.innerHTML = '';
 
+        if (!messages.length) {
+            container.hidden = true;
+            return;
+        }
+
+        container.hidden = false;
+
         messages.forEach(message => {
 
             container.innerHTML += `
@@ -830,7 +864,28 @@ async function openTicketModal(
         saveTicket
     );
 
+    function closeTicketModal() {
+        SweetDeskEditor.destroy('sd-ticket-body');
+
+        document
+            .getElementById('sd-create-ticket-modal')
+            .classList.remove('active');
+    }
+
     async function saveTicket() {
+
+        const title = document.getElementById('sd-ticket-title').value.trim();
+        const message = SweetDeskEditor.getContent('sd-ticket-body');
+
+        if (!title) {
+            alert('Title is required.');
+            return;
+        }
+
+        if (modalMode === 'create' && SweetDeskEditor.isEmpty('sd-ticket-body')) {
+            alert('Initial message is required.');
+            return;
+        }
 
         const customFields = {};
 
@@ -859,10 +914,7 @@ async function openTicketModal(
                     ).value
                 ) || null,
 
-            title:
-                document.getElementById(
-                    'sd-ticket-title'
-                ).value,
+            title,
 
             status:
                 document.getElementById(
@@ -874,9 +926,16 @@ async function openTicketModal(
                     'sd-ticket-priority'
                 ).value,
 
+            message,
+
             custom_fields:
                 customFields
         };
+
+        const endpoint =
+            modalMode === 'create'
+                ? '/tickets'
+                : `/edit-ticket/${currentTicketId}`;
 
         const method =
             modalMode === 'create'
@@ -887,18 +946,18 @@ async function openTicketModal(
 
             const response =
                 await apiFetch(
-                    modalMode === 'create'
-                        ? '/tickets'
-                        : `/tickets/${currentTicketId}`,
+                    endpoint,
                     {
                         method,
                         body: JSON.stringify(payload)
                     }
                 );
 
-            if (!response.ok) {
+            const result = await response.json();
+
+            if (!response.ok || result.success === false) {
                 throw new Error(
-                    'Save failed'
+                    result.message || 'Save failed'
                 );
             }
 
@@ -911,9 +970,144 @@ async function openTicketModal(
             console.error(error);
 
             alert(
-                'Failed to save ticket.'
+                error.message || 'Failed to save ticket.'
             );
         }
     }
+
+    document
+        .getElementById('sd-export-json')
+        ?.addEventListener(
+            'click',
+            exportTickets
+        );
+
+    async function exportTickets() {
+
+        try {
+
+            const response =
+                await apiFetch(
+                    '/tickets/export'
+                );
+
+            const data =
+                await response.json();
+
+            const blob =
+                new Blob(
+                    [
+                        JSON.stringify(
+                            data,
+                            null,
+                            2
+                        )
+                    ],
+                    {
+                        type:
+                            'application/json'
+                    }
+                );
+
+            const url =
+                URL.createObjectURL(blob);
+
+            const link =
+                document.createElement('a');
+
+            link.href = url;
+
+            link.download =
+                `sweetdesk-export-${Date.now()}.json`;
+
+            document.body.appendChild(link);
+
+            link.click();
+
+            link.remove();
+
+            URL.revokeObjectURL(url);
+
+        } catch (error) {
+
+            console.error(error);
+
+            alert(
+                'Failed to export tickets.'
+            );
+        }
+    }
+
+    async function importTickets(event) {
+
+        const file =
+            event.target.files[0];
+
+        if (!file) {
+            return;
+        }
+
+        try {
+
+            const text =
+                await file.text();
+
+            const payload =
+                JSON.parse(text);
+
+            const response =
+                await apiFetch(
+                    '/tickets/import',
+                    {
+                        method: 'POST',
+                        body:
+                            JSON.stringify(
+                                payload
+                            )
+                    }
+                );
+
+            const result =
+                await response.json();
+
+            alert(
+                result.message ||
+                'Tickets imported successfully.'
+            );
+
+            await loadTickets();
+
+        } catch (error) {
+
+            console.error(error);
+
+            alert(
+                'Failed to import tickets.'
+            );
+        }
+
+        event.target.value = '';
+    }
+
+    document
+        .getElementById('sd-import-json')
+        ?.addEventListener(
+            'click',
+            () => {
+
+                document
+                    .getElementById(
+                        'sd-import-file'
+                    )
+                    .click();
+            }
+        );
+
+    document
+        .getElementById('sd-import-file')
+        ?.addEventListener(
+            'change',
+            importTickets
+        );
 
 });

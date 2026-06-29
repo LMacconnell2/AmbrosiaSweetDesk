@@ -10,10 +10,10 @@ function openEditClientModal(name, contact, notes) {
     document.getElementById('edit-client-notes').value = notes;
     const sel = document.getElementById('edit-client-contact');
     for (let opt of sel.options) { if (opt.value === contact) { sel.value = contact; break; } }
-    document.getElementById('editClientModal').style.display = 'flex';
+    document.getElementById('editClientModal').classList.add('active');
 }
 function closeEditClientModal() {
-    document.getElementById('editClientModal').style.display = 'none';
+    document.getElementById('editClientModal').classList.remove('active');
 }
 document.getElementById('editClientModal').addEventListener('click', function (e) {
     if (e.target === this) closeEditClientModal();

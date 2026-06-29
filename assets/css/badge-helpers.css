@@ -1,0 +1,86 @@
+/*
+|--------------------------------------------------------------------------
+| Ticket badges (shared by list + detail)
+|--------------------------------------------------------------------------
+*/
+
+.sd-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 4px 10px;
+    border-radius: 99px;
+    font-size: 0.78rem;
+    font-weight: 600;
+}
+
+.sd-status-open {
+    background: var(--ticket-status-open-bg);
+    color: var(--ticket-status-open-text);
+}
+
+.sd-status-progress {
+    background: var(--ticket-status-progress-bg);
+    color: var(--ticket-status-progress-text);
+}
+
+.sd-status-pending {
+    background: var(--ticket-status-pending-bg);
+    color: var(--ticket-status-pending-text);
+}
+
+.sd-status-closed {
+    background: var(--ticket-status-closed-bg);
+    color: var(--ticket-status-closed-text);
+}
+
+.sd-status-customer {
+    background: var(--ticket-status-customer-bg);
+    color: var(--ticket-status-customer-text);
+}
+
+.sd-status-resolved {
+    background: var(--ticket-status-resolved-bg);
+    color: var(--ticket-status-resolved-text);
+}
+
+.sd-priority-urgent {
+    background: var(--ticket-priority-urgent-bg);
+    color: var(--status-error);
+}
+
+.sd-priority-high {
+    background: var(--ticket-priority-high-bg);
+    color: var(--status-warning);
+}
+
+.sd-priority-normal {
+    background: var(--ticket-priority-normal-bg);
+    color: var(--ticket-priority-normal-text);
+}
+
+.sd-priority-low {
+    background: var(--ticket-priority-low-bg);
+    color: var(--ticket-priority-low-text);
+}
+
+.sd-badge-default {
+    background: var(--surface-page);
+    color: var(--text-secondary);
+}
+
+.sd-pill {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 4px 12px;
+    border-radius: 99px;
+    background: linear-gradient(
+        135deg,
+        var(--brand-blue-700),
+        var(--brand-magenta-700)
+    );
+    color: #fff;
+    font-size: 0.78rem;
+    font-weight: 600;
+}
