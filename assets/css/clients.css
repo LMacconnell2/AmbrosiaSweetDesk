@@ -7,7 +7,6 @@
 }
 
 :root {
-    --panel-width: 300px;
     --status-active-bg: var(--status-success-bg);
     --status-active-text: var(--status-success-text);
     --status-inactive-bg: var(--surface-page);
@@ -20,25 +19,6 @@ body {
     color: var(--text-primary);
     display: flex;
     min-height: 100vh;
-}
-
-.layout {
-    margin-left: 0;
-    flex: 1;
-    display: flex;
-    min-height: 100vh;
-    position: relative;
-}
-
-.main {
-    flex: 1;
-    padding: 36px 36px 48px;
-    min-width: 0;
-    transition: margin-right 0.3s ease;
-}
-
-.main.panel-open {
-    margin-right: var(--panel-width);
 }
 
 .status-badge {
@@ -64,108 +44,4 @@ body {
     display: flex;
     gap: 8px;
     align-items: center;
-}
-
-.row-actions button {
-    background: none;
-    border: none;
-    cursor: pointer;
-    padding: 3px;
-    border-radius: 4px;
-    display: flex;
-    align-items: center;
-    transition: background 0.1s;
-}
-
-.row-actions button:hover {
-    background: var(--surface-page);
-}
-
-.row-actions button svg {
-    width: 15px;
-    height: 15px;
-}
-
-.btn-edit svg {
-    color: var(--link);
-}
-
-.btn-delete svg {
-    color: var(--status-error);
-}
-
-.side-panel {
-    width: var(--panel-width);
-    background: var(--surface);
-    border-left: 1px solid var(--border);
-    position: fixed;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    display: flex;
-    flex-direction: column;
-    transition: transform 0.3s ease;
-    z-index: 10;
-}
-
-.side-panel.collapsed {
-    transform: translateX(var(--panel-width));
-}
-
-.panel-toggle {
-    position: absolute;
-    left: -28px;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 28px;
-    height: 52px;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-right: none;
-    border-radius: 8px 0 0 8px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: -2px 0 6px var(--shadow-sm);
-}
-
-.panel-toggle svg {
-    width: 16px;
-    height: 16px;
-    color: var(--text-secondary);
-    transition: transform 0.3s ease;
-}
-
-.side-panel.collapsed .panel-toggle svg {
-    transform: rotate(180deg);
-}
-
-.side-panel-inner {
-    padding: 24px 20px;
-    flex: 1;
-    overflow-y: auto;
-}
-
-.side-panel-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 20px;
-}
-
-.side-panel-header h2 {
-    font-size: 1rem;
-    font-weight: 700;
-}
-
-.modal {
-    width: 460px;
-    max-width: 95vw;
-    padding: 28px 28px 24px;
-}
-
-.modal .btn-primary {
-    width: auto;
-    margin-top: 0;
 }

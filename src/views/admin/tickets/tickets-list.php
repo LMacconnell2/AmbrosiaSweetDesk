@@ -34,23 +34,25 @@
         </div>
 
         <div class="sweetdesk-ticket-query-builder">
-            <div class="sd-query-row">
-                <select class="sd-logic">
-                    <option value="AND">AND</option>
-                    <option value="OR">OR</option>
-                </select>
-                <select class="sd-field">
-                    <option value="status">Status</option>
-                    <option value="date_opened">Date Opened</option>
-                    <option value="latest_response">Latest Response</option>
-                    <option value="client">Client</option>
-                    <option value="assignee">Assignee</option>
-                    <option value="title">Search Text</option>
-                </select>
-                <select class="sd-operator"></select>
-                <div class="sd-value-container"></div>
-                <button type="button" class="sd-remove-filter" aria-label="Remove filter">−</button>
-                <button type="button" class="sd-add-filter" aria-label="Add filter">+</button>
+            <div class="sd-query-rows">
+                <div class="sd-query-row">
+                    <select class="sd-logic">
+                        <option value="AND">AND</option>
+                        <option value="OR">OR</option>
+                    </select>
+                    <select class="sd-field">
+                        <option value="status">Status</option>
+                        <option value="date_opened">Date Opened</option>
+                        <option value="latest_response">Latest Response</option>
+                        <option value="client">Client</option>
+                        <option value="assignee">Assignee</option>
+                        <option value="title">Search Text</option>
+                    </select>
+                    <select class="sd-operator"></select>
+                    <div class="sd-value-container"></div>
+                    <button type="button" class="sd-remove-filter" aria-label="Remove filter">−</button>
+                    <button type="button" class="sd-add-filter" aria-label="Add filter">+</button>
+                </div>
             </div>
 
             <div class="sweetdesk-ticket-sort">
@@ -153,28 +155,28 @@
                 </div>
             </div>
 
-            <hr class="sd-form-divider">
+            <div id="sd-ticket-initial-message-section">
+                <hr class="sd-form-divider">
 
-            <div class="sd-form-group">
-                <label for="sd-ticket-reply-type">Reply Type</label>
-                <select id="sd-ticket-reply-type">
-                    <option value="public">Public</option>
-                    <option value="internal">Internal</option>
-                </select>
-            </div>
+                <div class="sd-form-group">
+                    <label for="sd-ticket-reply-type">Reply Type</label>
+                    <select id="sd-ticket-reply-type">
+                        <option value="public">Public</option>
+                        <option value="internal">Internal</option>
+                    </select>
+                </div>
 
-            <div class="sd-form-group">
-                <label for="sd-ticket-body">Initial Message *</label>
-                <div
-                    id="sd-ticket-body"
-                    class="sweetdesk-quill-editor"
-                    data-placeholder="Describe the issue..."
-                ></div>
+                <div class="sd-form-group">
+                    <label for="sd-ticket-body">Initial Message *</label>
+                    <div
+                        id="sd-ticket-body"
+                        class="sweetdesk-quill-editor"
+                        data-placeholder="Describe the issue..."
+                    ></div>
+                </div>
             </div>
 
             <div id="sd-custom-fields-container"></div>
-
-            <div id="sd-ticket-thread" class="sd-ticket-thread-panel" hidden></div>
         </div>
         <div class="sd-modal-footer">
             <button type="button" class="btn-outline" onclick="closeTicketModal()">Cancel</button>

@@ -108,9 +108,9 @@
     font-size: 0.9375rem;
     border: 1.5px solid var(--brand-blue-200);
     border-radius: 6px;
-    padding: 5px 10px;
+    padding: 5px 2rem 5px 10px;
     color: var(--text-primary);
-    background: var(--surface);
+    background-color: var(--surface);
     outline: none;
     cursor: pointer;
 }
@@ -434,9 +434,9 @@
     font-size: 0.9rem;
     border: 1.5px solid var(--brand-blue-200);
     border-radius: 6px;
-    padding: 5px 10px;
+    padding: 5px 2rem 5px 10px;
     color: var(--text-primary);
-    background: var(--surface);
+    background-color: var(--surface);
     outline: none;
     cursor: pointer;
 }

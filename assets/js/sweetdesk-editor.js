@@ -61,6 +61,22 @@
         return replacement;
     }
 
+    function cleanupQuillMount(element) {
+        const parent = element.parentNode;
+
+        if (parent) {
+            let sibling = element.previousElementSibling;
+
+            while (sibling?.classList.contains('ql-toolbar')) {
+                const toRemove = sibling;
+                sibling = sibling.previousElementSibling;
+                toRemove.remove();
+            }
+        }
+
+        return resetMountElement(element);
+    }
+
     window.SweetDeskEditor = {
         init(id, options = {}) {
             if (typeof Quill === 'undefined') {
@@ -71,10 +87,17 @@
                 return;
             }
 
-            const mount = getMount(id);
+            let mount = getMount(id);
 
             if (!mount) {
                 return;
+            }
+
+            if (
+                mount.classList.contains('ql-container') ||
+                mount.previousElementSibling?.classList.contains('ql-toolbar')
+            ) {
+                mount = cleanupQuillMount(mount);
             }
 
             const modules = {
@@ -105,7 +128,7 @@
             delete editors[id];
 
             if (mount) {
-                resetMountElement(mount);
+                cleanupQuillMount(mount);
             }
         },
 

@@ -338,7 +338,8 @@ function truncateText(text, maxLength = 80) {
 function startReplyTo(message) {
     activeReplyTo = {
         reply_id: message.reply_id,
-        preview: truncateText(message.body)
+        preview: truncateText(message.body),
+        visibility: message.visibility
     };
 
     updateReplyContextUI();
@@ -359,6 +360,26 @@ function clearReplyTarget() {
     highlightActiveReplyTarget();
 }
 
+function setInternalReplyLocked(locked) {
+    const internalCheckbox = document.getElementById('reply-internal');
+    const internalLabel = document.getElementById('reply-internal-label');
+
+    if (!internalCheckbox || !internalLabel) {
+        return;
+    }
+
+    if (locked) {
+        internalCheckbox.checked = true;
+        internalCheckbox.disabled = true;
+        internalLabel.classList.add('is-locked');
+        return;
+    }
+
+    internalCheckbox.disabled = false;
+    internalCheckbox.checked = false;
+    internalLabel.classList.remove('is-locked');
+}
+
 function updateReplyContextUI() {
     const context = document.getElementById('reply-context');
     const preview = document.getElementById('reply-context-preview');
@@ -376,6 +397,7 @@ function updateReplyContextUI() {
             'reply-body',
             'Write your reply here...'
         );
+        setInternalReplyLocked(false);
 
         return;
     }
@@ -387,6 +409,7 @@ function updateReplyContextUI() {
         'reply-body',
         'Write your threaded reply...'
     );
+    setInternalReplyLocked(activeReplyTo.visibility === 'internal');
 }
 
 function highlightActiveReplyTarget() {
@@ -488,7 +511,10 @@ function setupReplySubmission(ticketId) {
             return;
         }
 
-        const isInternal = internalCheckbox?.checked || false;
+        const isInternal =
+            activeReplyTo?.visibility === 'internal' ||
+            internalCheckbox?.checked ||
+            false;
         const visibility = isInternal ? 'internal' : 'public';
 
         sendBtn.disabled = true;
@@ -516,10 +542,6 @@ function setupReplySubmission(ticketId) {
             }
 
             SweetDeskEditor.setContent('reply-body', '');
-
-            if (internalCheckbox) {
-                internalCheckbox.checked = false;
-            }
 
             clearReplyTarget();
             await loadAndRenderMessages(ticketId);

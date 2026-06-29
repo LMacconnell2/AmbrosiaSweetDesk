@@ -23,3 +23,12 @@
     background: var(--surface-subtle);
     padding: 10px;
 }
+
+/* SweetDesk admin screens only — admin.css is enqueued on those hooks */
+#wpfooter {
+    display: none;
+}
+
+#wpbody-content {
+    padding-bottom: 0;
+}

@@ -62,7 +62,7 @@ $ticket_id = isset($_GET['ticket_id']) ? absint($_GET['ticket_id']) : 0;
                     data-placeholder="Write your reply here..."
                 ></div>
                 <div class="sweetdesk-reply-options">
-                    <label>
+                    <label id="reply-internal-label" class="sweetdesk-reply-internal-label">
                         <input type="checkbox" id="reply-internal">
                         Internal only (not visible to customer)
                     </label>

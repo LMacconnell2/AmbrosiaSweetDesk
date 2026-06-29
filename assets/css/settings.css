@@ -106,7 +106,7 @@ body {
 }
 
 .nav-item.active:hover svg {
-    color: var(--text-primary);
+    color: #fff;
 }
 
 /* ── Right content panel ── */
@@ -158,10 +158,14 @@ body {
     border-radius: 7px;
     padding: 9px 11px;
     color: var(--text-primary);
-    background: #fff;
+    background-color: var(--surface);
     outline: none;
     transition: border-color 0.15s;
     max-width: 480px;
+}
+
+.form-group select {
+    padding-right: 2rem;
 }
 
 .form-group input:focus,
@@ -412,15 +416,15 @@ body {
     font-size: 0.875rem;
     border: 1.5px solid var(--border);
     border-radius: 7px;
-    padding: 8px 30px 8px 11px;
-    background-color: #fff;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+    padding: 8px 2rem 8px 11px;
+    background-color: var(--surface);
+    background-image: var(--select-chevron);
     background-repeat: no-repeat;
     background-position: right 10px center;
+    background-size: 12px;
     outline: none;
     cursor: pointer;
     transition: border-color 0.15s;
-    /* Normal text color for real options */
     color: var(--text-primary);
 }
 
