@@ -100,9 +100,16 @@ class AdminMenu {
         if (in_array($hook, $sweetdeskHooks)) {
 
             wp_enqueue_style(
+                'sweetdesk-theme',
+                plugin_dir_url(__FILE__) . '../../../assets/css/ambrosia-theme.css',
+                [],
+                SWEETDESK_VERSION
+            );
+
+            wp_enqueue_style(
                 'sweetdesk-admin',
                 plugin_dir_url(__FILE__) . '../../../assets/css/admin.css',
-                [],
+                ['sweetdesk-theme'],
                 SWEETDESK_VERSION
             );
         }
@@ -111,7 +118,7 @@ class AdminMenu {
             wp_enqueue_style(
                 'sweetdesk-tickets',
                 plugin_dir_url(__FILE__) . '../../../assets/css/tickets.css',
-                [],
+                ['sweetdesk-theme'],
                 SWEETDESK_VERSION
             );
 
@@ -132,7 +139,7 @@ class AdminMenu {
             wp_enqueue_style(
                 'sweetdesk-clients',
                 plugin_dir_url(__FILE__) . '../../../assets/css/clients.css',
-                [],
+                ['sweetdesk-theme'],
                 SWEETDESK_VERSION
             );
 
@@ -153,7 +160,7 @@ class AdminMenu {
             wp_enqueue_style(
                 'sweetdesk-people',
                 plugin_dir_url(__FILE__) . '../../../assets/css/people.css',
-                [],
+                ['sweetdesk-theme'],
                 SWEETDESK_VERSION
             );
 
@@ -174,7 +181,7 @@ class AdminMenu {
             wp_enqueue_style(
                 'sweetdesk-teams',
                 plugin_dir_url(__FILE__) . '../../../assets/css/teams.css',
-                [],
+                ['sweetdesk-theme'],
                 SWEETDESK_VERSION
             );
 
@@ -191,7 +198,7 @@ class AdminMenu {
             wp_enqueue_style(
                 'sweetdesk-analytics',
                 plugin_dir_url(__FILE__) . '../../../assets/css/analytics.css',
-                [],
+                ['sweetdesk-theme'],
                 SWEETDESK_VERSION
             );
 
@@ -212,7 +219,7 @@ class AdminMenu {
             wp_enqueue_style(
                 'sweetdesk-settings',
                 plugin_dir_url(__FILE__) . '../../../assets/css/settings.css',
-                [],
+                ['sweetdesk-theme'],
                 SWEETDESK_VERSION
             );
 

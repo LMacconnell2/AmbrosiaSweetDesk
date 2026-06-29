@@ -6,7 +6,7 @@
 
 .sweetdesk-tickets-page {
     padding: 24px;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    font-family: 'DM Sans', sans-serif;
 }
 
 /*
@@ -28,7 +28,7 @@
     margin: 0;
     font-size: 42px;
     font-weight: 700;
-    color: #0f172a;
+    color: var(--text-primary);
 }
 
 .sweetdesk-header-actions {
@@ -50,11 +50,9 @@
     font-size: 16px;
     font-weight: 600;
     cursor: pointer;
-
     display: flex;
     align-items: center;
     gap: 10px;
-
     transition: all 0.2s ease;
 }
 
@@ -63,22 +61,22 @@
 }
 
 .sd-btn-secondary {
-    background: #ffffff;
-    border: 1px solid #d4d4d8;
-    color: #334155;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--text-secondary);
 }
 
 .sd-btn-secondary:hover {
-    background: #f8fafc;
+    background: var(--surface-subtle);
 }
 
 .sd-btn-primary {
-    background: #2563eb;
-    color: white;
+    background: var(--action);
+    color: #fff;
 }
 
 .sd-btn-primary:hover {
-    background: #1d4ed8;
+    background: var(--action-hover);
 }
 
 /*
@@ -95,23 +93,20 @@
 .sweetdesk-search input {
     width: 100%;
     height: 54px;
-
     border-radius: 14px;
-    border: 1px solid #d4d4d8;
-
+    border: 1px solid var(--border);
     padding-left: 52px;
     padding-right: 16px;
-
     font-size: 16px;
-    background: white;
+    background: var(--surface);
+    color: var(--text-primary);
 }
 
 .sweetdesk-search .dashicons {
     position: absolute;
     top: 15px;
     left: 16px;
-
-    color: #94a3b8;
+    color: var(--text-muted);
     font-size: 22px;
 }
 
@@ -133,25 +128,23 @@
     display: flex;
     align-items: center;
     gap: 8px;
-
     font-weight: 600;
-    color: #334155;
+    color: var(--text-secondary);
 }
 
 .sweetdesk-filter-label .dashicons {
-    color: #64748b;
+    color: var(--text-muted);
 }
 
 .sweetdesk-filters select {
     min-width: 180px;
     height: 48px;
-
     border-radius: 14px;
-    border: 1px solid #d4d4d8;
-
+    border: 1px solid var(--border);
     padding: 0 16px;
     font-size: 15px;
-    background: white;
+    background: var(--surface);
+    color: var(--text-primary);
 }
 
 /*
@@ -162,14 +155,10 @@
 
 .sweetdesk-table-wrapper {
     overflow-x: auto;
-
-    background: white;
+    background: var(--surface);
     border-radius: 18px;
-    border: 1px solid #e2e8f0;
-
-    box-shadow:
-        0 1px 2px rgba(15, 23, 42, 0.05),
-        0 4px 12px rgba(15, 23, 42, 0.04);
+    border: 1px solid var(--border-light);
+    box-shadow: 0 1px 3px var(--shadow-sm);
 }
 
 .sweetdesk-table {
@@ -178,32 +167,29 @@
 }
 
 .sweetdesk-table thead {
-    background: #ffffff;
+    background: var(--surface);
 }
 
 .sweetdesk-table th {
     text-align: left;
     padding: 22px 28px;
-
     font-size: 14px;
     font-weight: 700;
-    color: #64748b;
-
-    border-bottom: 1px solid #e2e8f0;
+    color: var(--text-muted);
+    border-bottom: 1px solid var(--border-light);
     white-space: nowrap;
 }
 
 .sweetdesk-table td {
     padding: 22px 28px;
-    border-bottom: 1px solid #f1f5f9;
-
+    border-bottom: 1px solid var(--border-light);
     font-size: 16px;
-    color: #0f172a;
+    color: var(--text-primary);
     white-space: nowrap;
 }
 
 .sweetdesk-table tbody tr:hover {
-    background: #fafafa;
+    background: var(--surface-subtle);
 }
 
 .sweetdesk-table tbody tr:last-child td {
@@ -220,11 +206,8 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-
     padding: 8px 14px;
-
     border-radius: 999px;
-
     font-size: 14px;
     font-weight: 600;
 }
@@ -236,33 +219,33 @@
 */
 
 .sd-status-open {
-    background: #dbeafe;
-    color: #1d4ed8;
+    background: var(--ticket-status-open-bg);
+    color: var(--ticket-status-open-text);
 }
 
 .sd-status-progress {
-    background: #fef3c7;
-    color: #a16207;
+    background: var(--ticket-status-progress-bg);
+    color: var(--ticket-status-progress-text);
 }
 
 .sd-status-pending {
-    background: #ede9fe;
-    color: #7e22ce;
+    background: var(--ticket-status-pending-bg);
+    color: var(--ticket-status-pending-text);
 }
 
 .sd-status-closed {
-    background: #e2e8f0;
-    color: #334155;
+    background: var(--ticket-status-closed-bg);
+    color: var(--ticket-status-closed-text);
 }
 
 .sd-status-customer {
-    background: #ffedd5;
-    color: #c2410c;
+    background: var(--ticket-status-customer-bg);
+    color: var(--ticket-status-customer-text);
 }
 
 .sd-status-resolved {
-    background: #dcfce7;
-    color: #15803d;
+    background: var(--ticket-status-resolved-bg);
+    color: var(--ticket-status-resolved-text);
 }
 
 /*
@@ -272,23 +255,23 @@
 */
 
 .sd-priority-urgent {
-    background: #fee2e2;
-    color: #dc2626;
+    background: var(--ticket-priority-urgent-bg);
+    color: var(--status-error);
 }
 
 .sd-priority-high {
-    background: #ffedd5;
-    color: #d97706;
+    background: var(--ticket-priority-high-bg);
+    color: var(--status-warning);
 }
 
 .sd-priority-normal {
-    background: #dbeafe;
-    color: #2563eb;
+    background: var(--ticket-priority-normal-bg);
+    color: var(--ticket-priority-normal-text);
 }
 
 .sd-priority-low {
-    background: #f1f5f9;
-    color: #334155;
+    background: var(--ticket-priority-low-bg);
+    color: var(--ticket-priority-low-text);
 }
 
 /*
@@ -301,18 +284,14 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-
     padding: 8px 16px;
-
     border-radius: 999px;
-
     background: linear-gradient(
         135deg,
-        #7c3aed,
-        #a21caf
+        var(--brand-blue-700),
+        var(--brand-magenta-700)
     );
-
-    color: white;
+    color: #fff;
     font-size: 14px;
     font-weight: 600;
 }
@@ -324,7 +303,7 @@
 */
 
 .sd-muted {
-    color: #94a3b8 !important;
+    color: var(--text-muted) !important;
     font-style: italic;
 }
 
@@ -337,23 +316,13 @@
 .sd-modal-overlay {
     position: fixed;
     inset: 0;
-
-    background: rgba(15, 23, 42, 0.55);
-
+    background: var(--overlay-bg);
     display: none;
     align-items: center;
     justify-content: center;
-
     z-index: 9999;
-
     padding: 24px;
 }
-
-/*
-|--------------------------------------------------------------------------
-| Active Modal
-|--------------------------------------------------------------------------
-*/
 
 .sd-modal-overlay.active {
     display: flex;
@@ -368,17 +337,10 @@
 .sd-modal {
     width: 100%;
     max-width: 720px;
-
-    background: white;
-
+    background: var(--surface);
     border-radius: 22px;
-
     overflow: hidden;
-
-    box-shadow:
-        0 10px 25px rgba(0,0,0,0.15),
-        0 4px 10px rgba(0,0,0,0.08);
-
+    box-shadow: 0 10px 25px var(--shadow-sm);
     animation: sdModalIn 0.2s ease;
 }
 
@@ -394,102 +356,65 @@
     }
 }
 
-/*
-|--------------------------------------------------------------------------
-| Header
-|--------------------------------------------------------------------------
-*/
-
 .sd-modal-header {
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
-
     padding: 28px;
-
-    border-bottom: 1px solid #e2e8f0;
+    border-bottom: 1px solid var(--border-light);
 }
 
 .sd-modal-header h2 {
     margin: 0;
     font-size: 28px;
-    color: #0f172a;
+    color: var(--text-primary);
 }
 
 .sd-modal-header p {
     margin-top: 6px;
-    color: #64748b;
+    color: var(--text-muted);
 }
-
-/*
-|--------------------------------------------------------------------------
-| Close Button
-|--------------------------------------------------------------------------
-*/
 
 .sd-modal-close {
     border: none;
-    background: #f1f5f9;
-
+    background: var(--surface-page);
     width: 42px;
     height: 42px;
-
     border-radius: 12px;
-
     cursor: pointer;
-
     font-size: 18px;
-
     transition: background 0.2s ease;
 }
 
 .sd-modal-close:hover {
-    background: #e2e8f0;
+    background: var(--border-light);
 }
-
-/*
-|--------------------------------------------------------------------------
-| Body
-|--------------------------------------------------------------------------
-*/
 
 .sd-modal-body {
     padding: 28px;
 }
-
-/*
-|--------------------------------------------------------------------------
-| Footer
-|--------------------------------------------------------------------------
-*/
 
 .sd-modal-footer {
     display: flex;
     justify-content: flex-end;
     gap: 12px;
     padding: 20px 28px;
-    border-top: 1px solid #e2e8f0;
-    background: #fafafa;
+    border-top: 1px solid var(--border-light);
+    background: var(--surface-subtle);
 }
 
-/*
-|--------------------------------------------------------------------------
-| Delete Modal
-|--------------------------------------------------------------------------
-*/
-
 .sd-modal.sd-delete-modal {
-    border: 2px solid #fecaca;
-    background: #fef2f2;
+    border: 2px solid var(--status-error-border);
+    background: var(--status-error-bg);
 }
 
 .sd-modal.sd-delete-modal .sd-modal-header h2 {
-    color: #dc2626;
+    color: var(--status-error);
 }
 
 .sd-btn-danger {
-    background: #dc2626;
-    color: white;
+    background: var(--status-error);
+    color: #fff;
     border: none;
     border-radius: 14px;
     padding: 14px 22px;
@@ -500,34 +425,18 @@
 }
 
 .sd-btn-danger:hover {
-    background: #b91c1c;
+    background: var(--status-error-dark);
 }
-
-/*
-|--------------------------------------------------------------------------
-| Labels
-|--------------------------------------------------------------------------
-*/
 
 .sd-label {
     display: block;
-
     font-size: 13px;
     font-weight: 700;
-
     text-transform: uppercase;
     letter-spacing: 0.04em;
-
-    color: #64748b;
-
+    color: var(--text-muted);
     margin-bottom: 12px;
 }
-
-/*
-|--------------------------------------------------------------------------
-| Actions
-|--------------------------------------------------------------------------
-*/
 
 .sd-actions {
     display: flex;
@@ -538,7 +447,7 @@
 
 .sd-action-btn {
     border: none;
-    background: #f1f5f9;
+    background: var(--surface-page);
     border-radius: 8px;
     padding: 8px;
     cursor: pointer;
@@ -547,21 +456,21 @@
     justify-content: center;
     width: 36px;
     height: 36px;
-    color: #64748b;
+    color: var(--text-muted);
     transition: all 0.2s ease;
 }
 
 .sd-action-btn:hover {
-    background: #e2e8f0;
-    color: #0f172a;
+    background: var(--border-light);
+    color: var(--text-primary);
 }
 
 .sd-edit-btn:hover {
-    color: #0073aa;
+    color: var(--chrome);
 }
 
 .sd-delete-btn:hover {
-    color: #dc2626;
+    color: var(--status-error);
 }
 
 .sd-action-btn svg {
@@ -570,21 +479,10 @@
     stroke-width: 2;
 }
 
-/*
-|--------------------------------------------------------------------------
-| Row Hover
-|--------------------------------------------------------------------------
-*/
-
 .sd-ticket-row {
     cursor: pointer;
 }
 
-/*
-|--------------------------------------------------------------------------
-|Filter section
-|--------------------------------------------------------------------------
-*/
 .sweetdesk-ticket-query-builder {
     display: flex;
     flex-direction: column;
@@ -620,13 +518,13 @@
 }
 
 .sd-add-filter {
-    background: #2271b1;
-    color: white;
+    background: var(--chrome);
+    color: #fff;
 }
 
 .sd-remove-filter {
-    background: #d63638;
-    color: white;
+    background: var(--status-error);
+    color: #fff;
 }
 
 .sweetdesk-ticket-sort {

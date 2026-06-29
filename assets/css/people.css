@@ -1,5 +1,3 @@
-@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap');
-
 *,
 *::before,
 *::after {
@@ -9,23 +7,6 @@
 }
 
 :root {
-    --page-bg: #f3f4f6;
-    --surface: #ffffff;
-    --border: #e5e7eb;
-
-    --text-primary: #111827;
-    --text-secondary: #6b7280;
-    --text-muted: #9ca3af;
-
-    --accent: #2563eb;
-    --accent-hover: #1d4ed8;
-
-    --section-personnel-border: #93c5fd;
-    --section-contacts-border: #c4b5fd;
-
-    --btn-outline-border: #d1d5db;
-    --btn-outline-text: #374151;
-
     --panel-width: 300px;
 }
 
@@ -92,7 +73,7 @@ body {
 }
 
 .btn-outline:hover {
-    background: #f9fafb;
+    background: var(--surface-subtle);
 }
 
 .btn-outline svg {
@@ -125,11 +106,11 @@ body {
 }
 
 .section-accent-bar.blue {
-    background: var(--section-personnel-border);
+    background: var(--section-personnel-accent);
 }
 
 .section-accent-bar.purple {
-    background: var(--section-contacts-border);
+    background: var(--section-contacts-accent);
 }
 
 .section-title {
@@ -177,8 +158,8 @@ body {
 }
 
 .search-wrap input:focus {
-    border-color: var(--accent);
-    background: #fff;
+    border-color: var(--action);
+    background: var(--surface);
 }
 
 .filter-wrap {
@@ -251,7 +232,7 @@ tbody tr:last-child {
 }
 
 tbody tr:hover {
-    background: #f9fafb;
+    background: var(--surface-subtle);
 }
 
 td {
@@ -265,7 +246,7 @@ td.col-name {
 }
 
 a.email-link {
-    color: var(--accent);
+    color: var(--link);
     text-decoration: none;
     font-size: 0.875rem;
 }
@@ -292,7 +273,7 @@ a.email-link:hover {
 }
 
 .row-actions button:hover {
-    background: #f3f4f6;
+    background: var(--surface-page);
 }
 
 .row-actions button svg {
@@ -301,11 +282,11 @@ a.email-link:hover {
 }
 
 .btn-edit svg {
-    color: var(--accent);
+    color: var(--link);
 }
 
 .btn-delete svg {
-    color: #ef4444;
+    color: var(--status-error);
 }
 
 /* ── Side panel ── */
@@ -397,7 +378,7 @@ a.email-link:hover {
 }
 
 .type-toggle button.active {
-    background: var(--accent);
+    background: var(--action);
     color: #fff;
 }
 
@@ -423,7 +404,7 @@ a.email-link:hover {
     border-radius: 7px;
     padding: 8px 11px;
     color: var(--text-primary);
-    background: #fff;
+    background: var(--surface);
     outline: none;
     transition: border-color 0.15s;
 }
@@ -431,7 +412,7 @@ a.email-link:hover {
 .form-group input:focus,
 .form-group textarea:focus,
 .form-group select:focus {
-    border-color: var(--accent);
+    border-color: var(--action);
 }
 
 .form-group textarea {
@@ -444,7 +425,7 @@ a.email-link:hover {
     align-items: center;
     justify-content: center;
     gap: 7px;
-    background: var(--accent);
+    background: var(--action);
     color: #fff;
     border: none;
     border-radius: 7px;
@@ -459,7 +440,7 @@ a.email-link:hover {
 }
 
 .btn-primary:hover {
-    background: var(--accent-hover);
+    background: var(--action-hover);
 }
 
 /* ── Modals ── */
@@ -534,7 +515,7 @@ a.email-link:hover {
 }
 
 .btn-secondary:hover {
-    background: #f9fafb;
+    background: var(--surface-subtle);
 }
 
 .modal .btn-primary {

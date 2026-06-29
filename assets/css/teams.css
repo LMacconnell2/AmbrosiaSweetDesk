@@ -1,36 +1,9 @@
-@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap');
-
 *,
 *::before,
 *::after {
     box-sizing: border-box;
     margin: 0;
     padding: 0;
-}
-
-:root {
-    --page-bg: #f3f4f6;
-    --surface: #ffffff;
-    --border: #e5e7eb;
-
-    --text-primary: #111827;
-    --text-secondary: #6b7280;
-    --text-muted: #9ca3af;
-
-    --accent: #2563eb;
-    --accent-hover: #1d4ed8;
-
-    --card-blue-bg: #eff6ff;
-    --card-blue-border: #bfdbfe;
-    --card-green-bg: #f0fdf4;
-    --card-green-border: #bbf7d0;
-    --card-pink-bg: #fdf4ff;
-    --card-pink-border: #f0abfc;
-    --card-orange-bg: #fff7ed;
-    --card-orange-border: #fed7aa;
-
-    --btn-outline-border: #d1d5db;
-    --btn-outline-text: #374151;
 }
 
 body {
@@ -66,7 +39,7 @@ body {
     display: inline-flex;
     align-items: center;
     gap: 7px;
-    background: var(--accent);
+    background: var(--action);
     color: #fff;
     border: none;
     border-radius: 7px;
@@ -79,7 +52,7 @@ body {
 }
 
 .btn-primary:hover {
-    background: var(--accent-hover);
+    background: var(--action-hover);
 }
 
 .btn-primary svg {
@@ -221,19 +194,19 @@ body {
 }
 
 .team-card-actions button:hover {
-    background: #f9fafb;
+    background: var(--surface-subtle);
 }
 
 .team-card-actions button.email-btn {
-    color: var(--accent);
+    color: var(--link);
 }
 
 .team-card-actions button.delete-btn {
-    color: #dc2626;
+    color: var(--status-error);
 }
 
 .team-card-actions button.delete-btn:hover {
-    background: #fef2f2;
+    background: var(--status-error-bg);
 }
 
 .team-card-actions button svg {
@@ -316,7 +289,7 @@ body {
     border-radius: 7px;
     padding: 8px 11px;
     color: var(--text-primary);
-    background: #fff;
+    background: var(--surface);
     outline: none;
     transition: border-color 0.15s;
 }
@@ -324,7 +297,7 @@ body {
 .form-group input:focus,
 .form-group textarea:focus,
 .form-group select:focus {
-    border-color: var(--accent);
+    border-color: var(--action);
 }
 
 .form-group textarea {
@@ -352,11 +325,11 @@ body {
 }
 
 .btn-secondary:hover {
-    background: #f9fafb;
+    background: var(--surface-subtle);
 }
 
 .btn-danger {
-    background: #dc2626;
+    background: var(--status-error);
     color: #fff;
     border: none;
     border-radius: 7px;
@@ -369,14 +342,14 @@ body {
 }
 
 .btn-danger:hover {
-    background: #b91c1c;
+    background: var(--status-error-dark);
 }
 
 .modal.delete-modal {
-    border: 2px solid #fecaca;
-    background: #fef2f2;
+    border: 2px solid var(--status-error-border);
+    background: var(--status-error-bg);
 }
 
 .modal.delete-modal .modal-header h2 {
-    color: #dc2626;
+    color: var(--status-error);
 }

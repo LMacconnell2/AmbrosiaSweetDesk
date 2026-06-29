@@ -1,0 +1,119 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap');
+
+/*
+|--------------------------------------------------------------------------
+| Ambrosia Digital — shared color tokens
+| Hex/rgba literals live here only. All other stylesheets use var(--token).
+|--------------------------------------------------------------------------
+*/
+
+:root {
+    /* Brand blue scale */
+    --brand-blue-900: #1A2854;
+    --brand-blue-800: #2B417F;
+    --brand-blue-700: #3853A3;
+    --brand-blue-500: #6B84CC;
+    --brand-blue-200: #C8D7FF;
+    --brand-blue-100: #EAF0FF;
+    --brand-blue-50: #EEF3FF;
+
+    /* Brand magenta scale */
+    --brand-magenta-900: #5C1232;
+    --brand-magenta-800: #891748;
+    --brand-magenta-700: #A91E58;
+    --brand-magenta-500: #D44D8A;
+    --brand-magenta-200: #F4B3D0;
+    --brand-magenta-100: #FCE8F0;
+    --brand-magenta-50: #FDF2F7;
+
+    /* Neutrals */
+    --surface-page: #F5F7FA;
+    --surface: #FFFFFF;
+    --surface-subtle: #F9FAFC;
+    --border: #D9E0EC;
+    --border-light: #E8EDF5;
+
+    --text-primary: #182235;
+    --text-secondary: #55637A;
+    --text-muted: #8A94A6;
+
+    /* Semantic roles */
+    --chrome: var(--brand-blue-700);
+    --chrome-hover: var(--brand-blue-800);
+    --chrome-text: var(--brand-blue-900);
+
+    --action: var(--brand-magenta-700);
+    --action-hover: var(--brand-magenta-800);
+
+    --link: var(--brand-magenta-700);
+    --link-hover: var(--brand-magenta-800);
+
+    --highlight: var(--brand-magenta-700);
+
+    --toggle-on: var(--brand-magenta-700);
+    --toggle-off: #CBD5E1;
+
+    --focus-chrome: rgba(56, 83, 163, 0.25);
+    --focus-action: rgba(169, 30, 88, 0.25);
+    --shadow-sm: rgba(24, 34, 53, 0.04);
+
+    /* Backward-compat aliases */
+    --page-bg: var(--surface-page);
+    --accent: var(--action);
+    --accent-hover: var(--action-hover);
+    --toggle-checked: var(--toggle-on);
+    --toggle-unchecked: var(--toggle-off);
+
+    --btn-outline-border: #C9D3E5;
+    --btn-outline-text: var(--text-secondary);
+
+    /* Status (semantic, not brand) */
+    --status-success-bg: #E8F5EE;
+    --status-success-text: #15803D;
+    --status-error: #DC2626;
+    --status-error-bg: #FEF2F2;
+    --status-warning: #D97706;
+
+    /* Teams card tints */
+    --card-blue-bg: var(--brand-blue-100);
+    --card-blue-border: var(--brand-blue-200);
+    --card-magenta-bg: var(--brand-magenta-100);
+    --card-magenta-border: var(--brand-magenta-200);
+    --card-green-bg: #F0FDF4;
+    --card-green-border: #BBF7D0;
+    --card-orange-bg: #FFF7ED;
+    --card-orange-border: #FED7AA;
+
+    /* People section accents */
+    --section-personnel-accent: var(--brand-blue-500);
+    --section-contacts-accent: var(--brand-magenta-500);
+
+    /* Teams card aliases */
+    --card-pink-bg: var(--card-magenta-bg);
+    --card-pink-border: var(--card-magenta-border);
+
+    /* Ticket status/priority badges (semantic) */
+    --ticket-status-open-bg: var(--brand-blue-100);
+    --ticket-status-open-text: var(--brand-blue-800);
+    --ticket-status-progress-bg: #FEF3C7;
+    --ticket-status-progress-text: #A16207;
+    --ticket-status-pending-bg: var(--brand-magenta-100);
+    --ticket-status-pending-text: var(--brand-magenta-800);
+    --ticket-status-closed-bg: var(--border-light);
+    --ticket-status-closed-text: var(--text-secondary);
+    --ticket-status-customer-bg: #FFEDD5;
+    --ticket-status-customer-text: #C2410C;
+    --ticket-status-resolved-bg: var(--status-success-bg);
+    --ticket-status-resolved-text: var(--status-success-text);
+    --ticket-priority-urgent-bg: #FEE2E2;
+    --ticket-priority-high-bg: #FFEDD5;
+    --ticket-priority-normal-bg: var(--brand-blue-100);
+    --ticket-priority-normal-text: var(--chrome);
+    --ticket-priority-low-bg: var(--surface-page);
+    --ticket-priority-low-text: var(--text-secondary);
+
+    --overlay-bg: rgba(24, 34, 53, 0.55);
+    --status-error-dark: #B91C1C;
+    --status-error-border: #FECACA;
+    --wp-blue: #2271B1;
+}
