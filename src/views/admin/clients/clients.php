@@ -1,13 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>SweetDesk - Clients</title>
-</head>
-<body>
-
-  <div class="layout">
+<div class="layout">
     <main class="main" id="mainContent">
       <div class="page-header">
         <h1 class="page-title">Clients</h1>
@@ -155,6 +146,4 @@
         </div>
       </aside>
     </div>
-  </div>
-</body>
-</html>
+</div>
