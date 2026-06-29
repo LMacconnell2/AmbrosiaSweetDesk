@@ -32,3 +32,19 @@
 #wpbody-content {
     padding-bottom: 0;
 }
+
+/* People/Clients: fill WP content area so the side panel reaches the bottom */
+#wpbody:has(#wpbody-content > .layout) {
+    min-height: calc(100vh - var(--wp-admin--admin-bar--height, 32px));
+}
+
+#wpbody-content:has(> .layout) {
+    float: none;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    box-sizing: border-box;
+    min-height: calc(100vh - var(--wp-admin--admin-bar--height, 32px));
+    background: var(--page-bg);
+    overflow-x: clip;
+}

@@ -6,14 +6,6 @@
     padding: 0;
 }
 
-body {
-    font-family: 'DM Sans', sans-serif;
-    background: var(--page-bg);
-    color: var(--text-primary);
-    display: flex;
-    min-height: 100vh;
-}
-
 .section {
     background: var(--surface);
     border-radius: 10px;

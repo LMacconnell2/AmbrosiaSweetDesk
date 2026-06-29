@@ -579,9 +579,10 @@ table td:last-child:has(.row-actions) {
     display: flex;
     align-items: stretch;
     gap: 0;
-    min-height: calc(100vh - 32px);
+    flex: 1;
+    min-height: 0;
     position: relative;
-    overflow: visible;
+    overflow-x: clip;
 }
 
 .layout > .main {
@@ -593,26 +594,38 @@ table td:last-child:has(.row-actions) {
 .side-panel-shell {
     position: relative;
     flex-shrink: 0;
+    align-self: stretch;
+    display: flex;
+    flex-direction: column;
     width: var(--panel-width);
-    max-height: calc(100vh - 32px);
-    transition: width 0.3s ease;
+    min-width: var(--panel-width);
+    min-height: 100%;
+    transition: width 0.3s ease, min-width 0.3s ease;
     overflow: visible;
 }
 
 .side-panel-shell.collapsed {
     width: 0;
+    min-width: 0;
 }
 
 .side-panel {
     position: relative;
-    width: var(--panel-width);
-    height: 100%;
-    max-height: calc(100vh - 32px);
+    flex: 1 1 auto;
+    width: 100%;
+    min-width: 0;
+    min-height: 0;
     background: var(--surface);
     border-left: 1px solid var(--border);
     display: flex;
     flex-direction: column;
     overflow: hidden;
+}
+
+.side-panel-shell.collapsed .side-panel {
+    flex: 0 0 0;
+    width: 0;
+    border-left-width: 0;
 }
 
 .side-panel-shell.collapsed .side-panel-inner {
