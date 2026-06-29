@@ -203,11 +203,8 @@ document.addEventListener('DOMContentLoaded', async () => {
                             <button
                                 type="button"
                                 class="sd-action-btn sd-delete-btn"
+                                data-id="${ticket.id}"
                                 aria-label="Delete ticket"
-                                onclick="openDeleteTicketModal(
-                                    ${ticket.id},
-                                    ${JSON.stringify(ticket.title)}
-                                )"
                             >
                                 ${ICON_DELETE}
                             </button>
@@ -440,7 +437,8 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     window.openDeleteTicketModal = function(ticketId, ticketTitle) {
         ticketToDelete = ticketId;
-        document.getElementById('sd-delete-ticket-title').textContent = '#' + ticketId;
+        document.getElementById('sd-delete-ticket-title').textContent =
+            `#${ticketId}: ${ticketTitle}`;
         document.getElementById('sd-delete-ticket-modal').classList.add('active');
     };
 
@@ -466,10 +464,13 @@ document.addEventListener('DOMContentLoaded', async () => {
                 );
 
             if (!response.ok) {
+                throw new Error('Delete failed');
+            }
 
-                throw new Error(
-                    'Delete failed'
-                );
+            const result = await response.json();
+
+            if (!result.success) {
+                throw new Error(result.message || 'Delete failed');
             }
 
             closeDeleteTicketModal();
@@ -682,6 +683,30 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     tbody.addEventListener('click', async e => {
+
+        const deleteButton =
+            e.target.closest('.sd-delete-btn');
+
+        if (deleteButton) {
+
+            const row =
+                deleteButton.closest('tr');
+
+            const ticketId =
+                Number(deleteButton.dataset.id);
+
+            const ticketTitle =
+                row?.querySelector('.sd-ticket-title-link')
+                    ?.textContent
+                    ?.trim() || '';
+
+            openDeleteTicketModal(
+                ticketId,
+                ticketTitle
+            );
+
+            return;
+        }
 
         const editButton =
             e.target.closest('.sd-edit-btn');

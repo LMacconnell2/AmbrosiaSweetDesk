@@ -19,8 +19,11 @@ function closeNewTeamModal() {
 
 let teamToDelete = null;
 
-function openDeleteTeamModal(teamName) {
-    teamToDelete = teamName;
+function openDeleteTeamModal(teamName, button) {
+    teamToDelete = {
+        name: teamName,
+        card: button.closest('.team-card')
+    };
     document.getElementById('delete-team-name').textContent = teamName;
     document.getElementById('deleteTeamModal').classList.add('active');
 }
@@ -31,10 +34,11 @@ function closeDeleteTeamModal() {
 }
 
 function confirmDeleteTeam() {
-    if (teamToDelete) {
-        // TODO: Implement actual deletion logic here
-        console.log('Deleting team:', teamToDelete);
+    if (!teamToDelete) {
+        return;
     }
+
+    teamToDelete.card?.remove();
     closeDeleteTeamModal();
 }
 

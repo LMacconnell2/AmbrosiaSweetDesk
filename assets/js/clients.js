@@ -55,3 +55,34 @@ function openEditClientSidebar(name, contact, notes) {
 }
 
 document.getElementById('sd-new-client')?.addEventListener('click', openNewClientSidebar);
+
+let clientToDelete = null;
+
+function openDeleteClientModal(name, button) {
+    clientToDelete = {
+        name,
+        row: button.closest('tr')
+    };
+    document.getElementById('sd-delete-client-name').textContent = name;
+    document.getElementById('sd-delete-client-modal').classList.add('active');
+}
+
+function closeDeleteClientModal() {
+    document.getElementById('sd-delete-client-modal').classList.remove('active');
+    clientToDelete = null;
+}
+
+function confirmDeleteClient() {
+    if (!clientToDelete) {
+        return;
+    }
+
+    clientToDelete.row?.remove();
+    closeDeleteClientModal();
+}
+
+document.getElementById('sd-delete-client-modal')?.addEventListener('click', function (e) {
+    if (e.target === this) {
+        closeDeleteClientModal();
+    }
+});

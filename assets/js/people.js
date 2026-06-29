@@ -67,6 +67,37 @@ function openEditPersonSidebar(name, role, email, phone, company, notes) {
 
 document.getElementById('sd-new-person')?.addEventListener('click', openNewPersonSidebar);
 
+let personToDelete = null;
+
+function openDeletePersonModal(name, button) {
+    personToDelete = {
+        name,
+        row: button.closest('tr')
+    };
+    document.getElementById('sd-delete-person-name').textContent = name;
+    document.getElementById('sd-delete-person-modal').classList.add('active');
+}
+
+function closeDeletePersonModal() {
+    document.getElementById('sd-delete-person-modal').classList.remove('active');
+    personToDelete = null;
+}
+
+function confirmDeletePerson() {
+    if (!personToDelete) {
+        return;
+    }
+
+    personToDelete.row?.remove();
+    closeDeletePersonModal();
+}
+
+document.getElementById('sd-delete-person-modal')?.addEventListener('click', function (e) {
+    if (e.target === this) {
+        closeDeletePersonModal();
+    }
+});
+
 document.addEventListener('DOMContentLoaded', () => {
     setType('internal');
 });
