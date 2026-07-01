@@ -161,7 +161,7 @@ function renderMessages() {
     messages = messages.slice(0, count);
 
     if (messages.length === 0) {
-        list.innerHTML = '<p style="padding:16px 20px;font-size:0.875rem;color:#9ca3af;">No messages to display.</p>';
+        list.innerHTML = '<p class="sd-empty-state">No messages to display.</p>';
         return;
     }
 

@@ -153,7 +153,11 @@ class SweetDesk_Ticket_Service {
         }
 
         $sql .= "
-        ORDER BY {$sort} {$order}
+        ORDER BY " . (
+            $sort === 'priority'
+                ? "FIELD(t.priority, 'urgent', 'high', 'normal', 'low')"
+                : $sort
+        ) . " {$order}
         ";
 
         $offset =

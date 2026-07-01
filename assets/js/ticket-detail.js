@@ -55,11 +55,11 @@ function showNoTicketSelected() {
     const content = document.getElementById('ticket-detail-content');
 
     if (emptyState) {
-        emptyState.style.display = 'flex';
+        emptyState.hidden = false;
     }
 
     if (content) {
-        content.style.display = 'none';
+        content.hidden = true;
     }
 
     const title = document.getElementById('ticket-title');
@@ -127,7 +127,13 @@ async function loadTicketHeader(ticketId) {
             ticket.assigned_to || 'Unassigned';
 
         if (content) {
-            content.style.display = 'block';
+            content.hidden = false;
+        }
+
+        const emptyState = document.getElementById('ticket-detail-empty');
+
+        if (emptyState) {
+            emptyState.hidden = true;
         }
 
         return true;
@@ -135,7 +141,7 @@ async function loadTicketHeader(ticketId) {
         console.error('Error loading ticket:', error);
 
         if (content) {
-            content.style.display = 'none';
+            content.hidden = true;
         }
 
         const emptyState = document.getElementById('ticket-detail-empty');
@@ -143,7 +149,7 @@ async function loadTicketHeader(ticketId) {
         if (emptyState) {
             emptyState.innerHTML =
                 `<p>Ticket #${ticketId} could not be loaded. It may not exist yet. <a href="${SweetDesk.ticketsUrl || 'admin.php?page=sweetdesk'}">Back to Tickets</a></p>`;
-            emptyState.style.display = 'flex';
+            emptyState.hidden = false;
         }
 
         return false;
@@ -332,7 +338,8 @@ function truncateText(text, maxLength = 80) {
 function startReplyTo(message) {
     activeReplyTo = {
         reply_id: message.reply_id,
-        preview: truncateText(message.body)
+        preview: truncateText(message.body),
+        visibility: message.visibility
     };
 
     updateReplyContextUI();
@@ -353,6 +360,26 @@ function clearReplyTarget() {
     highlightActiveReplyTarget();
 }
 
+function setInternalReplyLocked(locked) {
+    const internalCheckbox = document.getElementById('reply-internal');
+    const internalLabel = document.getElementById('reply-internal-label');
+
+    if (!internalCheckbox || !internalLabel) {
+        return;
+    }
+
+    if (locked) {
+        internalCheckbox.checked = true;
+        internalCheckbox.disabled = true;
+        internalLabel.classList.add('is-locked');
+        return;
+    }
+
+    internalCheckbox.disabled = false;
+    internalCheckbox.checked = false;
+    internalLabel.classList.remove('is-locked');
+}
+
 function updateReplyContextUI() {
     const context = document.getElementById('reply-context');
     const preview = document.getElementById('reply-context-preview');
@@ -370,6 +397,7 @@ function updateReplyContextUI() {
             'reply-body',
             'Write your reply here...'
         );
+        setInternalReplyLocked(false);
 
         return;
     }
@@ -381,6 +409,7 @@ function updateReplyContextUI() {
         'reply-body',
         'Write your threaded reply...'
     );
+    setInternalReplyLocked(activeReplyTo.visibility === 'internal');
 }
 
 function highlightActiveReplyTarget() {
@@ -482,7 +511,10 @@ function setupReplySubmission(ticketId) {
             return;
         }
 
-        const isInternal = internalCheckbox?.checked || false;
+        const isInternal =
+            activeReplyTo?.visibility === 'internal' ||
+            internalCheckbox?.checked ||
+            false;
         const visibility = isInternal ? 'internal' : 'public';
 
         sendBtn.disabled = true;
@@ -510,10 +542,6 @@ function setupReplySubmission(ticketId) {
             }
 
             SweetDeskEditor.setContent('reply-body', '');
-
-            if (internalCheckbox) {
-                internalCheckbox.checked = false;
-            }
 
             clearReplyTarget();
             await loadAndRenderMessages(ticketId);

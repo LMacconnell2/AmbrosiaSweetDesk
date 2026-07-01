@@ -1,6 +1,6 @@
 /*
 |--------------------------------------------------------------------------
-| Badges
+| Ticket badges (shared by list + detail)
 |--------------------------------------------------------------------------
 */
 
@@ -8,104 +8,79 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-
-    padding: 8px 14px;
-
-    border-radius: 999px;
-
-    font-size: 14px;
+    padding: 4px 10px;
+    border-radius: 99px;
+    font-size: 0.78rem;
     font-weight: 600;
 }
 
-/*
-|--------------------------------------------------------------------------
-| Status Colors
-|--------------------------------------------------------------------------
-*/
-
 .sd-status-open {
-    background: #dbeafe;
-    color: #1d4ed8;
+    background: var(--ticket-status-open-bg);
+    color: var(--ticket-status-open-text);
 }
 
 .sd-status-progress {
-    background: #fef3c7;
-    color: #a16207;
+    background: var(--ticket-status-progress-bg);
+    color: var(--ticket-status-progress-text);
 }
 
 .sd-status-pending {
-    background: #ede9fe;
-    color: #7e22ce;
+    background: var(--ticket-status-pending-bg);
+    color: var(--ticket-status-pending-text);
 }
 
 .sd-status-closed {
-    background: #e2e8f0;
-    color: #334155;
+    background: var(--ticket-status-closed-bg);
+    color: var(--ticket-status-closed-text);
 }
 
 .sd-status-customer {
-    background: #ffedd5;
-    color: #c2410c;
+    background: var(--ticket-status-customer-bg);
+    color: var(--ticket-status-customer-text);
 }
 
 .sd-status-resolved {
-    background: #dcfce7;
-    color: #15803d;
+    background: var(--ticket-status-resolved-bg);
+    color: var(--ticket-status-resolved-text);
 }
 
-/*
-|--------------------------------------------------------------------------
-| Priority Colors
-|--------------------------------------------------------------------------
-*/
-
 .sd-priority-urgent {
-    background: #fee2e2;
-    color: #dc2626;
+    background: var(--ticket-priority-urgent-bg);
+    color: var(--status-error);
 }
 
 .sd-priority-high {
-    background: #ffedd5;
-    color: #d97706;
+    background: var(--ticket-priority-high-bg);
+    color: var(--status-warning);
 }
 
 .sd-priority-normal {
-    background: #fef3c7;
-    color: #a16207;
+    background: var(--ticket-priority-normal-bg);
+    color: var(--ticket-priority-normal-text);
 }
 
 .sd-priority-low {
-    background: #f1f5f9;
-    color: #334155;
+    background: var(--ticket-priority-low-bg);
+    color: var(--ticket-priority-low-text);
 }
 
 .sd-badge-default {
-    background: #f1f5f9;
-    color: #475569;
+    background: var(--surface-page);
+    color: var(--text-secondary);
 }
-
-/*
-|--------------------------------------------------------------------------
-| Client Pill
-|--------------------------------------------------------------------------
-*/
 
 .sd-pill {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-
-    padding: 8px 16px;
-
-    border-radius: 999px;
-
+    padding: 4px 12px;
+    border-radius: 99px;
     background: linear-gradient(
         135deg,
-        #7c3aed,
-        #a21caf
+        var(--brand-blue-700),
+        var(--brand-magenta-700)
     );
-
-    color: white;
-    font-size: 14px;
+    color: #fff;
+    font-size: 0.78rem;
     font-weight: 600;
 }

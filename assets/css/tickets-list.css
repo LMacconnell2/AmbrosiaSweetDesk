@@ -1,497 +1,48 @@
 /*
 |--------------------------------------------------------------------------
-| SweetDesk Tickets Page
-|--------------------------------------------------------------------------
-*/
-
-.sweetdesk-tickets-page {
-    padding: 24px;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-}
-
-/*
-|--------------------------------------------------------------------------
-| Header
-|--------------------------------------------------------------------------
-*/
-
-.sweetdesk-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 24px;
-    gap: 20px;
-    flex-wrap: wrap;
-}
-
-.sweetdesk-header h1 {
-    margin: 0;
-    font-size: 42px;
-    font-weight: 700;
-    color: #0f172a;
-}
-
-.sweetdesk-header-actions {
-    display: flex;
-    gap: 12px;
-    flex-wrap: wrap;
-}
-
-/*
-|--------------------------------------------------------------------------
-| Buttons
-|--------------------------------------------------------------------------
-*/
-
-.sd-btn {
-    border: none;
-    border-radius: 14px;
-    padding: 14px 22px;
-    font-size: 16px;
-    font-weight: 600;
-    cursor: pointer;
-
-    display: flex;
-    align-items: center;
-    gap: 10px;
-
-    transition: all 0.2s ease;
-}
-
-.sd-btn .dashicons {
-    font-size: 18px;
-}
-
-.sd-btn-secondary {
-    background: #ffffff;
-    border: 1px solid #d4d4d8;
-    color: #334155;
-}
-
-.sd-btn-secondary:hover {
-    background: #f8fafc;
-}
-
-.sd-btn-primary {
-    background: #2563eb;
-    color: white;
-}
-
-.sd-btn-primary:hover {
-    background: #1d4ed8;
-}
-
-/*
-|--------------------------------------------------------------------------
-| Search
-|--------------------------------------------------------------------------
-*/
-
-.sweetdesk-search {
-    position: relative;
-    margin-bottom: 22px;
-}
-
-.sweetdesk-search input {
-    width: 100%;
-    height: 54px;
-
-    border-radius: 14px;
-    border: 1px solid #d4d4d8;
-
-    padding-left: 52px;
-    padding-right: 16px;
-
-    font-size: 16px;
-    background: white;
-}
-
-.sweetdesk-search .dashicons {
-    position: absolute;
-    top: 15px;
-    left: 16px;
-
-    color: #94a3b8;
-    font-size: 22px;
-}
-
-/*
-|--------------------------------------------------------------------------
-| Filters
-|--------------------------------------------------------------------------
-*/
-
-.sweetdesk-filters {
-    display: flex;
-    align-items: center;
-    gap: 18px;
-    margin-bottom: 28px;
-    flex-wrap: wrap;
-}
-
-.sweetdesk-filter-label {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-
-    font-weight: 600;
-    color: #334155;
-}
-
-.sweetdesk-filter-label .dashicons {
-    color: #64748b;
-}
-
-.sweetdesk-filters select {
-    min-width: 180px;
-    height: 48px;
-
-    border-radius: 14px;
-    border: 1px solid #d4d4d8;
-
-    padding: 0 16px;
-    font-size: 15px;
-    background: white;
-}
-
-/*
-|--------------------------------------------------------------------------
-| Table
-|--------------------------------------------------------------------------
-*/
-
-.sweetdesk-table-wrapper {
-    overflow-x: auto;
-
-    background: white;
-    border-radius: 18px;
-    border: 1px solid #e2e8f0;
-
-    box-shadow:
-        0 1px 2px rgba(15, 23, 42, 0.05),
-        0 4px 12px rgba(15, 23, 42, 0.04);
-}
-
-.sweetdesk-table {
-    width: 100%;
-    border-collapse: collapse;
-}
-
-.sweetdesk-table thead {
-    background: #ffffff;
-}
-
-.sweetdesk-table th {
-    text-align: left;
-    padding: 22px 28px;
-
-    font-size: 14px;
-    font-weight: 700;
-    color: #64748b;
-
-    border-bottom: 1px solid #e2e8f0;
-    white-space: nowrap;
-}
-
-.sweetdesk-table td {
-    padding: 22px 28px;
-    border-bottom: 1px solid #f1f5f9;
-
-    font-size: 16px;
-    color: #0f172a;
-    white-space: nowrap;
-}
-
-.sweetdesk-table tbody tr:hover {
-    background: #fafafa;
-}
-
-.sweetdesk-table tbody tr:last-child td {
-    border-bottom: none;
-}
-
-/*
-|--------------------------------------------------------------------------
-| Misc
-|--------------------------------------------------------------------------
-*/
-
-.sd-muted {
-    color: #94a3b8 !important;
-    font-style: italic;
-}
-
-/*
-|--------------------------------------------------------------------------
-| Modal Overlay
-|--------------------------------------------------------------------------
-*/
-
-.sd-modal-overlay {
-    position: fixed;
-    inset: 0;
-
-    background: rgba(15, 23, 42, 0.55);
-
-    display: none;
-    align-items: center;
-    justify-content: center;
-
-    z-index: 9999;
-
-    padding: 24px;
-}
-
-/*
-|--------------------------------------------------------------------------
-| Active Modal
-|--------------------------------------------------------------------------
-*/
-
-.sd-modal-overlay.active {
-    display: flex;
-}
-
-/*
-|--------------------------------------------------------------------------
-| Modal Box
-|--------------------------------------------------------------------------
-*/
-
-.sd-modal {
-    width: 100%;
-    max-width: 720px;
-
-    background: white;
-
-    border-radius: 22px;
-
-    overflow: hidden;
-
-    box-shadow:
-        0 10px 25px rgba(0,0,0,0.15),
-        0 4px 10px rgba(0,0,0,0.08);
-
-    animation: sdModalIn 0.2s ease;
-}
-
-@keyframes sdModalIn {
-    from {
-        opacity: 0;
-        transform: translateY(10px) scale(0.98);
-    }
-
-    to {
-        opacity: 1;
-        transform: translateY(0) scale(1);
-    }
-}
-
-/*
-|--------------------------------------------------------------------------
-| Header
-|--------------------------------------------------------------------------
-*/
-
-.sd-modal-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-
-    padding: 28px;
-
-    border-bottom: 1px solid #e2e8f0;
-}
-
-.sd-modal-header h2 {
-    margin: 0;
-    font-size: 28px;
-    color: #0f172a;
-}
-
-.sd-modal-header p {
-    margin-top: 6px;
-    color: #64748b;
-}
-
-/*
-|--------------------------------------------------------------------------
-| Close Button
-|--------------------------------------------------------------------------
-*/
-
-.sd-modal-close {
-    border: none;
-    background: #f1f5f9;
-
-    width: 42px;
-    height: 42px;
-
-    border-radius: 12px;
-
-    cursor: pointer;
-
-    font-size: 18px;
-
-    transition: background 0.2s ease;
-}
-
-.sd-modal-close:hover {
-    background: #e2e8f0;
-}
-
-/*
-|--------------------------------------------------------------------------
-| Body
-|--------------------------------------------------------------------------
-*/
-
-.sd-modal-body {
-    padding: 28px;
-}
-
-/*
-|--------------------------------------------------------------------------
-| Footer
-|--------------------------------------------------------------------------
-*/
-
-.sd-modal-footer {
-    display: flex;
-    justify-content: flex-end;
-    gap: 12px;
-    padding: 20px 28px;
-    border-top: 1px solid #e2e8f0;
-    background: #fafafa;
-}
-
-/*
-|--------------------------------------------------------------------------
-| Delete Modal
-|--------------------------------------------------------------------------
-*/
-
-.sd-modal.sd-delete-modal {
-    border: 2px solid #fecaca;
-    background: #fef2f2;
-}
-
-.sd-modal.sd-delete-modal .sd-modal-header h2 {
-    color: #dc2626;
-}
-
-.sd-btn-danger {
-    background: #dc2626;
-    color: white;
-    border: none;
-    border-radius: 14px;
-    padding: 14px 22px;
-    font-size: 16px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: background 0.2s ease;
-}
-
-.sd-btn-danger:hover {
-    background: #b91c1c;
-}
-
-/*
-|--------------------------------------------------------------------------
-| Labels
-|--------------------------------------------------------------------------
-*/
-
-.sd-label {
-    display: block;
-
-    font-size: 13px;
-    font-weight: 700;
-
-    text-transform: uppercase;
-    letter-spacing: 0.04em;
-
-    color: #64748b;
-
-    margin-bottom: 12px;
-}
-
-/*
-|--------------------------------------------------------------------------
-| Actions
-|--------------------------------------------------------------------------
-*/
-
-.sd-actions {
-    display: flex;
-    gap: 8px;
-    align-items: center;
-    justify-content: center;
-}
-
-.sd-action-btn {
-    border: none;
-    background: #f1f5f9;
-    border-radius: 8px;
-    padding: 8px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 36px;
-    height: 36px;
-    color: #64748b;
-    transition: all 0.2s ease;
-}
-
-.sd-action-btn:hover {
-    background: #e2e8f0;
-    color: #0f172a;
-}
-
-.sd-edit-btn:hover {
-    color: #0073aa;
-}
-
-.sd-delete-btn:hover {
-    color: #dc2626;
-}
-
-.sd-action-btn svg {
-    width: 18px;
-    height: 18px;
-    stroke-width: 2;
-}
-
-/*
-|--------------------------------------------------------------------------
-| Row Hover
+| Tickets list — page-specific styles
+| Shared layout/buttons/tables/modals: ambrosia-components.css
+| Badges: badge-helpers.css
 |--------------------------------------------------------------------------
 */
 
 .sd-ticket-title-link {
-    color: #0f172a;
+    color: var(--text-primary);
     font-weight: 600;
     text-decoration: none;
     transition: color 0.15s ease;
 }
 
 .sd-ticket-title-link:hover {
-    color: #2563eb;
+    color: var(--link);
     text-decoration: underline;
     text-underline-offset: 2px;
 }
 
-/*
-|--------------------------------------------------------------------------
-|Filter section
-|--------------------------------------------------------------------------
-*/
+.sd-ticket-row {
+    cursor: pointer;
+}
+
+.sd-muted {
+    color: var(--text-muted) !important;
+    font-style: italic;
+}
+
+/* Query builder */
 .sweetdesk-ticket-query-builder {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    width: 100%;
+}
+
+.sd-query-rows {
     display: flex;
     flex-direction: column;
     gap: 12px;
-    margin-top: 16px;
+    flex: 1;
+    min-width: 0;
 }
 
 .sd-query-row {
@@ -501,14 +52,39 @@
     flex-wrap: wrap;
 }
 
-.sd-query-row select,
+.sd-query-row select {
+    font-family: inherit;
+    font-size: 0.84rem;
+    border: 1.5px solid var(--border);
+    border-radius: 7px;
+    padding: 7px 30px 7px 10px;
+    background-color: var(--surface);
+    color: var(--text-primary);
+    outline: none;
+    min-width: 120px;
+}
+
 .sd-query-row input {
-    min-width: 140px;
+    font-family: inherit;
+    font-size: 0.84rem;
+    border: 1.5px solid var(--border);
+    border-radius: 7px;
+    padding: 7px 10px;
+    background: var(--surface);
+    color: var(--text-primary);
+    outline: none;
+    min-width: 120px;
+}
+
+.sd-query-row select:focus,
+.sd-query-row input:focus {
+    border-color: var(--action);
 }
 
 .sd-value-container {
     display: flex;
     gap: 8px;
+    flex-wrap: wrap;
 }
 
 .sd-add-filter,
@@ -516,24 +92,71 @@
     width: 34px;
     height: 34px;
     border: none;
-    border-radius: 6px;
+    border-radius: 7px;
     cursor: pointer;
     font-size: 18px;
+    line-height: 1;
 }
 
 .sd-add-filter {
-    background: #2271b1;
-    color: white;
+    background: var(--chrome);
+    color: #fff;
+}
+
+.sd-add-filter:hover {
+    background: var(--chrome-hover);
 }
 
 .sd-remove-filter {
-    background: #d63638;
-    color: white;
+    background: var(--action);
+    color: #fff;
+}
+
+.sd-remove-filter:hover {
+    background: var(--action-hover);
 }
 
 .sweetdesk-ticket-sort {
     display: flex;
     align-items: center;
     gap: 10px;
-    margin-top: 20px;
+    flex-wrap: wrap;
+    flex-shrink: 0;
+    align-self: center;
+    font-size: 0.84rem;
+    color: var(--text-secondary);
+}
+
+.sweetdesk-ticket-sort label {
+    font-weight: 600;
+}
+
+.sweetdesk-ticket-sort select {
+    font-family: inherit;
+    font-size: 0.84rem;
+    border: 1.5px solid var(--border);
+    border-radius: 7px;
+    padding: 7px 30px 7px 10px;
+    background-color: var(--surface);
+    color: var(--text-primary);
+}
+
+/* Create / edit modal */
+.sd-form-divider {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 8px 0 16px;
+}
+
+.sd-ticket-modal {
+    max-width: 760px;
+    max-height: calc(100vh - 48px);
+    display: flex;
+    flex-direction: column;
+}
+
+.sd-ticket-modal .sd-modal-body {
+    overflow-y: auto;
+    flex: 1 1 auto;
+    min-height: 0;
 }

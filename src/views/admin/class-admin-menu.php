@@ -25,7 +25,7 @@ class AdminMenu {
         wp_enqueue_style(
             'sweetdesk-quill-editor',
             $plugin_url . 'assets/css/sweetdesk-editor.css',
-            ['quill-snow'],
+            ['quill-snow', 'sweetdesk-theme'],
             SWEETDESK_VERSION
         );
 
@@ -56,7 +56,6 @@ class AdminMenu {
 
     public function register_menu() {
 
-        // Main Menu
         add_menu_page(
             'SweetDesk',
             'SweetDesk',
@@ -67,7 +66,6 @@ class AdminMenu {
             6
         );
 
-        // Tickets
         add_submenu_page(
             'sweetdesk',
             'Tickets',
@@ -77,7 +75,6 @@ class AdminMenu {
             [$this, 'ticketsPage']
         );
 
-        // Analytics
         add_submenu_page(
             'sweetdesk',
             'Analytics',
@@ -87,7 +84,6 @@ class AdminMenu {
             [$this, 'analyticsPage']
         );
 
-        // Clients
         add_submenu_page(
             'sweetdesk',
             'Clients',
@@ -97,7 +93,6 @@ class AdminMenu {
             [$this, 'clientsPage']
         );
 
-        // People
         add_submenu_page(
             'sweetdesk',
             'People',
@@ -107,7 +102,6 @@ class AdminMenu {
             [$this, 'peoplePage']
         );
 
-        // Teams
         add_submenu_page(
             'sweetdesk',
             'Teams',
@@ -117,7 +111,6 @@ class AdminMenu {
             [$this, 'teamsPage']
         );
 
-        // Settings
         add_submenu_page(
             'sweetdesk',
             'Settings',
@@ -127,7 +120,6 @@ class AdminMenu {
             [$this, 'settingsPage']
         );
 
-        // Ticket detail — hidden from menu, reachable via ticket list links
         add_submenu_page(
             null,
             'Ticket Detail',
@@ -140,10 +132,6 @@ class AdminMenu {
 
     public function enqueue_admin_assets($hook) {
 
-        /*
-         * Base admin styles
-         * Loaded on ALL SweetDesk pages
-         */
         $sweetdeskHooks = [
             'toplevel_page_sweetdesk',
             'sweetdesk_page_sweetdesk-analytics',
@@ -157,18 +145,33 @@ class AdminMenu {
         if (in_array($hook, $sweetdeskHooks)) {
 
             wp_enqueue_style(
+                'sweetdesk-theme',
+                plugin_dir_url(__FILE__) . '../../../assets/css/ambrosia-theme.css',
+                [],
+                SWEETDESK_VERSION
+            );
+
+            wp_enqueue_style(
+                'sweetdesk-components',
+                plugin_dir_url(__FILE__) . '../../../assets/css/ambrosia-components.css',
+                ['sweetdesk-theme'],
+                SWEETDESK_VERSION
+            );
+
+            wp_enqueue_style(
                 'sweetdesk-admin',
                 plugin_dir_url(__FILE__) . '../../../assets/css/admin.css',
-                [],
+                ['sweetdesk-components'],
                 SWEETDESK_VERSION
             );
         }
 
         if ($hook === 'toplevel_page_sweetdesk') {
+
             wp_enqueue_style(
                 'sweetdesk-badge-helpers',
                 plugin_dir_url(__FILE__) . '../../../assets/css/badge-helpers.css',
-                [],
+                ['sweetdesk-components'],
                 SWEETDESK_VERSION
             );
 
@@ -206,15 +209,12 @@ class AdminMenu {
             );
         }
 
-        /*
-         * Clients page styles
-         */
         if ($hook === 'sweetdesk_page_sweetdesk-clients') {
 
             wp_enqueue_style(
                 'sweetdesk-clients',
                 plugin_dir_url(__FILE__) . '../../../assets/css/clients.css',
-                [],
+                ['sweetdesk-components'],
                 SWEETDESK_VERSION
             );
 
@@ -227,15 +227,12 @@ class AdminMenu {
             );
         }
 
-        /*
-         * People page styles
-         */
         if ($hook === 'sweetdesk_page_sweetdesk-people') {
 
             wp_enqueue_style(
                 'sweetdesk-people',
                 plugin_dir_url(__FILE__) . '../../../assets/css/people.css',
-                [],
+                ['sweetdesk-components'],
                 SWEETDESK_VERSION
             );
 
@@ -248,15 +245,12 @@ class AdminMenu {
             );
         }
 
-        /*
-         * Teams page styles
-         */
         if ($hook === 'sweetdesk_page_sweetdesk-teams') {
 
             wp_enqueue_style(
                 'sweetdesk-teams',
                 plugin_dir_url(__FILE__) . '../../../assets/css/teams.css',
-                [],
+                ['sweetdesk-components'],
                 SWEETDESK_VERSION
             );
 
@@ -268,12 +262,13 @@ class AdminMenu {
                 true
             );
         }
+
         if ($hook === 'sweetdesk_page_sweetdesk-analytics') {
 
             wp_enqueue_style(
                 'sweetdesk-analytics',
                 plugin_dir_url(__FILE__) . '../../../assets/css/analytics.css',
-                [],
+                ['sweetdesk-components'],
                 SWEETDESK_VERSION
             );
 
@@ -286,20 +281,17 @@ class AdminMenu {
             );
         }
 
-        /*
-         * Settings page styles
-         */
         if ($hook === 'sweetdesk_page_sweetdesk-settings') {
 
             wp_enqueue_style(
                 'sweetdesk-settings',
                 plugin_dir_url(__FILE__) . '../../../assets/css/settings.css',
-                [],
+                ['sweetdesk-components'],
                 SWEETDESK_VERSION
             );
 
             wp_enqueue_script(
-                'sweetdesk-analytics',
+                'sweetdesk-settings',
                 plugin_dir_url(__FILE__) . '../../../assets/js/settings.js',
                 [],
                 SWEETDESK_VERSION,
@@ -307,15 +299,12 @@ class AdminMenu {
             );
         }
 
-        /*
-         * Ticket Detail page styles
-         */
         if ($hook === 'admin_page_sweetdesk-ticket-detail') {
 
             wp_enqueue_style(
                 'sweetdesk-badge-helpers',
                 plugin_dir_url(__FILE__) . '../../../assets/css/badge-helpers.css',
-                [],
+                ['sweetdesk-components'],
                 SWEETDESK_VERSION
             );
 

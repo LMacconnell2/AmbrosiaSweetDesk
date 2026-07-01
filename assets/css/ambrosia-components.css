@@ -1,0 +1,746 @@
+/*
+|--------------------------------------------------------------------------
+| Ambrosia Digital — shared UI components (non-color rules)
+| Depends on ambrosia-theme.css for tokens.
+|--------------------------------------------------------------------------
+*/
+
+.sweetdesk-tickets-page,
+.sweetdesk-ticket-detail.wrap {
+    font-family: 'DM Sans', sans-serif;
+    color: var(--text-primary);
+    max-width: none;
+    padding: 28px 32px 48px;
+}
+
+.page-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 22px;
+    gap: 16px;
+    flex-wrap: wrap;
+}
+
+.page-title {
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin: 0;
+}
+
+.header-actions {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.btn-primary,
+.sd-btn-primary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    background: var(--action);
+    color: #fff;
+    border: none;
+    border-radius: 7px;
+    padding: 9px 16px;
+    font-family: inherit;
+    font-size: 0.875rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.15s;
+    text-decoration: none;
+}
+
+.btn-primary:hover,
+.sd-btn-primary:hover {
+    background: var(--action-hover);
+}
+
+.btn-outline,
+.btn-secondary,
+.sd-btn-secondary {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    background: var(--surface);
+    color: var(--btn-outline-text);
+    border: 1.5px solid var(--btn-outline-border);
+    border-radius: 7px;
+    padding: 8px 14px;
+    font-family: inherit;
+    font-size: 0.84rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.15s;
+}
+
+.btn-outline:hover,
+.btn-secondary:hover,
+.sd-btn-secondary:hover {
+    background: var(--surface-subtle);
+}
+
+.btn-outline svg,
+.sd-btn svg {
+    width: 16px;
+    height: 16px;
+}
+
+.sd-btn .dashicons {
+    font-size: 16px;
+    width: 16px;
+    height: 16px;
+}
+
+.btn-danger,
+.sd-btn-danger {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    background: var(--status-error);
+    color: #fff;
+    border: none;
+    border-radius: 7px;
+    padding: 9px 16px;
+    font-family: inherit;
+    font-size: 0.875rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.15s;
+}
+
+.btn-danger:hover,
+.sd-btn-danger:hover {
+    background: var(--status-error-dark);
+}
+
+.btn-primary:disabled,
+.btn-outline:disabled,
+.sd-btn-primary:disabled,
+.sd-btn-secondary:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.toolbar {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 18px;
+    align-items: center;
+}
+
+.toolbar .search-wrap {
+    flex: 1;
+    margin-bottom: 0;
+}
+
+.search-wrap {
+    position: relative;
+    width: 100%;
+    margin-bottom: 18px;
+}
+
+.search-wrap svg,
+.search-wrap .dashicons {
+    position: absolute;
+    left: 11px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 15px;
+    height: 15px;
+    color: var(--text-muted);
+    pointer-events: none;
+}
+
+.search-wrap .dashicons {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+}
+
+.search-wrap input {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 9px 12px 9px 34px;
+    border: 1.5px solid var(--border);
+    border-radius: 7px;
+    font-family: inherit;
+    font-size: 0.875rem;
+    line-height: 1.25;
+    color: var(--text-primary);
+    background: var(--surface);
+    outline: none;
+    transition: border-color 0.15s;
+}
+
+.search-wrap input:focus {
+    border-color: var(--action);
+}
+
+.filter-wrap {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.84rem;
+    color: var(--text-secondary);
+    flex-shrink: 0;
+}
+
+.filter-wrap svg {
+    width: 14px;
+    height: 14px;
+}
+
+.filter-wrap select {
+    box-sizing: border-box;
+    font-family: inherit;
+    font-size: 0.875rem;
+    line-height: 1.25;
+    border: 1.5px solid var(--border);
+    border-radius: 7px;
+    padding: 9px 30px 9px 10px;
+    background-color: var(--surface);
+    color: var(--text-primary);
+    outline: none;
+    cursor: pointer;
+}
+
+/* Site-wide dropdown chevron (SweetDesk admin views) */
+:where(
+    .sweetdesk-tickets-page,
+    .sweetdesk-ticket-detail,
+    .layout,
+    .sd-analytics-page,
+    .main
+) select:not([multiple]):not([size]),
+.sd-modal select,
+.modal select,
+select.sd-value,
+select.sd-select,
+select.sd-user-select,
+select.inline-edit-select {
+    appearance: none;
+    -webkit-appearance: none;
+    background-image: var(--select-chevron);
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    background-size: 12px;
+    padding-right: 2rem;
+    cursor: pointer;
+}
+
+.filters-panel {
+    margin-bottom: 20px;
+}
+
+.filters-panel-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.84rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    margin-bottom: 12px;
+}
+
+.filters-panel-label .dashicons {
+    color: var(--text-muted);
+}
+
+.table-wrap {
+    background: var(--surface);
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    overflow-x: auto;
+    width: 100%;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+thead tr {
+    background: var(--table-header-bg);
+    border-bottom: 1.5px solid var(--table-header-border);
+}
+
+th {
+    padding: 11px 16px;
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--table-header-text);
+    text-align: left;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    white-space: nowrap;
+}
+
+th.col-check,
+td.col-check {
+    width: 36px;
+    padding-left: 16px;
+    padding-right: 4px;
+}
+
+th .sort-icon {
+    display: inline;
+    margin-left: 3px;
+    opacity: 0.5;
+    font-size: 0.7rem;
+}
+
+tbody tr {
+    border-bottom: 1px solid var(--border);
+    transition: background 0.1s;
+}
+
+tbody tr:last-child {
+    border-bottom: none;
+}
+
+tbody tr:hover {
+    background: var(--surface-subtle);
+}
+
+td {
+    padding: 13px 16px;
+    font-size: 0.875rem;
+    color: var(--text-primary);
+}
+
+td.col-name {
+    font-weight: 600;
+}
+
+/* Table row action icons (tickets, clients, people) */
+.sd-actions,
+.row-actions {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+    justify-content: center;
+    opacity: 1;
+    visibility: visible;
+}
+
+.sd-action-btn,
+.row-actions button {
+    border: none;
+    background: transparent;
+    border-radius: 6px;
+    padding: 6px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-muted);
+    opacity: 1;
+    visibility: visible;
+    transition: color 0.15s ease;
+}
+
+.sd-action-btn:hover,
+.row-actions button:hover {
+    color: var(--action);
+    background: transparent;
+}
+
+.sd-action-btn svg,
+.row-actions button svg {
+    width: 16px;
+    height: 16px;
+    stroke: currentColor;
+    stroke-width: 2;
+    color: currentColor;
+    opacity: 1;
+    visibility: visible;
+}
+
+/* Override WP admin list-table row-actions hover-only visibility */
+.layout .row-actions,
+.layout tbody tr .row-actions,
+.section table .row-actions,
+.section tbody tr .row-actions,
+.table-wrap .row-actions,
+.table-wrap tbody tr .row-actions,
+.sweetdesk-tickets-page .sd-actions,
+.sweetdesk-tickets-page tbody tr .sd-actions {
+    opacity: 1 !important;
+    visibility: visible !important;
+}
+
+table th:last-child,
+table td:last-child:has(.sd-actions),
+table td:last-child:has(.row-actions) {
+    text-align: center;
+}
+
+.pagination-bar {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 16px;
+    margin-top: 20px;
+}
+
+.pagination-bar #sd-page-info {
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+    font-weight: 500;
+}
+
+.form-group,
+.sd-form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    margin-bottom: 14px;
+}
+
+.form-group label,
+.sd-form-group label {
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+}
+
+.form-group input,
+.form-group textarea,
+.sd-form-group input,
+.sd-form-group textarea {
+    font-family: inherit;
+    font-size: 0.875rem;
+    border: 1.5px solid var(--border);
+    border-radius: 7px;
+    padding: 8px 11px;
+    color: var(--text-primary);
+    background: var(--surface);
+    outline: none;
+    transition: border-color 0.15s;
+}
+
+.form-group select,
+.sd-form-group select {
+    font-family: inherit;
+    font-size: 0.875rem;
+    border: 1.5px solid var(--border);
+    border-radius: 7px;
+    padding: 8px 2rem 8px 11px;
+    color: var(--text-primary);
+    background-color: var(--surface);
+    outline: none;
+    transition: border-color 0.15s;
+}
+
+.form-group input:focus,
+.form-group textarea:focus,
+.form-group select:focus,
+.sd-form-group input:focus,
+.sd-form-group textarea:focus,
+.sd-form-group select:focus {
+    border-color: var(--action);
+}
+
+.form-group textarea,
+.sd-form-group textarea {
+    resize: vertical;
+    min-height: 80px;
+}
+
+.form-grid,
+.sd-form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px 16px;
+}
+
+@media (max-width: 640px) {
+    .form-grid,
+    .sd-form-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+.modal-overlay,
+.sd-modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: var(--overlay-bg);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 100000;
+    padding: 24px;
+}
+
+.modal-overlay.active,
+.sd-modal-overlay.active {
+    display: flex;
+}
+
+.modal,
+.sd-modal {
+    width: 100%;
+    max-width: 720px;
+    background: var(--surface);
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 20px 60px var(--shadow-sm);
+    animation: sdModalIn 0.2s ease;
+}
+
+@keyframes sdModalIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px) scale(0.98);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+.modal-header,
+.sd-modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 24px 28px;
+    border-bottom: 1px solid var(--border);
+}
+
+.modal-header h2,
+.sd-modal-header h2 {
+    margin: 0;
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+.modal-close,
+.sd-modal-close {
+    border: none;
+    background: var(--surface-page);
+    width: 36px;
+    height: 36px;
+    border-radius: 7px;
+    cursor: pointer;
+    font-size: 16px;
+    color: var(--text-muted);
+    transition: background 0.15s;
+    flex-shrink: 0;
+}
+
+.modal-close:hover,
+.sd-modal-close:hover {
+    background: var(--border-light);
+    color: var(--text-primary);
+}
+
+.modal-body,
+.sd-modal-body {
+    padding: 24px 28px;
+}
+
+.modal-footer,
+.sd-modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    padding: 16px 28px;
+    border-top: 1px solid var(--border);
+    background: var(--surface-subtle);
+}
+
+.modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.sd-modal.sd-delete-modal {
+    border: 2px solid var(--status-error-border);
+    background: var(--status-error-bg);
+}
+
+.sd-modal.sd-delete-modal .sd-modal-header h2 {
+    color: var(--status-error);
+}
+
+/* Layout with optional side panel (Clients, People) */
+.layout {
+    display: flex;
+    align-items: stretch;
+    gap: 0;
+    flex: 1;
+    min-height: 0;
+    position: relative;
+    overflow-x: clip;
+}
+
+.layout > .main {
+    flex: 1;
+    padding: 36px 36px 48px;
+    min-width: 0;
+}
+
+.side-panel-shell {
+    position: relative;
+    flex-shrink: 0;
+    align-self: stretch;
+    display: flex;
+    flex-direction: column;
+    width: var(--panel-width);
+    min-width: var(--panel-width);
+    min-height: 100%;
+    transition: width 0.3s ease, min-width 0.3s ease;
+    overflow: visible;
+}
+
+.side-panel-shell.collapsed {
+    width: 0;
+    min-width: 0;
+}
+
+.side-panel {
+    position: relative;
+    flex: 1 1 auto;
+    width: 100%;
+    min-width: 0;
+    min-height: 0;
+    background: var(--surface);
+    border-left: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.side-panel-shell.collapsed .side-panel {
+    flex: 0 0 0;
+    width: 0;
+    border-left-width: 0;
+}
+
+.side-panel-shell.collapsed .side-panel-inner {
+    visibility: hidden;
+    pointer-events: none;
+}
+
+.side-panel-shell.collapsed .side-panel-close {
+    visibility: hidden;
+    pointer-events: none;
+}
+
+.panel-toggle {
+    position: absolute;
+    left: -28px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 28px;
+    height: 52px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-right: none;
+    border-radius: 8px 0 0 8px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: -2px 0 6px var(--shadow-sm);
+    z-index: 20;
+    padding: 0;
+}
+
+.panel-toggle:hover {
+    background: var(--surface-subtle);
+    color: var(--action);
+}
+
+.panel-toggle svg {
+    width: 16px;
+    height: 16px;
+    color: var(--text-secondary);
+    transition: transform 0.3s ease;
+}
+
+.panel-toggle:hover svg {
+    color: var(--action);
+}
+
+.side-panel-shell.collapsed .panel-toggle svg {
+    transform: rotate(180deg);
+}
+
+.side-panel-inner {
+    padding: 24px 20px;
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+}
+
+.side-panel-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 20px;
+    flex-shrink: 0;
+}
+
+.side-panel-header h2 {
+    margin: 0;
+    font-size: 1rem;
+    font-weight: 700;
+    flex: 1;
+}
+
+.side-panel-close {
+    border: none;
+    background: var(--surface-page);
+    width: 32px;
+    height: 32px;
+    border-radius: 7px;
+    cursor: pointer;
+    font-size: 16px;
+    line-height: 1;
+    color: var(--text-muted);
+    transition: background 0.15s, color 0.15s;
+    flex-shrink: 0;
+}
+
+.side-panel-close:hover {
+    background: var(--border-light);
+    color: var(--text-primary);
+}
+
+.section-card {
+    background: var(--surface);
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    overflow: hidden;
+    margin-bottom: 24px;
+}
+
+.section-card-header {
+    padding: 14px 18px;
+    background: var(--chrome);
+}
+
+.section-card-header h2,
+.section-card-header h3 {
+    margin: 0;
+    font-size: 1rem;
+    font-weight: 700;
+    color: #fff;
+}
+
+.section-card-body {
+    padding: 20px;
+}

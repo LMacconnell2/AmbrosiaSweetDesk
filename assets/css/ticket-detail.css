@@ -4,25 +4,19 @@
 |--------------------------------------------------------------------------
 */
 
-.sweetdesk-ticket-detail {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 24px;
-}
-
 .sd-back-link {
     display: inline-flex;
     align-items: center;
     margin-bottom: 20px;
-    font-size: 14px;
+    font-size: 0.875rem;
     font-weight: 600;
-    color: #64748b;
+    color: var(--text-muted);
     text-decoration: none;
     transition: color 0.15s ease;
 }
 
 .sd-back-link:hover {
-    color: #2563eb;
+    color: var(--link);
 }
 
 #ticket-detail-notices .notice {
@@ -30,81 +24,55 @@
 }
 
 .sweetdesk-ticket-detail-header {
-    margin-bottom: 40px;
+    align-items: flex-start;
+    margin-bottom: 28px;
 }
 
-.sweetdesk-ticket-detail-header h1 {
-    margin: 0 0 16px 0;
-    font-size: 32px;
-    font-weight: 700;
-    color: #0f172a;
+.sweetdesk-ticket-detail-header .page-title {
+    margin-bottom: 12px;
 }
 
 .ticket-metas {
     display: flex;
     align-items: center;
     gap: 24px;
-    font-size: 15px;
-    color: #475569;
+    flex-wrap: wrap;
+    font-size: 0.9rem;
+    color: var(--text-secondary);
 }
 
 .ticket-metas p {
     margin: 0;
 }
 
-.ticket-metas strong {
-    color: #0f172a;
+.ticket-metas span {
+    color: var(--text-primary);
     font-weight: 600;
 }
 
-/*
-|--------------------------------------------------------------------------
-| Messages Section
-|--------------------------------------------------------------------------
-*/
-
-.sweetdesk-messages-section {
-    margin-bottom: 40px;
-}
-
-.sweetdesk-messages-section h2 {
-    margin: 0 0 20px 0;
-    font-size: 24px;
-    font-weight: 700;
-    color: #0f172a;
+.sweetdesk-messages-container-wrap {
+    padding: 0;
 }
 
 .sweetdesk-messages-container {
-    background: white;
-    border-radius: 12px;
-    border: 1px solid #e2e8f0;
-    padding: 24px;
+    padding: 20px;
     min-height: 200px;
 }
 
-.sweetdesk-messages-loading {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    min-height: 200px;
-    color: #94a3b8;
-    font-size: 16px;
-}
-
+.sweetdesk-messages-loading,
 .sweetdesk-messages-empty {
     display: flex;
     align-items: center;
     justify-content: center;
     min-height: 200px;
-    color: #94a3b8;
-    font-size: 16px;
+    color: var(--text-muted);
+    font-size: 0.9rem;
 }
 
-/*
-|--------------------------------------------------------------------------
-| Message Thread
-|--------------------------------------------------------------------------
-*/
+.sweetdesk-messages-empty[hidden],
+#ticket-detail-content[hidden] {
+    display: none !important;
+}
 
 .sweetdesk-message-thread {
     display: flex;
@@ -114,18 +82,18 @@
 
 .sweetdesk-message {
     padding: 16px;
-    border-left: 3px solid #e2e8f0;
+    border-left: 3px solid var(--border-light);
     margin-left: 0;
     position: relative;
 }
 
 .sweetdesk-message:not(:last-child) {
-    border-bottom: 1px solid #f1f5f9;
+    border-bottom: 1px solid var(--border-light);
 }
 
 .sweetdesk-message.is-internal {
-    background: #ede9fe;
-    border-left-color: #c084fc;
+    background: var(--brand-magenta-50);
+    border-left-color: var(--brand-magenta-500);
 }
 
 .sweetdesk-message-header {
@@ -138,45 +106,46 @@
 
 .sweetdesk-message-author {
     font-weight: 600;
-    color: #0f172a;
-    font-size: 15px;
+    color: var(--text-primary);
+    font-size: 0.9rem;
 }
 
 .sweetdesk-message-date {
-    font-size: 13px;
-    color: #94a3b8;
+    font-size: 0.8rem;
+    color: var(--text-muted);
 }
 
 .sweetdesk-visibility-badge {
     display: inline-flex;
     align-items: center;
-    padding: 4px 10px;
-    border-radius: 6px;
-    font-size: 11px;
+    padding: 3px 8px;
+    border-radius: 99px;
+    font-size: 0.68rem;
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.04em;
 }
 
-.sweetdesk-visibility-badge.external {
-    background: #dbeafe;
-    color: #1d4ed8;
+.sweetdesk-visibility-badge.external,
+.sweetdesk-visibility-badge.public {
+    background: var(--brand-blue-100);
+    color: var(--chrome);
 }
 
 .sweetdesk-visibility-badge.internal {
-    background: #e0e7ff;
-    color: #4c1d95;
+    background: var(--brand-magenta-100);
+    color: var(--action);
 }
 
 .sweetdesk-message-edited {
-    font-size: 12px;
-    color: #94a3b8;
+    font-size: 0.75rem;
+    color: var(--text-muted);
     font-style: italic;
     margin-top: 8px;
 }
 
 .sweetdesk-message-body {
-    color: #334155;
+    color: var(--text-secondary);
     line-height: 1.6;
     word-wrap: break-word;
 }
@@ -198,16 +167,16 @@
 .sweetdesk-message-body blockquote {
     margin: 0 0 12px;
     padding-left: 12px;
-    border-left: 3px solid #e2e8f0;
-    color: #64748b;
+    border-left: 3px solid var(--border);
+    color: var(--text-muted);
 }
 
 .sweetdesk-message-body code,
 .sweetdesk-message-body pre {
     padding: 2px 6px;
     border-radius: 4px;
-    background: #f1f5f9;
-    font-family: Consolas, Monaco, monospace;
+    background: var(--surface-page);
+    font-family: 'DM Mono', Consolas, Monaco, monospace;
     font-size: 0.9em;
 }
 
@@ -219,64 +188,21 @@
     white-space: pre-wrap;
 }
 
-.sweetdesk-message-body pre.ql-syntax {
-    background: #f8fafc;
-}
-
-/*
-|--------------------------------------------------------------------------
-| Nested Replies
-|--------------------------------------------------------------------------
-*/
-
 .sweetdesk-message-replies {
     margin-top: 12px;
     margin-left: 24px;
     padding-left: 12px;
-    border-left: 2px solid #f1f5f9;
+    border-left: 2px solid var(--border-light);
 }
 
 .sweetdesk-message-replies .sweetdesk-message {
-    border-left-color: #d1d5db;
-    padding: 12px 12px;
+    border-left-color: var(--border);
+    padding: 12px;
 }
 
 .sweetdesk-message-replies .sweetdesk-message.is-internal {
-    background: #faf5ff;
-    border-left-color: #d8b4fe;
-}
-
-.sweetdesk-message-replies .sweetdesk-message-author {
-    font-size: 14px;
-}
-
-.sweetdesk-message-replies .sweetdesk-message-date {
-    font-size: 12px;
-}
-
-/*
-|--------------------------------------------------------------------------
-| Reply Section
-|--------------------------------------------------------------------------
-*/
-
-.sweetdesk-reply-section {
-    background: white;
-    border-radius: 12px;
-    border: 1px solid #e2e8f0;
-    padding: 24px;
-}
-
-.sweetdesk-reply-section h3 {
-    margin: 0 0 20px 0;
-    font-size: 18px;
-    font-weight: 600;
-    color: #0f172a;
-}
-
-.sweetdesk-visibility-badge.public {
-    background: #dbeafe;
-    color: #1d4ed8;
+    background: var(--brand-magenta-50);
+    border-left-color: var(--brand-magenta-200);
 }
 
 .sweetdesk-message-actions {
@@ -287,20 +213,20 @@
     background: none;
     border: none;
     padding: 0;
-    color: #2563eb;
-    font-size: 13px;
+    color: var(--link);
+    font-size: 0.8rem;
     font-weight: 600;
     cursor: pointer;
 }
 
 .sweetdesk-message-reply-btn:hover {
-    color: #1d4ed8;
+    color: var(--link-hover);
     text-decoration: underline;
 }
 
 .sweetdesk-message.is-reply-target {
-    background: #f8fafc;
-    border-left-color: #2563eb;
+    background: var(--brand-blue-50);
+    border-left-color: var(--chrome);
 }
 
 .sweetdesk-reply-context[hidden] {
@@ -314,11 +240,11 @@
     gap: 12px;
     margin-bottom: 12px;
     padding: 10px 12px;
-    border: 1px solid #bfdbfe;
+    border: 1px solid var(--brand-blue-200);
     border-radius: 8px;
-    background: #eff6ff;
-    color: #1e3a8a;
-    font-size: 14px;
+    background: var(--brand-blue-100);
+    color: var(--chrome-text);
+    font-size: 0.875rem;
 }
 
 .sweetdesk-reply-context-text {
@@ -328,7 +254,7 @@
 .sweetdesk-reply-context-text span {
     display: block;
     margin-top: 4px;
-    color: #334155;
+    color: var(--text-secondary);
     font-style: italic;
     white-space: nowrap;
     overflow: hidden;
@@ -337,25 +263,17 @@
 
 .sweetdesk-reply-cancel {
     flex-shrink: 0;
-    background: white;
-    border: 1px solid #cbd5e1;
-    border-radius: 6px;
     padding: 6px 10px;
-    font-size: 13px;
-    cursor: pointer;
-}
-
-.sweetdesk-reply-cancel:hover {
-    border-color: #94a3b8;
+    font-size: 0.8rem;
 }
 
 .sweetdesk-reply-options {
     display: flex;
     align-items: center;
     gap: 8px;
-    margin-bottom: 16px;
-    font-size: 14px;
-    color: #475569;
+    margin: 16px 0;
+    font-size: 0.875rem;
+    color: var(--text-secondary);
 }
 
 .sweetdesk-reply-options label {
@@ -366,6 +284,20 @@
     margin: 0;
 }
 
-.sweetdesk-reply-options input[type="checkbox"] {
-    cursor: pointer;
+.sweetdesk-reply-internal-label.is-locked {
+    opacity: 0.55;
+    cursor: not-allowed;
+    color: var(--text-muted);
+}
+
+.sweetdesk-reply-internal-label.is-locked input[type="checkbox"] {
+    cursor: not-allowed;
+}
+
+.section-card-header--magenta {
+    background: var(--action);
+}
+
+.section-card-header--magenta h3 {
+    font-size: 1rem;
 }

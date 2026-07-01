@@ -1,24 +1,19 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>SweetDesk - Clients</title>
-</head>
-<body>
-
-  <div class="layout">
-    <main class="main panel-open" id="mainContent">
+<div class="layout">
+    <main class="main" id="mainContent">
       <div class="page-header">
         <h1 class="page-title">Clients</h1>
         <div class="header-actions">
-          <button class="btn-outline">
+          <button class="btn-outline" type="button">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/></svg>
             Import CSV
           </button>
-          <button class="btn-outline">
+          <button class="btn-outline" type="button">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
             Export CSV
+          </button>
+          <button id="sd-new-client" class="btn-primary" type="button">
+            <span class="dashicons dashicons-plus-alt2"></span>
+            New Client
           </button>
         </div>
       </div>
@@ -64,8 +59,8 @@
               <td><span class="status-badge active">Active</span></td>
               <td>
                 <div class="row-actions">
-                  <button class="btn-edit" onclick="openEditClientModal('Acme Corp', 'Bob Johnson', '')"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg></button>
-                  <button class="btn-delete"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg></button>
+                  <button class="sd-action-btn sd-edit-btn" onclick="openEditClientSidebar('Acme Corp', 'Bob Johnson', '')"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg></button>
+                  <button type="button" class="sd-action-btn sd-delete-btn" onclick="openDeleteClientModal('Acme Corp', this)"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg></button>
                 </div>
               </td>
             </tr>
@@ -79,8 +74,8 @@
               <td><span class="status-badge active">Active</span></td>
               <td>
                 <div class="row-actions">
-                  <button class="btn-edit" onclick="openEditClientModal('TechStart Inc', 'Mike Chen', '')"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg></button>
-                  <button class="btn-delete"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg></button>
+                  <button class="sd-action-btn sd-edit-btn" onclick="openEditClientSidebar('TechStart Inc', 'Mike Chen', '')"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg></button>
+                  <button type="button" class="sd-action-btn sd-delete-btn" onclick="openDeleteClientModal('TechStart Inc', this)"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg></button>
                 </div>
               </td>
             </tr>
@@ -94,8 +89,8 @@
               <td><span class="status-badge active">Active</span></td>
               <td>
                 <div class="row-actions">
-                  <button class="btn-edit" onclick="openEditClientModal('Globex Solutions', 'Sarah Davis', '')"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg></button>
-                  <button class="btn-delete"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg></button>
+                  <button class="sd-action-btn sd-edit-btn" onclick="openEditClientSidebar('Globex Solutions', 'Sarah Davis', '')"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg></button>
+                  <button type="button" class="sd-action-btn sd-delete-btn" onclick="openDeleteClientModal('Globex Solutions', this)"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg></button>
                 </div>
               </td>
             </tr>
@@ -109,8 +104,8 @@
               <td><span class="status-badge inactive">Inactive</span></td>
               <td>
                 <div class="row-actions">
-                  <button class="btn-edit" onclick="openEditClientModal('Initech LLC', '', '')"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg></button>
-                  <button class="btn-delete"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg></button>
+                  <button class="sd-action-btn sd-edit-btn" onclick="openEditClientSidebar('Initech LLC', '', '')"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg></button>
+                  <button type="button" class="sd-action-btn sd-delete-btn" onclick="openDeleteClientModal('Initech LLC', this)"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg></button>
                 </div>
               </td>
             </tr>
@@ -119,68 +114,52 @@
       </div>
     </main>
 
-    <!-- Add New Client Panel -->
-    <aside class="side-panel" id="clientPanel">
-      <button class="panel-toggle" id="panelToggle" onclick="togglePanel()">
+    <!-- Client sidebar (create & edit) -->
+    <div class="side-panel-shell collapsed" id="clientPanelShell">
+      <button class="panel-toggle" type="button" onclick="toggleClientPanel()" aria-label="Expand or collapse client panel">
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
       </button>
-      <div class="side-panel-inner">
-        <div class="side-panel-header">
-          <h2>Add New Client</h2>
+      <aside class="side-panel" id="clientPanel">
+        <div class="side-panel-inner">
+          <div class="side-panel-header">
+            <h2 id="client-panel-title">Add New Client</h2>
+            <button type="button" class="side-panel-close" onclick="closeClientSidebar()" aria-label="Close panel">✕</button>
+          </div>
+        <div class="form-group">
+          <label for="client-panel-name">Client Name</label>
+          <input type="text" id="client-panel-name" placeholder="Company name" />
         </div>
         <div class="form-group">
-          <label for="new-client-name">Client Name</label>
-          <input type="text" id="new-client-name" placeholder="Company name" />
-        </div>
-        <div class="form-group">
-          <label for="new-client-contact">Primary Contact</label>
-          <select id="new-client-contact">
-            <option>None</option>
+          <label for="client-panel-contact">Primary Contact</label>
+          <select id="client-panel-contact">
+            <option value="">None</option>
             <option>Bob Johnson</option>
             <option>Mike Chen</option>
             <option>Sarah Davis</option>
           </select>
         </div>
         <div class="form-group">
-          <label for="new-client-notes">Notes</label>
-          <textarea id="new-client-notes" placeholder="Additional notes about this client..."></textarea>
+          <label for="client-panel-notes">Notes</label>
+          <textarea id="client-panel-notes" placeholder="Additional notes about this client..."></textarea>
         </div>
-        <button class="btn-primary">Add Client</button>
-      </div>
-    </aside>
-  </div>
-
-  <!-- Edit Client Modal -->
-  <div class="modal-overlay" id="editClientModal">
-    <div class="modal">
-      <div class="modal-header">
-        <h2>Edit Client</h2>
-        <button class="modal-close" onclick="closeEditClientModal()">
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
-        </button>
-      </div>
-      <div class="form-group">
-        <label for="edit-client-name">Client Name</label>
-        <input type="text" id="edit-client-name" />
-      </div>
-      <div class="form-group">
-        <label for="edit-client-contact">Primary Contact</label>
-        <select id="edit-client-contact">
-          <option>None</option>
-          <option>Bob Johnson</option>
-          <option>Mike Chen</option>
-          <option>Sarah Davis</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label for="edit-client-notes">Notes</label>
-        <textarea id="edit-client-notes"></textarea>
-      </div>
-      <div class="modal-actions">
-        <button class="btn-secondary" onclick="closeEditClientModal()">Cancel</button>
-        <button class="btn-primary">Save Changes</button>
-      </div>
+        <button type="button" class="btn-primary" id="client-panel-submit">Add Client</button>
+        </div>
+      </aside>
     </div>
-  </div>
-</body>
-</html>
+</div>
+
+<div class="sd-modal-overlay" id="sd-delete-client-modal">
+    <div class="sd-modal sd-delete-modal">
+        <div class="sd-modal-header">
+            <h2>Delete Client</h2>
+            <button type="button" class="sd-modal-close" onclick="closeDeleteClientModal()">✕</button>
+        </div>
+        <div class="sd-modal-body">
+            <p>Are you sure you want to delete <strong id="sd-delete-client-name">Client Name</strong>? This action cannot be undone.</p>
+        </div>
+        <div class="sd-modal-footer">
+            <button type="button" class="btn-outline" onclick="closeDeleteClientModal()">Cancel</button>
+            <button type="button" class="btn-danger" onclick="confirmDeleteClient()">Delete Client</button>
+        </div>
+    </div>
+</div>

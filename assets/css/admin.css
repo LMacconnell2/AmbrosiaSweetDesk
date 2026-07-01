@@ -1,16 +1,16 @@
 .status {
     padding: 4px 8px;
     border-radius: 4px;
-    color: white;
+    color: #fff;
     font-size: 12px;
 }
 
-.status.open { background: #0073aa; }
-.status.pending { background: #ffb900; }
-.status.closed { background: #46b450; }
+.status.open { background: var(--chrome); }
+.status.pending { background: var(--status-warning); }
+.status.closed { background: var(--status-success-text); }
 
 .ticket-thread {
-    border: 1px solid #ddd;
+    border: 1px solid var(--border);
     padding: 10px;
     margin: 20px 0;
 }
@@ -20,6 +20,31 @@
 }
 
 .message.staff {
-    background: #f6f7f7;
+    background: var(--surface-subtle);
     padding: 10px;
+}
+
+/* SweetDesk admin screens only — admin.css is enqueued on those hooks */
+#wpfooter {
+    display: none;
+}
+
+#wpbody-content {
+    padding-bottom: 0;
+}
+
+/* People/Clients: fill WP content area so the side panel reaches the bottom */
+#wpbody:has(#wpbody-content > .layout) {
+    min-height: calc(100vh - var(--wp-admin--admin-bar--height, 32px));
+}
+
+#wpbody-content:has(> .layout) {
+    float: none;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    box-sizing: border-box;
+    min-height: calc(100vh - var(--wp-admin--admin-bar--height, 32px));
+    background: var(--page-bg);
+    overflow-x: clip;
 }

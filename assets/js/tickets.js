@@ -137,6 +137,12 @@ document.addEventListener('DOMContentLoaded', async () => {
         return div.innerHTML;
     }
 
+    const ICON_EDIT =
+        '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>';
+
+    const ICON_DELETE =
+        '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>';
+
     function renderTickets(ticketData) {
 
         tbody.innerHTML = '';
@@ -186,20 +192,21 @@ document.addEventListener('DOMContentLoaded', async () => {
                         <div class="sd-actions">
 
                             <button
+                                type="button"
                                 class="sd-action-btn sd-edit-btn"
                                 data-id="${ticket.id}"
+                                aria-label="Edit ticket"
                             >
-                                Edit
+                                ${ICON_EDIT}
                             </button>
 
                             <button
+                                type="button"
                                 class="sd-action-btn sd-delete-btn"
-                                onclick="openDeleteTicketModal(
-                                    ${ticket.id},
-                                    '${ticket.title}'
-                                )"
+                                data-id="${ticket.id}"
+                                aria-label="Delete ticket"
                             >
-                                Delete
+                                ${ICON_DELETE}
                             </button>
 
                         </div>
@@ -374,10 +381,9 @@ document.addEventListener('DOMContentLoaded', async () => {
 
             const clone = row.cloneNode(true);
 
-            queryBuilder.insertBefore(
-                clone,
-                document.querySelector('.sweetdesk-ticket-sort')
-            );
+            queryBuilder
+                .querySelector('.sd-query-rows')
+                .appendChild(clone);
 
             setupQueryRow(clone);
         }
@@ -431,7 +437,8 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     window.openDeleteTicketModal = function(ticketId, ticketTitle) {
         ticketToDelete = ticketId;
-        document.getElementById('sd-delete-ticket-title').textContent = '#' + ticketId;
+        document.getElementById('sd-delete-ticket-title').textContent =
+            `#${ticketId}: ${ticketTitle}`;
         document.getElementById('sd-delete-ticket-modal').classList.add('active');
     };
 
@@ -457,10 +464,13 @@ document.addEventListener('DOMContentLoaded', async () => {
                 );
 
             if (!response.ok) {
+                throw new Error('Delete failed');
+            }
 
-                throw new Error(
-                    'Delete failed'
-                );
+            const result = await response.json();
+
+            if (!result.success) {
+                throw new Error(result.message || 'Delete failed');
             }
 
             closeDeleteTicketModal();
@@ -546,6 +556,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         modal.classList.add('active');
 
         const title =
+            document.getElementById('sd-ticket-modal-title') ||
             modal.querySelector('h2');
 
         const saveButton =
@@ -562,6 +573,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 'Create Ticket';
 
             resetTicketForm();
+            setInitialMessageSectionVisible(true);
             initTicketModalEditor(true);
 
             return;
@@ -574,7 +586,16 @@ document.addEventListener('DOMContentLoaded', async () => {
             'Save Changes';
 
         populateTicketForm(ticket);
-        initTicketModalEditor(false);
+        SweetDeskEditor.destroy('sd-ticket-body');
+        setInitialMessageSectionVisible(false);
+    }
+
+    function setInitialMessageSectionVisible(visible) {
+        const section = document.getElementById('sd-ticket-initial-message-section');
+
+        if (section) {
+            section.hidden = !visible;
+        }
     }
 
     function initTicketModalEditor(clearContent = false) {
@@ -663,6 +684,30 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     tbody.addEventListener('click', async e => {
 
+        const deleteButton =
+            e.target.closest('.sd-delete-btn');
+
+        if (deleteButton) {
+
+            const row =
+                deleteButton.closest('tr');
+
+            const ticketId =
+                Number(deleteButton.dataset.id);
+
+            const ticketTitle =
+                row?.querySelector('.sd-ticket-title-link')
+                    ?.textContent
+                    ?.trim() || '';
+
+            openDeleteTicketModal(
+                ticketId,
+                ticketTitle
+            );
+
+            return;
+        }
+
         const editButton =
             e.target.closest('.sd-edit-btn');
 
@@ -706,7 +751,8 @@ document.addEventListener('DOMContentLoaded', async () => {
                 )
                 .classList.add('active');
 
-            initTicketModalEditor(false);
+            SweetDeskEditor.destroy('sd-ticket-body');
+            setInitialMessageSectionVisible(false);
 
         } catch (error) {
 
@@ -752,14 +798,17 @@ document.addEventListener('DOMContentLoaded', async () => {
             data.custom_fields || []
         );
 
-        renderTicketMessages(
-            data.messages || []
-        );
-
         document.getElementById(
             'sd-save-ticket'
         ).textContent =
             'Save Changes';
+
+        const modalTitle =
+            document.getElementById('sd-ticket-modal-title');
+
+        if (modalTitle) {
+            modalTitle.textContent = 'Edit Ticket';
+        }
     }
 
     function renderCustomFields(fields) {
@@ -797,43 +846,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
     }
 
-    function renderTicketMessages(messages) {
-
-        const container =
-            document.getElementById(
-                'sd-ticket-thread'
-            );
-
-        if (!container) {
-            return;
-        }
-
-        container.innerHTML = '';
-
-        messages.forEach(message => {
-
-            container.innerHTML += `
-                <div class="sd-ticket-message">
-
-                    <div class="sd-message-meta">
-
-                        ${message.reply_type}
-                        •
-                        ${message.created_at}
-
-                    </div>
-
-                    <div class="sd-message-body">
-
-                        ${message.body}
-
-                    </div>
-
-                </div>
-            `;
-        });
-    }
-
     document
     .getElementById('sd-save-ticket')
     ?.addEventListener(
@@ -843,6 +855,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     function closeTicketModal() {
         SweetDeskEditor.destroy('sd-ticket-body');
+        setInitialMessageSectionVisible(true);
 
         document
             .getElementById('sd-create-ticket-modal')
@@ -852,7 +865,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     async function saveTicket() {
 
         const title = document.getElementById('sd-ticket-title').value.trim();
-        const message = SweetDeskEditor.getContent('sd-ticket-body');
+        const message = modalMode === 'create'
+            ? SweetDeskEditor.getContent('sd-ticket-body')
+            : '';
 
         if (!title) {
             alert('Title is required.');
@@ -903,11 +918,13 @@ document.addEventListener('DOMContentLoaded', async () => {
                     'sd-ticket-priority'
                 ).value,
 
-            message,
-
             custom_fields:
                 customFields
         };
+
+        if (modalMode === 'create') {
+            payload.message = message;
+        }
 
         const endpoint =
             modalMode === 'create'

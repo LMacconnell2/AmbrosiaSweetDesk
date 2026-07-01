@@ -1,5 +1,3 @@
-@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap');
-
 *,
 *::before,
 *::after {
@@ -9,24 +7,7 @@
 }
 
 :root {
-    --page-bg: #f3f4f6;
-    --surface: #ffffff;
-    --border: #e5e7eb;
-
-    --text-primary: #111827;
-    --text-secondary: #6b7280;
-    --text-muted: #9ca3af;
-
-    --accent: #2563eb;
-    --accent-hover: #1d4ed8;
-
-    --btn-outline-border: #d1d5db;
-    --btn-outline-text: #374151;
-
     --nav-width: 220px;
-
-    --toggle-checked: #d97706;
-    --toggle-unchecked: #d1d5db;
 }
 
 body {
@@ -111,16 +92,20 @@ body {
 }
 
 .nav-item:hover {
-    background: #f3f4f6;
+    background: var(--brand-blue-50);
     color: var(--text-primary);
 }
 
 .nav-item.active {
-    background: var(--accent);
+    background: var(--chrome);
     color: #fff;
 }
 
 .nav-item.active svg {
+    color: #fff;
+}
+
+.nav-item.active:hover svg {
     color: #fff;
 }
 
@@ -137,6 +122,7 @@ body {
     border-radius: 10px;
     padding: 28px 32px;
     min-height: calc(100vh - 84px);
+    box-shadow: 0 1px 3px var(--shadow-sm);
 }
 
 .tab-panel.active {
@@ -172,15 +158,19 @@ body {
     border-radius: 7px;
     padding: 9px 11px;
     color: var(--text-primary);
-    background: #fff;
+    background-color: var(--surface);
     outline: none;
     transition: border-color 0.15s;
     max-width: 480px;
 }
 
+.form-group select {
+    padding-right: 2rem;
+}
+
 .form-group input:focus,
 .form-group select:focus {
-    border-color: var(--accent);
+    border-color: var(--action);
 }
 
 .form-actions {
@@ -192,7 +182,7 @@ body {
     align-items: center;
     justify-content: center;
     gap: 7px;
-    background: var(--accent);
+    background: var(--action);
     color: #fff;
     border: none;
     border-radius: 7px;
@@ -205,7 +195,7 @@ body {
 }
 
 .btn-primary:hover {
-    background: var(--accent-hover);
+    background: var(--action-hover);
 }
 
 /* ── Notification rows ── */
@@ -253,7 +243,7 @@ body {
 }
 
 .toggle:focus-visible {
-    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.4);
+    box-shadow: 0 0 0 3px var(--focus-action);
 }
 
 .toggle[aria-checked="true"] {
@@ -291,7 +281,7 @@ body {
 }
 
 .email-config-inner {
-    background: #f9fafb;
+    background: var(--surface-subtle);
     border: 1px solid var(--border);
     border-radius: 8px;
     padding: 16px 18px 12px;
@@ -347,7 +337,7 @@ body {
     font-family: inherit;
     font-size: 0.82rem;
     font-weight: 600;
-    color: #ef4444;
+    color: var(--status-error);
     cursor: pointer;
     padding: 2px 4px;
     border-radius: 4px;
@@ -355,7 +345,7 @@ body {
 }
 
 .btn-remove:hover {
-    background: #fef2f2;
+    background: var(--status-error-bg);
 }
 
 .btn-edit-link {
@@ -364,15 +354,16 @@ body {
     font-family: inherit;
     font-size: 0.82rem;
     font-weight: 600;
-    color: var(--accent);
+    color: var(--link);
     cursor: pointer;
     padding: 2px 4px;
     border-radius: 4px;
-    transition: background 0.1s;
+    transition: background 0.1s, color 0.1s;
 }
 
 .btn-edit-link:hover {
-    background: #eff6ff;
+    background: var(--brand-magenta-50);
+    color: var(--link-hover);
 }
 
 .btn-add-link {
@@ -381,12 +372,13 @@ body {
     font-family: inherit;
     font-size: 0.84rem;
     font-weight: 600;
-    color: var(--accent);
+    color: var(--link);
     cursor: pointer;
     padding: 2px 0;
 }
 
 .btn-add-link:hover {
+    color: var(--link-hover);
     text-decoration: underline;
 }
 
@@ -413,7 +405,7 @@ body {
 }
 
 .add-row input:focus {
-    border-color: var(--accent);
+    border-color: var(--action);
 }
 
 /* Field type select — appearance reset + custom arrow to defeat WordPress styles */
@@ -424,20 +416,20 @@ body {
     font-size: 0.875rem;
     border: 1.5px solid var(--border);
     border-radius: 7px;
-    padding: 8px 30px 8px 11px;
-    background-color: #fff;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+    padding: 8px 2rem 8px 11px;
+    background-color: var(--surface);
+    background-image: var(--select-chevron);
     background-repeat: no-repeat;
     background-position: right 10px center;
+    background-size: 12px;
     outline: none;
     cursor: pointer;
     transition: border-color 0.15s;
-    /* Normal text color for real options */
     color: var(--text-primary);
 }
 
 .add-row select:focus {
-    border-color: var(--accent);
+    border-color: var(--action);
 }
 
 /* Placeholder state — muted italic on the select box itself */
@@ -453,7 +445,7 @@ body {
 }
 
 .btn-add-confirm {
-    background: var(--accent);
+    background: var(--action);
     color: #fff;
     border: none;
     border-radius: 7px;
@@ -466,7 +458,7 @@ body {
 }
 
 .btn-add-confirm:hover {
-    background: var(--accent-hover);
+    background: var(--action-hover);
 }
 
 .btn-add-cancel {
@@ -482,7 +474,37 @@ body {
 }
 
 .btn-add-cancel:hover {
-    background: #f9fafb;
+    background: var(--surface-subtle);
+}
+
+/* ── Inline edit (dynamic form fields) ── */
+.inline-edit-input {
+    font-family: inherit;
+    font-size: 0.875rem;
+    border: 1.5px solid var(--action);
+    border-radius: 6px;
+    padding: 4px 8px;
+    outline: none;
+    flex: 1;
+    color: var(--text-primary);
+    background: var(--surface);
+}
+
+.inline-edit-select {
+    font-family: inherit;
+    font-size: 0.875rem;
+    border: 1.5px solid var(--border);
+    border-radius: 6px;
+    padding: 4px 28px 4px 8px;
+    outline: none;
+    cursor: pointer;
+    appearance: none;
+    -webkit-appearance: none;
+    background-color: var(--surface);
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%238A94A6' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 8px center;
+    color: var(--text-primary);
 }
 
 /* ── Coming soon placeholder ── */

@@ -1,24 +1,19 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>SweetDesk - People</title>
-</head>
-<body>
-
-  <div class="layout">
-    <main class="main panel-open" id="mainContent">
+<div class="layout">
+    <main class="main" id="mainContent">
       <div class="page-header">
         <h1 class="page-title">People</h1>
         <div class="header-actions">
-          <button class="btn-outline">
+          <button class="btn-outline" type="button">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/></svg>
             Import CSV
           </button>
-          <button class="btn-outline">
+          <button class="btn-outline" type="button">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
             Export CSV
+          </button>
+          <button id="sd-new-person" class="btn-primary" type="button">
+            <span class="dashicons dashicons-plus-alt2"></span>
+            New Person
           </button>
         </div>
       </div>
@@ -64,8 +59,8 @@
               <td>555-0101</td>
               <td>
                 <div class="row-actions">
-                  <button class="btn-edit" onclick="openEditPersonModal('John Doe','Developer','john@example.com','555-0101','','')"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg></button>
-                  <button class="btn-delete"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg></button>
+                  <button class="sd-action-btn sd-edit-btn" onclick="openEditPersonSidebar('John Doe','Developer','john@example.com','555-0101','','')"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg></button>
+                  <button type="button" class="sd-action-btn sd-delete-btn" onclick="openDeletePersonModal('John Doe', this)"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg></button>
                 </div>
               </td>
             </tr>
@@ -77,8 +72,8 @@
               <td>555-0102</td>
               <td>
                 <div class="row-actions">
-                  <button class="btn-edit" onclick="openEditPersonModal('Jane Smith','Designer','jane@example.com','555-0102','','')"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg></button>
-                  <button class="btn-delete"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg></button>
+                  <button class="sd-action-btn sd-edit-btn" onclick="openEditPersonSidebar('Jane Smith','Designer','jane@example.com','555-0102','','')"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg></button>
+                  <button type="button" class="sd-action-btn sd-delete-btn" onclick="openDeletePersonModal('Jane Smith', this)"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg></button>
                 </div>
               </td>
             </tr>
@@ -90,8 +85,8 @@
               <td>555-0104</td>
               <td>
                 <div class="row-actions">
-                  <button class="btn-edit" onclick="openEditPersonModal('Alice Williams','Developer','alice@example.com','555-0104','','')"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg></button>
-                  <button class="btn-delete"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg></button>
+                  <button class="sd-action-btn sd-edit-btn" onclick="openEditPersonSidebar('Alice Williams','Developer','alice@example.com','555-0104','','')"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg></button>
+                  <button type="button" class="sd-action-btn sd-delete-btn" onclick="openDeletePersonModal('Alice Williams', this)"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg></button>
                 </div>
               </td>
             </tr>
@@ -143,8 +138,8 @@
               <td>555-0103</td>
               <td>
                 <div class="row-actions">
-                  <button class="btn-edit" onclick="openEditPersonModal('Bob Johnson','Manager','bob@example.com','555-0103','Acme Corp','')"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg></button>
-                  <button class="btn-delete"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg></button>
+                  <button class="sd-action-btn sd-edit-btn" onclick="openEditPersonSidebar('Bob Johnson','Manager','bob@example.com','555-0103','Acme Corp','')"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg></button>
+                  <button type="button" class="sd-action-btn sd-delete-btn" onclick="openDeletePersonModal('Bob Johnson', this)"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg></button>
                 </div>
               </td>
             </tr>
@@ -157,8 +152,8 @@
               <td>555-0105</td>
               <td>
                 <div class="row-actions">
-                  <button class="btn-edit" onclick="openEditPersonModal('Mike Chen','CTO','mike@techstart.com','555-0105','TechStart Inc','')"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg></button>
-                  <button class="btn-delete"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg></button>
+                  <button class="sd-action-btn sd-edit-btn" onclick="openEditPersonSidebar('Mike Chen','CTO','mike@techstart.com','555-0105','TechStart Inc','')"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg></button>
+                  <button type="button" class="sd-action-btn sd-delete-btn" onclick="openDeletePersonModal('Mike Chen', this)"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg></button>
                 </div>
               </td>
             </tr>
@@ -171,8 +166,8 @@
               <td>555-0106</td>
               <td>
                 <div class="row-actions">
-                  <button class="btn-edit" onclick="openEditPersonModal('Sarah Davis','Product Owner','sarah@globex.com','555-0106','Globex Solutions','')"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg></button>
-                  <button class="btn-delete"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg></button>
+                  <button class="sd-action-btn sd-edit-btn" onclick="openEditPersonSidebar('Sarah Davis','Product Owner','sarah@globex.com','555-0106','Globex Solutions','')"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg></button>
+                  <button type="button" class="sd-action-btn sd-delete-btn" onclick="openDeletePersonModal('Sarah Davis', this)"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg></button>
                 </div>
               </td>
             </tr>
@@ -181,85 +176,66 @@
       </div>
     </main>
 
-    <!-- Add New Person Panel -->
-    <aside class="side-panel" id="personPanel">
-      <button class="panel-toggle" id="panelToggle" onclick="togglePanel()">
+    <!-- Person sidebar (create & edit) -->
+    <div class="side-panel-shell collapsed" id="personPanelShell">
+      <button class="panel-toggle" type="button" onclick="togglePersonPanel()" aria-label="Expand or collapse person panel">
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
       </button>
-      <div class="side-panel-inner">
-        <div class="side-panel-header">
-          <h2>Add New Person</h2>
-        </div>
+      <aside class="side-panel" id="personPanel">
+        <div class="side-panel-inner">
+          <div class="side-panel-header">
+            <h2 id="person-panel-title">Add New Person</h2>
+            <button type="button" class="side-panel-close" onclick="closePersonSidebar()" aria-label="Close panel">✕</button>
+          </div>
         <div class="form-group">
           <label>Type</label>
           <div class="type-toggle">
-            <button class="active" id="typeInternal" onclick="setType('internal')">Internal</button>
-            <button id="typeClient" onclick="setType('client')">Client</button>
+            <button type="button" class="active" id="typeInternal" onclick="setType('internal')">Internal</button>
+            <button type="button" id="typeClient" onclick="setType('client')">Client</button>
           </div>
         </div>
         <div class="form-group">
-          <label for="new-person-name">Name</label>
-          <input type="text" id="new-person-name" placeholder="Full name" />
+          <label for="person-panel-name">Name</label>
+          <input type="text" id="person-panel-name" placeholder="Full name" />
         </div>
         <div class="form-group">
-          <label for="new-person-email">Email</label>
-          <input type="email" id="new-person-email" placeholder="email@example.com" />
+          <label for="person-panel-role">Role</label>
+          <input type="text" id="person-panel-role" placeholder="Job title or role" />
+        </div>
+        <div class="form-group">
+          <label for="person-panel-email">Email</label>
+          <input type="email" id="person-panel-email" placeholder="email@example.com" />
         </div>
         <div class="form-group" id="companyField">
-          <label for="new-person-company">Company</label>
-          <input type="text" id="new-person-company" placeholder="Company name" />
+          <label for="person-panel-company">Company</label>
+          <input type="text" id="person-panel-company" placeholder="Company name" />
         </div>
         <div class="form-group">
-          <label for="new-person-phone">Phone Number</label>
-          <input type="tel" id="new-person-phone" placeholder="555-0000" />
+          <label for="person-panel-phone">Phone Number</label>
+          <input type="tel" id="person-panel-phone" placeholder="555-0000" />
         </div>
         <div class="form-group">
-          <label for="new-person-notes">Notes</label>
-          <textarea id="new-person-notes" placeholder="Additional notes..."></textarea>
+          <label for="person-panel-notes">Notes</label>
+          <textarea id="person-panel-notes" placeholder="Additional notes..."></textarea>
         </div>
-        <button class="btn-primary">Add Person</button>
-      </div>
-    </aside>
-  </div>
-
-  <!-- Edit Person Modal -->
-  <div class="modal-overlay" id="editPersonModal">
-    <div class="modal">
-      <div class="modal-header">
-        <h2>Edit Person</h2>
-        <button class="modal-close" onclick="closeEditPersonModal()">
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
-        </button>
-      </div>
-      <div class="form-group">
-        <label for="edit-person-name">Name</label>
-        <input type="text" id="edit-person-name" />
-      </div>
-      <div class="form-group">
-        <label for="edit-person-role">Role</label>
-        <input type="text" id="edit-person-role" />
-      </div>
-      <div class="form-group">
-        <label for="edit-person-email">Email</label>
-        <input type="email" id="edit-person-email" />
-      </div>
-      <div class="form-group">
-        <label for="edit-person-phone">Phone</label>
-        <input type="tel" id="edit-person-phone" />
-      </div>
-      <div class="form-group">
-        <label for="edit-person-company">Company</label>
-        <input type="text" id="edit-person-company" placeholder="Leave blank for internal staff" />
-      </div>
-      <div class="form-group">
-        <label for="edit-person-notes">Notes</label>
-        <textarea id="edit-person-notes"></textarea>
-      </div>
-      <div class="modal-actions">
-        <button class="btn-secondary" onclick="closeEditPersonModal()">Cancel</button>
-        <button class="btn-primary">Save Changes</button>
-      </div>
+        <button type="button" class="btn-primary" id="person-panel-submit">Add Person</button>
+        </div>
+      </aside>
     </div>
-  </div>
-</body>
-</html>
+</div>
+
+<div class="sd-modal-overlay" id="sd-delete-person-modal">
+    <div class="sd-modal sd-delete-modal">
+        <div class="sd-modal-header">
+            <h2>Delete Person</h2>
+            <button type="button" class="sd-modal-close" onclick="closeDeletePersonModal()">✕</button>
+        </div>
+        <div class="sd-modal-body">
+            <p>Are you sure you want to delete <strong id="sd-delete-person-name">Person Name</strong>? This action cannot be undone.</p>
+        </div>
+        <div class="sd-modal-footer">
+            <button type="button" class="btn-outline" onclick="closeDeletePersonModal()">Cancel</button>
+            <button type="button" class="btn-danger" onclick="confirmDeletePerson()">Delete Person</button>
+        </div>
+    </div>
+</div>
