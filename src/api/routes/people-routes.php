@@ -1,32 +1,60 @@
 <?php
 
-function sweetdesk_create_team_table_sql() {
+if (!defined('ABSPATH')) {
+    exit;
+}
 
-    global $wpdb;
+class SweetDesk_People_Routes
+{
+    public static function register_routes()
+    {
+        $controller = new SweetDesk_People_Controller();
 
-    $table = $wpdb->prefix . 'sweetdesk_teams';
+        register_rest_route('sweetdesk/v1', '/people', [
+            [
+                'methods' => WP_REST_Server::READABLE,
+                'callback' => [$controller, 'get_people'],
+                'permission_callback' => [$controller, 'permissions_check'],
+            ],
+            [
+                'methods' => WP_REST_Server::CREATABLE,
+                'callback' => [$controller, 'create_person'],
+                'permission_callback' => [$controller, 'permissions_check'],
+            ],
+        ]);
 
-    $charset_collate = $wpdb->get_charset_collate();
+        register_rest_route('sweetdesk/v1', '/people/(?P<id>\d+)', [
+            [
+                'methods' => WP_REST_Server::READABLE,
+                'callback' => [$controller, 'get_person'],
+                'permission_callback' => [$controller, 'permissions_check'],
+            ],
+            [
+                'methods' => WP_REST_Server::EDITABLE,
+                'callback' => [$controller, 'update_person'],
+                'permission_callback' => [$controller, 'permissions_check'],
+            ],
+            [
+                'methods' => WP_REST_Server::DELETABLE,
+                'callback' => [$controller, 'delete_person'],
+                'permission_callback' => [$controller, 'permissions_check'],
+            ],
+        ]);
 
-    return "
-    CREATE TABLE {$table} (
+        register_rest_route('sweetdesk/v1', '/people/export', [
+            [
+                'methods' => WP_REST_Server::READABLE,
+                'callback' => [$controller, 'export_people'],
+                'permission_callback' => [$controller, 'permissions_check'],
+            ],
+        ]);
 
-        id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-
-        name VARCHAR(255) NOT NULL,
-
-        description TEXT NULL,
-
-        color VARCHAR(20) NULL,
-
-        created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-
-        updated_at DATETIME NOT NULL
-            DEFAULT CURRENT_TIMESTAMP
-            ON UPDATE CURRENT_TIMESTAMP,
-
-        KEY idx_name (name)
-
-    ) {$charset_collate};
-    ";
+        register_rest_route('sweetdesk/v1', '/people/import', [
+            [
+                'methods' => WP_REST_Server::CREATABLE,
+                'callback' => [$controller, 'import_people'],
+                'permission_callback' => [$controller, 'permissions_check'],
+            ],
+        ]);
+    }
 }

@@ -68,4 +68,9 @@ class SweetDesk_People_Controller {
             $this->service->import_people($request)
         );
     }
+
+    public function permissions_check(WP_REST_Request $request)
+    {
+        return current_user_can('read');
+    }
 }

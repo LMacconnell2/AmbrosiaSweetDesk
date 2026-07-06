@@ -58,4 +58,9 @@ class SweetDesk_Client_Controller {
         $data = $request->get_json_params();
         return rest_ensure_response($this->service->import_clients($data));
     }
+
+    public function permissions_check(WP_REST_Request $request)
+    {
+        return current_user_can('read');
+    }
 }
