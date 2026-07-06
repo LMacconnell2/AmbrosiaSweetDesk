@@ -225,6 +225,11 @@ class AdminMenu {
                 SWEETDESK_VERSION,
                 true
             );
+
+            wp_localize_script('sweetdesk-clients', 'sweetdeskClients', [
+                'apiUrl' => esc_url_raw(rest_url('sweetdesk/v1')),
+                'nonce'  => wp_create_nonce('wp_rest'),
+            ]);
         }
 
         if ($hook === 'sweetdesk_page_sweetdesk-people') {
@@ -244,7 +249,7 @@ class AdminMenu {
                 true
             );
 
-            wp_localize_script('sweetdesk-people-js', 'sweetdeskPeople', [
+            wp_localize_script('sweetdesk-people', 'sweetdeskPeople', [
                 'apiUrl' => esc_url_raw(rest_url('sweetdesk/v1')),
                 'nonce'  => wp_create_nonce('wp_rest'),
             ]);
