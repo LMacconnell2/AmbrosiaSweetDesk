@@ -2,6 +2,9 @@
 
 if (!defined('ABSPATH')) exit;
 
+require_once SWEETDESK_PATH .
+    'src/api/services/people-service.php';
+
 class SweetDesk_People_Controller {
 
     private SweetDesk_People_Service $service;

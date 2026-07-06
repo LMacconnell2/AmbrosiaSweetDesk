@@ -4,6 +4,9 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
+require_once SWEETDESK_PATH .
+    'src/api/controllers/client-controller.php';
+
 class SweetDesk_Client_Routes
 {
     public static function register_routes()

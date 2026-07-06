@@ -2,6 +2,9 @@
 
 if (!defined('ABSPATH')) exit;
 
+require_once SWEETDESK_PATH .
+    'src/api/services/client-service.php';
+
 class SweetDesk_Client_Controller {
 
     private SweetDesk_Client_Service $service;

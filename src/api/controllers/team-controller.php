@@ -3,6 +3,9 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
+require_once SWEETDESK_PATH .
+    'src/api/services/team-service.php';
+
 class SweetDesk_Team_Controller
 {
     private SweetDesk_Team_Service $service;

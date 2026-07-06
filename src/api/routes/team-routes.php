@@ -3,6 +3,9 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
+require_once SWEETDESK_PATH .
+    'src/api/controllers/team-controller.php';
+
 class SweetDesk_Team_Routes
 {
     public static function register_routes()
