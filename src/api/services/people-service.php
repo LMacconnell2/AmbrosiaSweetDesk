@@ -1,0 +1,646 @@
+<?php
+
+if (!defined('ABSPATH')) exit;
+
+class SweetDesk_People_Service {
+
+    private wpdb $db;
+    private string $people_table;
+    private string $people_meta_table;
+    private string $people_teams_table;
+    private string $teams_table;
+
+    public function __construct() {
+        global $wpdb;
+
+        $this->db = $wpdb;
+        $this->people_table = $wpdb->prefix . 'sweetdesk_people';
+        $this->people_meta_table = $wpdb->prefix . 'sweetdesk_people_meta';
+        $this->people_teams_table = $wpdb->prefix . 'sweetdesk_people_teams';
+        $this->teams_table = $wpdb->prefix . 'sweetdesk_teams';
+    }
+
+    public function get_people(array $args): array {
+        $page = max(1, (int) $args['page']);
+        $per_page = min(100, max(1, (int) $args['per_page']));
+        $offset = ($page - 1) * $per_page;
+
+        $roles = $this->csv_strings($args['roles'] ?? '');
+        $team_ids = $this->csv_ints($args['team_ids'] ?? '');
+        $client_ids = $this->csv_ints($args['client_ids'] ?? '');
+
+        $allowed_sort = ['first_name', 'last_name', 'email', 'role', 'created_at', 'updated_at'];
+        $sort = in_array($args['sort'], $allowed_sort, true) ? $args['sort'] : 'last_name';
+        $order = strtolower($args['order']) === 'desc' ? 'DESC' : 'ASC';
+
+        $joins = '';
+        $where = 'WHERE 1=1';
+        $params = [];
+
+        if (!empty($team_ids)) {
+            $joins .= " INNER JOIN {$this->people_teams_table} pt_filter ON pt_filter.person_id = p.id ";
+            $where .= ' AND pt_filter.team_id IN (' . implode(',', array_fill(0, count($team_ids), '%d')) . ')';
+            $params = array_merge($params, $team_ids);
+        }
+
+        if (!empty($args['q'])) {
+            $like = '%' . $this->db->esc_like($args['q']) . '%';
+            $where .= ' AND (p.first_name LIKE %s OR p.last_name LIKE %s OR p.email LIKE %s)';
+            array_push($params, $like, $like, $like);
+        }
+
+        if (!empty($roles)) {
+            $where .= ' AND p.role IN (' . implode(',', array_fill(0, count($roles), '%s')) . ')';
+            $params = array_merge($params, $roles);
+        }
+
+        if (!empty($client_ids)) {
+            $where .= ' AND p.client_id IN (' . implode(',', array_fill(0, count($client_ids), '%d')) . ')';
+            $params = array_merge($params, $client_ids);
+        }
+
+        if ($args['internal'] !== null && $args['internal'] !== '') {
+            $internal = filter_var($args['internal'], FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE);
+
+            if ($internal === true) {
+                $where .= ' AND p.wp_user_id IS NOT NULL';
+            } elseif ($internal === false) {
+                $where .= ' AND p.wp_user_id IS NULL';
+            }
+        }
+
+        if ($args['is_active'] !== null && $args['is_active'] !== '') {
+            $active = filter_var($args['is_active'], FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE);
+            $where .= ' AND p.is_active = %d';
+            $params[] = $active ? 1 : 0;
+        }
+
+        $total_sql = "
+            SELECT COUNT(DISTINCT p.id)
+            FROM {$this->people_table} p
+            {$joins}
+            {$where}
+        ";
+
+        $total = !empty($params)
+            ? (int) $this->db->get_var($this->db->prepare($total_sql, ...$params))
+            : (int) $this->db->get_var($total_sql);
+
+        $sql = "
+            SELECT DISTINCT
+                p.id,
+                p.wp_user_id,
+                p.client_id,
+                p.first_name,
+                p.last_name,
+                p.email,
+                p.role,
+                p.avatar_url,
+                p.is_active
+            FROM {$this->people_table} p
+            {$joins}
+            {$where}
+            ORDER BY p.{$sort} {$order}
+            LIMIT %d OFFSET %d
+        ";
+
+        $rows = $this->db->get_results(
+            $this->db->prepare($sql, ...array_merge($params, [$per_page, $offset])),
+            ARRAY_A
+        );
+
+        return [
+            'success' => true,
+            'data' => array_map([$this, 'cast_person_row'], $rows),
+            'pagination' => [
+                'page' => $page,
+                'per_page' => $per_page,
+                'total' => $total,
+                'total_pages' => (int) ceil($total / $per_page),
+            ],
+            'filters' => [
+                'q' => $args['q'],
+                'roles' => $roles,
+                'team_ids' => $team_ids,
+                'client_ids' => $client_ids,
+            ],
+            'sorting' => [
+                'sort' => $sort,
+                'order' => strtolower($order),
+            ],
+        ];
+    }
+
+    public function get_person(int $id): array|WP_Error {
+        $person = $this->db->get_row(
+            $this->db->prepare("SELECT * FROM {$this->people_table} WHERE id = %d", $id),
+            ARRAY_A
+        );
+
+        if (!$person) {
+            return new WP_Error('sweetdesk_person_not_found', 'Person not found.', ['status' => 404]);
+        }
+
+        $person = $this->cast_person_row($person);
+        $person['created_at'] = $person['created_at'] ?? null;
+        $person['updated_at'] = $person['updated_at'] ?? null;
+        $person['meta'] = $this->get_person_meta_rows($id);
+        $person['teams'] = $this->get_person_teams($id);
+
+        return [
+            'success' => true,
+            'data' => $person,
+        ];
+    }
+
+    public function create_person(array $data): array|WP_Error {
+        $person_data = $this->sanitize_person_data($data);
+
+        if (is_wp_error($person_data)) {
+            return $person_data;
+        }
+
+        $inserted = $this->db->insert($this->people_table, $person_data);
+
+        if (!$inserted) {
+            return new WP_Error('sweetdesk_person_create_failed', 'Person could not be created.', ['status' => 500]);
+        }
+
+        $person_id = (int) $this->db->insert_id;
+
+        if (!empty($data['meta']) && is_array($data['meta'])) {
+            $this->upsert_person_meta($person_id, $data['meta']);
+        }
+
+        if (isset($data['team_ids']) && is_array($data['team_ids'])) {
+            $this->replace_person_teams($person_id, $data['team_ids']);
+        }
+
+        return [
+            'success' => true,
+            'message' => 'Person created successfully.',
+            'data' => $this->get_person_payload($person_id),
+        ];
+    }
+
+    public function update_person(int $id, array $data): array|WP_Error {
+        if (!$this->person_exists($id)) {
+            return new WP_Error('sweetdesk_person_not_found', 'Person not found.', ['status' => 404]);
+        }
+
+        $person_data = $this->sanitize_person_data($data, false);
+
+        if (is_wp_error($person_data)) {
+            return $person_data;
+        }
+
+        if (!empty($person_data)) {
+            $this->db->update($this->people_table, $person_data, ['id' => $id]);
+        }
+
+        if (isset($data['meta']) && is_array($data['meta'])) {
+            $this->upsert_person_meta($id, $data['meta']);
+        }
+
+        if (isset($data['team_ids']) && is_array($data['team_ids'])) {
+            $this->replace_person_teams($id, $data['team_ids']);
+        }
+
+        return [
+            'success' => true,
+            'message' => 'Person updated successfully.',
+            'data' => $this->get_person_payload($id),
+        ];
+    }
+
+    public function delete_person(int $id): array|WP_Error {
+        if (!$this->person_exists($id)) {
+            return new WP_Error('sweetdesk_person_not_found', 'Person not found.', ['status' => 404]);
+        }
+
+        $this->db->delete($this->people_teams_table, ['person_id' => $id]);
+        $this->db->delete($this->people_meta_table, ['person_id' => $id]);
+
+        $deleted = $this->db->delete($this->people_table, ['id' => $id]);
+
+        if (!$deleted) {
+            return new WP_Error('sweetdesk_person_delete_failed', 'Person could not be deleted.', ['status' => 500]);
+        }
+
+        return [
+            'success' => true,
+            'message' => 'Person deleted successfully.',
+            'data' => [
+                'id' => $id,
+            ],
+        ];
+    }
+
+    public function export_people(array $args): WP_REST_Response {
+        $people = $this->get_people(array_merge($args, [
+            'page' => 1,
+            'per_page' => 100,
+            'sort' => 'last_name',
+            'order' => 'asc',
+        ]));
+
+        $rows = [];
+        $meta_keys = [];
+
+        foreach ($people['data'] as $person) {
+            $person_id = (int) $person['id'];
+            $meta = $this->get_person_meta_assoc($person_id);
+
+            foreach (array_keys($meta) as $key) {
+                $meta_keys[$key] = true;
+            }
+
+            $teams = $this->get_person_teams($person_id);
+
+            $rows[] = [
+                'person' => $person,
+                'meta' => $meta,
+                'team_ids' => implode(',', array_column($teams, 'team_id')),
+                'team_names' => implode(',', array_column($teams, 'name')),
+            ];
+        }
+
+        $meta_columns = array_keys($meta_keys);
+
+        $headers = array_merge([
+            'id',
+            'wp_user_id',
+            'client_id',
+            'first_name',
+            'last_name',
+            'email',
+            'role',
+            'avatar_url',
+            'is_active',
+            'team_ids',
+            'team_names',
+            'created_at',
+            'updated_at',
+        ], $meta_columns);
+
+        $handle = fopen('php://temp', 'r+');
+        fputcsv($handle, $headers);
+
+        foreach ($rows as $row) {
+            $person = $row['person'];
+
+            $csv_row = [
+                $person['id'] ?? '',
+                $person['wp_user_id'] ?? '',
+                $person['client_id'] ?? '',
+                $person['first_name'] ?? '',
+                $person['last_name'] ?? '',
+                $person['email'] ?? '',
+                $person['role'] ?? '',
+                $person['avatar_url'] ?? '',
+                !empty($person['is_active']) ? 1 : 0,
+                $row['team_ids'],
+                $row['team_names'],
+                $person['created_at'] ?? '',
+                $person['updated_at'] ?? '',
+            ];
+
+            foreach ($meta_columns as $key) {
+                $value = $row['meta'][$key] ?? '';
+                $csv_row[] = is_scalar($value) ? $value : wp_json_encode($value);
+            }
+
+            fputcsv($handle, $csv_row);
+        }
+
+        rewind($handle);
+        $csv = stream_get_contents($handle);
+        fclose($handle);
+
+        return new WP_REST_Response($csv, 200, [
+            'Content-Type' => 'text/csv; charset=' . get_option('blog_charset'),
+            'Content-Disposition' => 'attachment; filename="sweetdesk-people-export.csv"',
+        ]);
+    }
+
+    public function import_people(WP_REST_Request $request): array|WP_Error {
+        $files = $request->get_file_params();
+
+        if (empty($files['file']['tmp_name'])) {
+            return new WP_Error('sweetdesk_missing_import_file', 'CSV file is required.', ['status' => 400]);
+        }
+
+        $handle = fopen($files['file']['tmp_name'], 'r');
+
+        if (!$handle) {
+            return new WP_Error('sweetdesk_import_open_failed', 'Could not open CSV file.', ['status' => 400]);
+        }
+
+        $headers = fgetcsv($handle);
+
+        if (!$headers) {
+            fclose($handle);
+            return new WP_Error('sweetdesk_import_empty_file', 'CSV file is empty.', ['status' => 400]);
+        }
+
+        $headers = array_map('sanitize_key', $headers);
+
+        $core_fields = [
+            'wp_user_id',
+            'client_id',
+            'first_name',
+            'last_name',
+            'email',
+            'role',
+            'avatar_url',
+            'is_active',
+            'team_ids',
+        ];
+
+        $created = 0;
+        $updated = 0;
+        $skipped = 0;
+        $errors = [];
+        $row_number = 1;
+
+        while (($row = fgetcsv($handle)) !== false) {
+            $row_number++;
+
+            $record = array_combine($headers, $row);
+
+            if (!$record) {
+                $skipped++;
+                $errors[] = [
+                    'row' => $row_number,
+                    'message' => 'Invalid CSV row.',
+                ];
+                continue;
+            }
+
+            if (empty($record['email']) && empty($record['first_name']) && empty($record['last_name'])) {
+                $skipped++;
+                $errors[] = [
+                    'row' => $row_number,
+                    'message' => 'Missing email and name.',
+                ];
+                continue;
+            }
+
+            $person_data = [];
+            $meta = [];
+
+            foreach ($record as $key => $value) {
+                if (in_array($key, $core_fields, true)) {
+                    $person_data[$key] = $value;
+                } elseif ($value !== '') {
+                    $meta[$key] = $value;
+                }
+            }
+
+            $team_ids = [];
+
+            if (!empty($person_data['team_ids'])) {
+                $team_ids = $this->csv_ints($person_data['team_ids']);
+                unset($person_data['team_ids']);
+            }
+
+            $person_data['meta'] = $meta;
+            $person_data['team_ids'] = $team_ids;
+
+            $existing_id = null;
+
+            if (!empty($person_data['email'])) {
+                $existing_id = $this->db->get_var(
+                    $this->db->prepare(
+                        "SELECT id FROM {$this->people_table} WHERE email = %s LIMIT 1",
+                        sanitize_email($person_data['email'])
+                    )
+                );
+            }
+
+            $result = $existing_id
+                ? $this->update_person((int) $existing_id, $person_data)
+                : $this->create_person($person_data);
+
+            if (is_wp_error($result)) {
+                $skipped++;
+                $errors[] = [
+                    'row' => $row_number,
+                    'message' => $result->get_error_message(),
+                ];
+                continue;
+            }
+
+            $existing_id ? $updated++ : $created++;
+        }
+
+        fclose($handle);
+
+        return [
+            'success' => true,
+            'message' => 'People imported successfully.',
+            'data' => [
+                'created' => $created,
+                'updated' => $updated,
+                'skipped' => $skipped,
+                'errors' => $errors,
+            ],
+        ];
+    }
+
+    private function sanitize_person_data(array $data, bool $allow_empty = true): array|WP_Error {
+        $clean = [];
+
+        if (array_key_exists('wp_user_id', $data)) {
+            $clean['wp_user_id'] = $data['wp_user_id'] !== '' && $data['wp_user_id'] !== null
+                ? absint($data['wp_user_id'])
+                : null;
+        }
+
+        if (array_key_exists('client_id', $data)) {
+            $clean['client_id'] = $data['client_id'] !== '' && $data['client_id'] !== null
+                ? absint($data['client_id'])
+                : null;
+        }
+
+        if (array_key_exists('first_name', $data)) {
+            $clean['first_name'] = sanitize_text_field($data['first_name']);
+        }
+
+        if (array_key_exists('last_name', $data)) {
+            $clean['last_name'] = sanitize_text_field($data['last_name']);
+        }
+
+        if (array_key_exists('email', $data)) {
+            $clean['email'] = $data['email'] ? sanitize_email($data['email']) : null;
+        }
+
+        if (array_key_exists('role', $data)) {
+            $clean['role'] = $data['role'] ? sanitize_key($data['role']) : null;
+        }
+
+        if (array_key_exists('avatar_url', $data)) {
+            $clean['avatar_url'] = $data['avatar_url'] ? esc_url_raw($data['avatar_url']) : null;
+        }
+
+        if (array_key_exists('is_active', $data)) {
+            $active = filter_var($data['is_active'], FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE);
+            $clean['is_active'] = $active ? 1 : 0;
+        }
+
+        if (!$allow_empty && empty($clean)) {
+            return [];
+        }
+
+        return $clean;
+    }
+
+    private function upsert_person_meta(int $person_id, array $meta): void {
+        foreach ($meta as $key => $value) {
+            $meta_key = sanitize_key($key);
+
+            if ($meta_key === '') {
+                continue;
+            }
+
+            $this->db->query(
+                $this->db->prepare(
+                    "
+                    INSERT INTO {$this->people_meta_table}
+                        (person_id, meta_key, meta_value)
+                    VALUES
+                        (%d, %s, %s)
+                    ON DUPLICATE KEY UPDATE
+                        meta_value = VALUES(meta_value)
+                    ",
+                    $person_id,
+                    $meta_key,
+                    maybe_serialize($value)
+                )
+            );
+        }
+    }
+
+    private function replace_person_teams(int $person_id, array $team_ids): void {
+        $team_ids = array_values(array_unique(array_filter(array_map('absint', $team_ids))));
+
+        $this->db->delete($this->people_teams_table, ['person_id' => $person_id]);
+
+        foreach ($team_ids as $team_id) {
+            $this->db->insert($this->people_teams_table, [
+                'person_id' => $person_id,
+                'team_id' => $team_id,
+            ]);
+        }
+    }
+
+    private function get_person_payload(int $id): array {
+        $person = $this->db->get_row(
+            $this->db->prepare("SELECT * FROM {$this->people_table} WHERE id = %d", $id),
+            ARRAY_A
+        );
+
+        $person = $this->cast_person_row($person);
+        $person['meta'] = $this->get_person_meta_assoc($id);
+        $person['team_ids'] = array_map(
+            'intval',
+            array_column($this->get_person_teams($id), 'team_id')
+        );
+
+        return $person;
+    }
+
+    private function get_person_meta_rows(int $person_id): array {
+        $rows = $this->db->get_results(
+            $this->db->prepare(
+                "
+                SELECT meta_id, meta_key, meta_value
+                FROM {$this->people_meta_table}
+                WHERE person_id = %d
+                ORDER BY meta_key ASC
+                ",
+                $person_id
+            ),
+            ARRAY_A
+        );
+
+        return array_map(function ($row) {
+            $row['meta_id'] = (int) $row['meta_id'];
+            $row['meta_value'] = maybe_unserialize($row['meta_value']);
+            return $row;
+        }, $rows);
+    }
+
+    private function get_person_meta_assoc(int $person_id): array {
+        $rows = $this->get_person_meta_rows($person_id);
+        $meta = [];
+
+        foreach ($rows as $row) {
+            $meta[$row['meta_key']] = $row['meta_value'];
+        }
+
+        return $meta;
+    }
+
+    private function get_person_teams(int $person_id): array {
+        $rows = $this->db->get_results(
+            $this->db->prepare(
+                "
+                SELECT
+                    pt.person_id,
+                    pt.team_id,
+                    pt.assigned_at,
+                    t.name,
+                    t.description,
+                    t.color
+                FROM {$this->people_teams_table} pt
+                INNER JOIN {$this->teams_table} t ON t.id = pt.team_id
+                WHERE pt.person_id = %d
+                ORDER BY t.name ASC
+                ",
+                $person_id
+            ),
+            ARRAY_A
+        );
+
+        return array_map(function ($row) {
+            $row['person_id'] = (int) $row['person_id'];
+            $row['team_id'] = (int) $row['team_id'];
+            return $row;
+        }, $rows);
+    }
+
+    private function person_exists(int $id): bool {
+        return (bool) $this->db->get_var(
+            $this->db->prepare("SELECT id FROM {$this->people_table} WHERE id = %d", $id)
+        );
+    }
+
+    private function cast_person_row(array $row): array {
+        $row['id'] = isset($row['id']) ? (int) $row['id'] : null;
+        $row['wp_user_id'] = !empty($row['wp_user_id']) ? (int) $row['wp_user_id'] : null;
+        $row['client_id'] = !empty($row['client_id']) ? (int) $row['client_id'] : null;
+        $row['is_active'] = !empty($row['is_active']);
+
+        return $row;
+    }
+
+    private function csv_ints(string $value): array {
+        if ($value === '') {
+            return [];
+        }
+
+        return array_values(array_filter(array_map('absint', explode(',', $value))));
+    }
+
+    private function csv_strings(string $value): array {
+        if ($value === '') {
+            return [];
+        }
+
+        return array_values(array_filter(array_map(
+            'sanitize_key',
+            array_map('trim', explode(',', $value))
+        )));
+    }
+}

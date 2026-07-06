@@ -7,8 +7,11 @@ class SweetDesk_API {
         require_once SWEETDESK_PATH .
             'src/api/routes/ticket-routes.php';
 
-        // require_once SWEETDESK_PATH .
-        //     'src/api/routes/client-routes.php';
+        require_once SWEETDESK_PATH .
+            'src/api/routes/client-routes.php';
+
+        require_once SWEETDESK_PATH .
+            'src/api/routes/people-routes.php';
 
         add_action(
             'rest_api_init',
