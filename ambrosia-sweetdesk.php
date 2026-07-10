@@ -8,7 +8,7 @@
  * Plugin Name:       Ambrosia SweetDesk
  * Plugin URI:        https://ambrosia.digital/ambrosia-sweetdesk
  * Description:       This plugin provides a comprehensive help desk solution for WordPress, allowing you to manage customer support tickets, teams, and analytics all from your WordPress dashboard.
- * Version:           0.0.1
+ * Version:           0.0.2
  * Author:            Logan MacConnell, Matthew C, Art Smith
  * Author URI:        https://ambrosia.digital
  * License:           
@@ -22,36 +22,56 @@
  *  Version    Date    Description
  * --------- --------  ----------------------------------------------------------------------------------------------------
  *  0. 0. 1  5-20-2026  Refactor for better code ogranization and maintanability.
+ *  0. 0. 2  7-10-2026  Database schema updates and implementation of core API endpoints.
  */
 
-if (!defined('ABSPATH')) exit;
+if (!defined('ABSPATH')) {
+    exit;
+}
 
-define( 'SWEETDESK_VERSION', '0.0.1' );
-define( 'SWEETDESK_PATH', plugin_dir_path( __FILE__ ) );
-define( 'SWEETDESK_URL', plugin_dir_url( __FILE__ ) );
+define('SWEETDESK_VERSION', '0.0.2');
+define('SWEETDESK_DB_VERSION', '1.1.0');
+
+define('SWEETDESK_FILE', __FILE__);
+define('SWEETDESK_PATH', plugin_dir_path(__FILE__));
+define('SWEETDESK_URL', plugin_dir_url(__FILE__));
 
 require_once SWEETDESK_PATH . 'src/core/activator.php';
 require_once SWEETDESK_PATH . 'src/core/deactivator.php';
 require_once SWEETDESK_PATH . 'src/core/plugin.php';
+require_once SWEETDESK_PATH .
+    'src/database/class-database-upgrader.php';
 
 register_activation_hook(
-    __FILE__,
-    [ 'SweetDesk_Activator', 'activate' ]
+    SWEETDESK_FILE,
+    ['SweetDesk_Activator', 'activate']
 );
 
 register_deactivation_hook(
-    __FILE__,
-    [ 'SweetDesk_Deactivator', 'deactivate' ]
+    SWEETDESK_FILE,
+    ['SweetDesk_Deactivator', 'deactivate']
 );
 
-// function sweetdesk_init() {
-//     new SweetDesk\Admin\AdminMenu();
-// }
-// add_action('plugins_loaded', 'sweetdesk_init');
+/**
+ * Run database upgrades before the rest of the plugin initializes.
+ */
+add_action(
+    'plugins_loaded',
+    ['SweetDesk_Database_Upgrader', 'maybe_upgrade'],
+    5
+);
 
-function run_sweetdesk() {
+/**
+ * Initialize SweetDesk after database upgrades have been checked.
+ */
+function run_sweetdesk(): void
+{
     $plugin = new SweetDesk_Plugin();
     $plugin->run();
 }
 
-run_sweetdesk();
+add_action(
+    'plugins_loaded',
+    'run_sweetdesk',
+    10
+);
