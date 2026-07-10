@@ -2,6 +2,9 @@
 
 if (!defined('ABSPATH')) exit;
 
+require_once SWEETDESK_PATH .
+    'src/api/services/people-service.php';
+
 class SweetDesk_People_Controller {
 
     private SweetDesk_People_Service $service;
@@ -67,5 +70,10 @@ class SweetDesk_People_Controller {
         return rest_ensure_response(
             $this->service->import_people($request)
         );
+    }
+
+    public function permissions_check(WP_REST_Request $request)
+    {
+        return current_user_can('read');
     }
 }

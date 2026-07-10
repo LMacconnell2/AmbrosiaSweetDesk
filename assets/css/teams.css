@@ -186,3 +186,84 @@ body {
 .modal.delete-modal .modal-header h2 {
     color: var(--status-error);
 }
+
+/* NEW CODE MAY NEED REFACTORING */
+.team-card {
+    border-top: 4px solid var(--team-color, #2563eb);
+}
+
+.team-card-header > svg {
+    color: var(--team-color, #2563eb);
+}
+
+.member-search-results {
+    display: grid;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+    max-height: 220px;
+    overflow-y: auto;
+}
+
+.member-search-result {
+    display: grid;
+    gap: 0.15rem;
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #dcdcde;
+    border-radius: 4px;
+    background: #fff;
+    text-align: left;
+    cursor: pointer;
+}
+
+.member-search-result:hover,
+.member-search-result:focus {
+    border-color: #2271b1;
+    background: #f6f7f7;
+}
+
+.member-search-result span,
+.member-search-result small {
+    color: #646970;
+}
+
+.member-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+}
+
+.member-item > span {
+    display: grid;
+}
+
+.member-item small {
+    color: #646970;
+}
+
+.member-empty,
+.member-search-status,
+.sd-loading-message {
+    color: #646970;
+}
+
+.sd-pagination {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    margin-top: 1.5rem;
+}
+
+.sd-empty-state,
+.sd-error-message {
+    grid-column: 1 / -1;
+    padding: 2rem;
+    text-align: center;
+}
+
+.is-loading {
+    opacity: 0.65;
+    pointer-events: none;
+}

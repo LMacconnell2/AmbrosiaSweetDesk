@@ -2,6 +2,9 @@
 
 if (!defined('ABSPATH')) exit;
 
+require_once SWEETDESK_PATH .
+    'src/api/services/client-service.php';
+
 class SweetDesk_Client_Controller {
 
     private SweetDesk_Client_Service $service;
@@ -57,5 +60,10 @@ class SweetDesk_Client_Controller {
     public function import_clients(WP_REST_Request $request) {
         $data = $request->get_json_params();
         return rest_ensure_response($this->service->import_clients($data));
+    }
+
+    public function permissions_check(WP_REST_Request $request)
+    {
+        return current_user_can('read');
     }
 }

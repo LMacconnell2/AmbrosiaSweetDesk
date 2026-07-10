@@ -1,50 +1,45 @@
 <?php
 
-class SweetDesk_Activator {
+if (!defined('ABSPATH')) {
+    exit;
+}
 
-    public static function activate() {
+class SweetDesk_Activator
+{
+    public static function activate(): void
+    {
+        self::load_dependencies();
+        self::update_schema();
 
-        global $wpdb;
+        update_option(
+            'sweetdesk_db_version',
+            SWEETDESK_DB_VERSION,
+            false
+        );
+    }
 
+    public static function load_dependencies(): void
+    {
         require_once ABSPATH . 'wp-admin/includes/upgrade.php';
 
-        require_once SWEETDESK_PATH .
-            'src/database/Schemas/activity-table.php';
+        $schema_path = SWEETDESK_PATH . 'src/database/Schemas/';
 
-        require_once SWEETDESK_PATH .
-            'src/database/Schemas/attachment-table.php';
+        require_once $schema_path . 'activity-table.php';
+        require_once $schema_path . 'attachment-table.php';
+        require_once $schema_path . 'client-table.php';
+        require_once $schema_path . 'client-meta-table.php';
+        require_once $schema_path . 'people-table.php';
+        require_once $schema_path . 'people-meta-table.php';
+        require_once $schema_path . 'team-table.php';
+        require_once $schema_path . 'team-meta-table.php';
+        require_once $schema_path . 'people-teams-table.php';
+        require_once $schema_path . 'ticket-table.php';
+        require_once $schema_path . 'ticket-meta-table.php';
+        require_once $schema_path . 'ticket-messages-table.php';
+    }
 
-        require_once SWEETDESK_PATH . 
-                'src/database/Schemas/client-table.php';
-
-        require_once SWEETDESK_PATH . 
-                'src/database/Schemas/client-meta-table.php';
-
-        require_once SWEETDESK_PATH . 
-                'src/database/Schemas/people-table.php';
-
-        require_once SWEETDESK_PATH . 
-                'src/database/Schemas/people-meta-table.php';
-
-        require_once SWEETDESK_PATH . 
-                'src/database/Schemas/team-table.php';
-
-        require_once SWEETDESK_PATH . 
-                'src/database/Schemas/team-meta-table.php';
-
-        require_once SWEETDESK_PATH . 
-                'src/database/Schemas/people-teams-table.php';
-
-        require_once SWEETDESK_PATH . 
-                'src/database/Schemas/ticket-table.php';
-                
-        require_once SWEETDESK_PATH . 
-                'src/database/Schemas/ticket-meta-table.php';
-
-        require_once SWEETDESK_PATH . 
-                'src/database/Schemas/ticket-messages-table.php';
-
-
+    public static function update_schema(): void
+    {
         dbDelta(sweetdesk_create_client_table_sql());
         dbDelta(sweetdesk_create_client_meta_table_sql());
 
@@ -57,17 +52,10 @@ class SweetDesk_Activator {
         dbDelta(sweetdesk_create_people_teams_table_sql());
 
         dbDelta(sweetdesk_create_ticket_table_sql());
-
         dbDelta(sweetdesk_create_ticket_meta_table_sql());
         dbDelta(sweetdesk_create_ticket_messages_table_sql());
 
         dbDelta(sweetdesk_create_attachments_table_sql());
         dbDelta(sweetdesk_create_activity_table_sql());
-
-
-        update_option(
-            'sweetdesk_db_version',
-            SWEETDESK_VERSION
-        );
     }
 }

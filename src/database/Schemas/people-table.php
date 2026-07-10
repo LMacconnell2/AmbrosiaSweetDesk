@@ -17,6 +17,7 @@ function sweetdesk_create_people_table_sql() {
 
         first_name VARCHAR(100) NULL,
         last_name VARCHAR(100) NULL,
+        client_id BIGINT UNSIGNED NULL,
 
         email VARCHAR(255) NULL,
 
@@ -34,7 +35,8 @@ function sweetdesk_create_people_table_sql() {
 
         KEY idx_wp_user_id (wp_user_id),
         KEY idx_email (email),
-        KEY idx_role (role)
+        KEY idx_role (role),
+        KEY idx_client_id (client_id)
 
     ) {$charset_collate};
     ";
