@@ -111,7 +111,17 @@ class SweetDesk_People_Service {
 
         return [
             'success' => true,
-            'data' => array_map([$this, 'cast_person_row'], $rows),
+            'data' => array_map(function ($row) {
+                $person = $this->cast_person_row($row);
+                $meta = $this->get_person_meta_assoc((int) $person['id']);
+
+                $person['meta'] = [
+                    ['meta_key' => 'phone', 'meta_value' => $meta['phone'] ?? ''],
+                    ['meta_key' => 'notes', 'meta_value' => $meta['notes'] ?? ''],
+                ];
+
+                return $person;
+            }, $rows),
             'pagination' => [
                 'page' => $page,
                 'per_page' => $per_page,

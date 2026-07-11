@@ -66,7 +66,14 @@ class SweetDesk_Client_Service {
 
         return [
             'success' => true,
-            'data' => array_map([$this, 'cast_client_list_row'], $rows),
+            'data' => array_map(function ($row) {
+                $client = $this->cast_client_list_row($row);
+                $client_id = (int) $client['id'];
+                $client['meta'] = $this->get_client_meta_assoc($client_id);
+                $client['people'] = $this->get_client_people($client_id);
+
+                return $client;
+            }, $rows),
             'pagination' => [
                 'page' => $page,
                 'per_page' => $per_page,

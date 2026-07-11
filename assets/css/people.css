@@ -44,6 +44,10 @@
 }
 
 .section .toolbar {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
     padding: 14px 16px 12px;
     margin-bottom: 0;
     border-bottom: 1px solid var(--border);
@@ -66,6 +70,124 @@
     background-color: var(--page-bg);
 }
 
+.filter-checkbox {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin: 0;
+    font-size: 0.84rem;
+    font-weight: 500;
+    line-height: 1.25;
+    color: var(--text-secondary);
+    white-space: nowrap;
+    cursor: pointer;
+    user-select: none;
+    flex-shrink: 0;
+}
+
+.filter-checkbox input {
+    width: 15px;
+    height: 15px;
+    margin: 0;
+    cursor: pointer;
+}
+
+.table-bulk-actions {
+    display: flex;
+    gap: 10px;
+    padding: 12px 16px;
+    border-top: 1px solid var(--border);
+    background: var(--surface-subtle);
+}
+
+.table-bulk-actions.sd-form-hidden {
+    display: none !important;
+}
+
+.table-bulk-actions .btn-outline.sd-form-hidden,
+.table-bulk-actions .btn-outline[hidden] {
+    display: none !important;
+}
+
+#person-panel-toggle-active.sd-form-hidden,
+#person-panel-toggle-active[hidden] {
+    display: none !important;
+}
+
+tr.person-row-inactive td {
+    color: var(--text-muted);
+}
+
+tr.person-row-inactive .col-name {
+    color: var(--text-secondary);
+}
+
+.person-name-cell {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-width: 0;
+}
+
+.person-name-text {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.status-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 3px 9px;
+    border-radius: 99px;
+    font-size: 0.78rem;
+    font-weight: 600;
+    flex-shrink: 0;
+}
+
+.status-badge.inactive {
+    background: var(--surface-page);
+    color: var(--text-muted);
+}
+
+.status-badge.is-reserved {
+    visibility: hidden;
+}
+
+.section table {
+    table-layout: fixed;
+    width: 100%;
+}
+
+.section table .col-check {
+    width: 42px;
+}
+
+.section table .col-name {
+    width: 30%;
+}
+
+.section table th:nth-child(3),
+.section table td:nth-child(3) {
+    width: 15%;
+}
+
+.section table th:nth-child(4),
+.section table td:nth-child(4) {
+    width: 24%;
+}
+
+.section table th:nth-child(5),
+.section table td:nth-child(5) {
+    width: 15%;
+}
+
+.section table th:last-child,
+.section table td:last-child {
+    width: 88px;
+}
+
 a.email-link {
     color: var(--link);
     text-decoration: none;
@@ -74,6 +196,11 @@ a.email-link {
 
 a.email-link:hover {
     text-decoration: underline;
+}
+
+.form-group[hidden],
+.form-group.sd-form-hidden {
+    display: none !important;
 }
 
 .row-actions {
@@ -106,4 +233,15 @@ a.email-link:hover {
 .type-toggle button.active {
     background: var(--action);
     color: #fff;
+}
+
+#person-panel-submit,
+#person-panel-toggle-active {
+    width: 100%;
+    justify-content: center;
+    box-sizing: border-box;
+}
+
+#person-panel-toggle-active {
+    margin-top: 10px;
 }

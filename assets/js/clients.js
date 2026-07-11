@@ -4,9 +4,12 @@ const SweetDeskClients = {
     clients: [],
     people: [],
     editingClientId: null,
+    editingClientData: null,
     deleteClientId: null,
     deleteClientRow: null,
-    searchTimer: null
+    searchTimer: null,
+    sort: { field: 'name', order: 'asc' },
+    statusFilter: ''
 };
 
 function sdClientApi(path, options = {}) {
@@ -65,8 +68,14 @@ function getClientStatus(client) {
 
 function resetClientForm() {
     SweetDeskClients.editingClientId = null;
+    SweetDeskClients.editingClientData = null;
 
     document.getElementById('client-panel-name').value = '';
+    document.getElementById('client-panel-email').value = '';
+    document.getElementById('client-panel-phone').value = '';
+    document.getElementById('client-panel-website').value = '';
+    document.getElementById('client-panel-industry').value = '';
+    document.getElementById('client-panel-status').value = 'active';
     document.getElementById('client-panel-notes').value = '';
     document.getElementById('client-panel-contact').value = '';
 }
@@ -75,6 +84,7 @@ function openClientSidebar(mode = 'create', data = {}) {
     getClientPanelShell()?.classList.remove('collapsed');
 
     SweetDeskClients.editingClientId = mode === 'edit' ? Number(data.id) : null;
+    SweetDeskClients.editingClientData = mode === 'edit' ? data : null;
 
     document.getElementById('client-panel-title').textContent =
         mode === 'create' ? 'Add New Client' : 'Edit Client';
@@ -88,15 +98,26 @@ function openClientSidebar(mode = 'create', data = {}) {
     }
 
     document.getElementById('client-panel-name').value = data.name || '';
+    document.getElementById('client-panel-email').value = data.email || '';
+    document.getElementById('client-panel-phone').value = data.phone || '';
+    document.getElementById('client-panel-website').value = data.website || '';
+    document.getElementById('client-panel-industry').value = getClientMeta(data, 'industry');
+    document.getElementById('client-panel-status').value = getClientStatus(data);
     document.getElementById('client-panel-notes').value = data.notes || '';
 
     const contactSelect = document.getElementById('client-panel-contact');
-    const contact = getPrimaryContact(data);
+    const linkedPerson = data.people?.[0];
 
-    for (const option of contactSelect.options) {
-        if (option.value === contact || option.textContent === contact) {
-            contactSelect.value = option.value;
-            break;
+    if (linkedPerson) {
+        contactSelect.value = String(linkedPerson.id);
+    } else {
+        const contactName = getClientMeta(data, 'primary_contact');
+
+        for (const option of contactSelect.options) {
+            if (option.textContent === contactName) {
+                contactSelect.value = option.value;
+                break;
+            }
         }
     }
 }
@@ -116,36 +137,65 @@ async function openEditClientSidebar(id) {
 
 function getClientPayload() {
     const contactSelect = document.getElementById('client-panel-contact');
+    const contactOption = contactSelect.selectedOptions[0];
+    const contactName = contactOption && contactOption.value ? contactOption.textContent : '';
 
     return {
         name: document.getElementById('client-panel-name').value,
+        email: document.getElementById('client-panel-email').value,
+        phone: document.getElementById('client-panel-phone').value,
+        website: document.getElementById('client-panel-website').value,
         notes: document.getElementById('client-panel-notes').value,
-        email: '',
-        phone: '',
-        website: '',
         meta: {
-            primary_contact: contactSelect.value || '',
-            industry: '',
-            account_status: 'active'
+            primary_contact: contactName,
+            industry: document.getElementById('client-panel-industry').value,
+            account_status: document.getElementById('client-panel-status').value
         }
     };
+}
+
+async function linkPrimaryContact(clientId, personId, previousPersonId) {
+    if (previousPersonId && Number(previousPersonId) !== Number(personId)) {
+        await sdClientApi(`/people/${previousPersonId}`, {
+            method: 'PUT',
+            body: JSON.stringify({ client_id: null })
+        });
+    }
+
+    if (personId) {
+        await sdClientApi(`/people/${personId}`, {
+            method: 'PUT',
+            body: JSON.stringify({ client_id: clientId })
+        });
+    }
 }
 
 async function saveClient() {
     const payload = getClientPayload();
     const id = SweetDeskClients.editingClientId;
+    const contactSelect = document.getElementById('client-panel-contact');
+    const personId = contactSelect.value ? Number(contactSelect.value) : null;
+    const previousPersonId = SweetDeskClients.editingClientData?.people?.[0]?.id ?? null;
 
     try {
+        let clientId = id;
+
         if (id) {
             await sdClientApi(`/clients/${id}`, {
                 method: 'PUT',
                 body: JSON.stringify(payload)
             });
         } else {
-            await sdClientApi('/clients', {
+            const response = await sdClientApi('/clients', {
                 method: 'POST',
                 body: JSON.stringify(payload)
             });
+
+            clientId = response.data?.id;
+        }
+
+        if (clientId) {
+            await linkPrimaryContact(clientId, personId, previousPersonId);
         }
 
         closeClientSidebar();
@@ -190,7 +240,7 @@ function clientActionButtons(client) {
     const safeName = String(client.name || '').replace(/'/g, '&#039;');
 
     return `
-        <div class="row-actions">
+        <div class="sd-actions">
             <button class="sd-action-btn sd-edit-btn" type="button" onclick="openEditClientSidebar(${client.id})">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
@@ -228,25 +278,38 @@ function renderClientRow(client) {
     `;
 }
 
+function applyStatusFilter(clients) {
+    if (!SweetDeskClients.statusFilter) {
+        return clients;
+    }
+
+    return clients.filter(client => {
+        const status = getClientStatus(client).toLowerCase();
+        return status === SweetDeskClients.statusFilter;
+    });
+}
+
 function renderClients() {
     const tbody = document.querySelector('.table-wrap table tbody');
 
     if (!tbody) return;
 
-    tbody.innerHTML = SweetDeskClients.clients.length
-        ? SweetDeskClients.clients.map(renderClientRow).join('')
+    const filtered = applyStatusFilter(SweetDeskClients.clients);
+
+    tbody.innerHTML = filtered.length
+        ? filtered.map(renderClientRow).join('')
         : `<tr><td colspan="8">No clients found.</td></tr>`;
 }
 
 async function loadClients() {
-    const searchInput = document.querySelector('.search-wrap input');
+    const searchInput = document.getElementById('client-search');
     const q = searchInput?.value?.trim() || '';
 
     const params = new URLSearchParams({
         page: '1',
         per_page: '100',
-        sort: 'name',
-        order: 'asc'
+        sort: SweetDeskClients.sort.field,
+        order: SweetDeskClients.sort.order
     });
 
     if (q) params.set('q', q);
@@ -269,6 +332,7 @@ async function loadClientContacts() {
         const response = await sdClientApi('/people?roles=client&per_page=100&sort=last_name&order=asc');
         SweetDeskClients.people = response.data || [];
 
+        const current = contactSelect.value;
         contactSelect.innerHTML = `<option value="">None</option>`;
 
         SweetDeskClients.people.forEach(person => {
@@ -277,17 +341,61 @@ async function loadClientContacts() {
             if (!name) return;
 
             const option = document.createElement('option');
-            option.value = name;
+            option.value = String(person.id);
             option.textContent = name;
             contactSelect.appendChild(option);
         });
+
+        if (current) {
+            contactSelect.value = current;
+        }
     } catch (error) {
         console.warn(error.message);
     }
 }
 
-function exportClientsJson() {
-    window.location.href = `${SweetDeskClients.apiUrl}/clients/export?include_people=true&include_recent_tickets=true`;
+function getClientExportParams() {
+    const params = new URLSearchParams({
+        include_people: 'true',
+        include_recent_tickets: 'true'
+    });
+
+    const q = document.getElementById('client-search')?.value?.trim();
+
+    if (q) {
+        params.set('q', q);
+    }
+
+    return params;
+}
+
+async function exportClientsJson() {
+    const params = getClientExportParams();
+    const url = `${SweetDeskClients.apiUrl}/clients/export?${params.toString()}`;
+
+    try {
+        const response = await fetch(url, {
+            headers: {
+                'X-WP-Nonce': SweetDeskClients.nonce
+            }
+        });
+
+        if (!response.ok) {
+            const data = await response.json().catch(() => null);
+            throw new Error(data?.message || 'Export failed.');
+        }
+
+        const data = await response.json();
+        const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+        const objectUrl = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = objectUrl;
+        link.download = 'sweetdesk-clients-export.json';
+        link.click();
+        URL.revokeObjectURL(objectUrl);
+    } catch (error) {
+        alert(error.message);
+    }
 }
 
 async function importClientsJson(file) {
@@ -320,12 +428,49 @@ function setupClientImport() {
         if (!file) return;
 
         try {
-            await importClientsJson(file);
+            const result = await importClientsJson(file);
+            const summary = result.data || {};
+
+            alert(
+                `Import complete.\nCreated: ${summary.created ?? 0}\nUpdated: ${summary.updated ?? 0}\nSkipped: ${summary.skipped ?? 0}\nErrors: ${summary.errors?.length ?? 0}`
+            );
+
             input.value = '';
             await loadClients();
         } catch (error) {
             alert(error.message);
         }
+    });
+}
+
+function setupClientSort() {
+    const sortMap = {
+        1: 'name',
+        4: 'name',
+        5: 'name'
+    };
+
+    const headers = document.querySelectorAll('.table-wrap thead th');
+
+    headers.forEach((header, index) => {
+        const sortField = sortMap[index];
+
+        if (!sortField) {
+            return;
+        }
+
+        header.style.cursor = 'pointer';
+
+        header.addEventListener('click', () => {
+            if (SweetDeskClients.sort.field === sortField) {
+                SweetDeskClients.sort.order = SweetDeskClients.sort.order === 'asc' ? 'desc' : 'asc';
+            } else {
+                SweetDeskClients.sort.field = sortField;
+                SweetDeskClients.sort.order = 'asc';
+            }
+
+            loadClients();
+        });
     });
 }
 
@@ -339,9 +484,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     document.getElementById('sd-new-client')?.addEventListener('click', openNewClientSidebar);
     document.getElementById('client-panel-submit')?.addEventListener('click', saveClient);
 
-    const searchInput = document.querySelector('.search-wrap input');
-
-    searchInput?.addEventListener('input', () => {
+    document.getElementById('client-search')?.addEventListener('input', () => {
         clearTimeout(SweetDeskClients.searchTimer);
 
         SweetDeskClients.searchTimer = setTimeout(() => {
@@ -349,10 +492,16 @@ document.addEventListener('DOMContentLoaded', async () => {
         }, 300);
     });
 
+    document.getElementById('client-status-filter')?.addEventListener('change', event => {
+        SweetDeskClients.statusFilter = event.target.value;
+        renderClients();
+    });
+
     const exportButton = document.querySelectorAll('.header-actions .btn-outline')[1];
     exportButton?.addEventListener('click', exportClientsJson);
 
     setupClientImport();
+    setupClientSort();
 
     await loadClientContacts();
     await loadClients();
