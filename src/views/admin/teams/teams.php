@@ -2,10 +2,12 @@
   <main class="main">
     <div class="page-header">
       <h1 class="page-title">Teams</h1>
-      <button class="btn-primary" id="sd-new-team">
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
-        New Team
-      </button>
+      <div class="header-actions">
+        <button id="sd-new-team" class="btn-primary" type="button">
+          <span class="dashicons dashicons-plus-alt2"></span>
+          New Team
+        </button>
+      </div>
     </div>
 
     <div class="teams-grid" id="sd-teams-grid" aria-live="polite">
@@ -56,6 +58,58 @@
           <form id="edit-team-form">
               <input type="hidden" id="edit-team-id">
 
+              <section class="team-members-section" aria-labelledby="edit-team-members-heading">
+                  <h3 class="team-members-section-heading" id="edit-team-members-heading">Team Members</h3>
+
+                  <div class="form-group team-members-add-group">
+                      <label for="edit-team-member-add-trigger">Add Member</label>
+                      <div class="team-member-add-picker" id="edit-team-member-add-picker">
+                          <button
+                              type="button"
+                              class="team-member-add-trigger"
+                              id="edit-team-member-add-trigger"
+                              aria-haspopup="listbox"
+                              aria-expanded="false"
+                              aria-controls="edit-team-member-add-menu"
+                          >
+                              <span class="team-member-add-label">Select a person...</span>
+                          </button>
+                          <div class="team-member-add-menu" id="edit-team-member-add-menu" hidden>
+                              <div class="search-wrap team-member-add-search-wrap">
+                                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-4.35-4.35"/></svg>
+                                  <input
+                                      type="search"
+                                      class="team-member-add-search"
+                                      aria-label="Search people"
+                                      autocomplete="off"
+                                  >
+                              </div>
+                              <ul class="team-member-add-list" role="listbox"></ul>
+                          </div>
+                      </div>
+                  </div>
+
+                  <div class="team-members-panel">
+                      <div class="search-wrap member-list-filter-wrap">
+                          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-4.35-4.35"/></svg>
+                          <input
+                              type="search"
+                              id="edit-team-member-filter"
+                              class="member-list-filter"
+                              aria-label="Filter team members"
+                              autocomplete="off"
+                          >
+                      </div>
+
+                      <div class="member-list-scroll">
+                          <ul
+                              class="member-list"
+                              id="edit-team-member-list"
+                          ></ul>
+                      </div>
+                  </div>
+              </section>
+
               <div class="form-group">
                   <label for="edit-team-name">Team Name</label>
                   <input
@@ -99,43 +153,6 @@
                               style="--team-color: #2563eb"
                           >Team Name</span>
                       </span>
-                  </div>
-              </div>
-
-              <div class="form-group">
-                  <label for="edit-team-member-search">
-                      Search for members
-                  </label>
-
-                  <input
-                      type="search"
-                      id="edit-team-member-search"
-                      placeholder="Start typing a name or email"
-                      autocomplete="off"
-                  >
-
-                  <div
-                      class="member-search-results"
-                      id="edit-team-member-results"
-                  ></div>
-              </div>
-
-              <div class="form-group">
-                  <label>Selected Members</label>
-
-                  <input
-                      type="search"
-                      id="edit-team-member-filter"
-                      class="member-list-filter"
-                      placeholder="Filter selected members..."
-                      autocomplete="off"
-                  >
-
-                  <div class="member-list-scroll">
-                      <ul
-                          class="member-list"
-                          id="edit-team-member-list"
-                      ></ul>
                   </div>
               </div>
 
@@ -189,6 +206,58 @@
           </div>
 
           <form id="new-team-form">
+              <section class="team-members-section" aria-labelledby="new-team-members-heading">
+                  <h3 class="team-members-section-heading" id="new-team-members-heading">Team Members</h3>
+
+                  <div class="form-group team-members-add-group">
+                      <label for="new-team-member-add-trigger">Add Member</label>
+                      <div class="team-member-add-picker" id="new-team-member-add-picker">
+                          <button
+                              type="button"
+                              class="team-member-add-trigger"
+                              id="new-team-member-add-trigger"
+                              aria-haspopup="listbox"
+                              aria-expanded="false"
+                              aria-controls="new-team-member-add-menu"
+                          >
+                              <span class="team-member-add-label">Select a person...</span>
+                          </button>
+                          <div class="team-member-add-menu" id="new-team-member-add-menu" hidden>
+                              <div class="search-wrap team-member-add-search-wrap">
+                                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-4.35-4.35"/></svg>
+                                  <input
+                                      type="search"
+                                      class="team-member-add-search"
+                                      aria-label="Search people"
+                                      autocomplete="off"
+                                  >
+                              </div>
+                              <ul class="team-member-add-list" role="listbox"></ul>
+                          </div>
+                      </div>
+                  </div>
+
+                  <div class="team-members-panel">
+                      <div class="search-wrap member-list-filter-wrap">
+                          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-4.35-4.35"/></svg>
+                          <input
+                              type="search"
+                              id="new-team-member-filter"
+                              class="member-list-filter"
+                              aria-label="Filter team members"
+                              autocomplete="off"
+                          >
+                      </div>
+
+                      <div class="member-list-scroll">
+                          <ul
+                              class="member-list"
+                              id="new-team-member-list"
+                          ></ul>
+                      </div>
+                  </div>
+              </section>
+
               <div class="form-group">
                   <label for="new-team-name">Team Name</label>
                   <input
@@ -234,43 +303,6 @@
                               style="--team-color: #2563eb"
                           >Team Name</span>
                       </span>
-                  </div>
-              </div>
-
-              <div class="form-group">
-                  <label for="new-team-member-search">
-                      Search for members
-                  </label>
-
-                  <input
-                      type="search"
-                      id="new-team-member-search"
-                      placeholder="Start typing a name or email"
-                      autocomplete="off"
-                  >
-
-                  <div
-                      class="member-search-results"
-                      id="new-team-member-results"
-                  ></div>
-              </div>
-
-              <div class="form-group">
-                  <label>Selected Members</label>
-
-                  <input
-                      type="search"
-                      id="new-team-member-filter"
-                      class="member-list-filter"
-                      placeholder="Filter selected members..."
-                      autocomplete="off"
-                  >
-
-                  <div class="member-list-scroll">
-                      <ul
-                          class="member-list"
-                          id="new-team-member-list"
-                      ></ul>
                   </div>
               </div>
 

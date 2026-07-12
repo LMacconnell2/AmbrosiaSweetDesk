@@ -3,10 +3,10 @@
 
     const apiConfig = window.sweetdeskTeams;
 
-    if (!apiConfig?.apiBase || !apiConfig?.nonce) {
+    if (!apiConfig?.apiBase || !apiConfig?.nonce || !apiConfig?.peopleApiUrl) {
         console.error(
             'SweetDesk teams API configuration is missing. ' +
-                'Make sure teams.js is localized with apiBase and nonce.'
+                'Make sure teams.js is localized with apiBase, peopleApiUrl, and nonce.'
         );
         return;
     }
@@ -20,9 +20,11 @@
         teamToDelete: null,
         selectedNewMembers: new Map(),
         selectedEditMembers: new Map(),
-        memberSearchTimers: {
-            new: null,
-            edit: null,
+        allPeople: [],
+        allPeopleLoaded: false,
+        addMemberSearch: {
+            new: '',
+            edit: '',
         },
     };
 
@@ -94,6 +96,7 @@
     function initializeTeamsPage() {
         cacheElements();
         registerEventListeners();
+        setupAddMemberPicker();
         loadTeams();
     }
 
@@ -122,11 +125,20 @@
         elements.newTeamColorBadge = document.getElementById(
             'new-team-color-badge'
         );
-        elements.newMemberSearch = document.getElementById(
-            'new-team-member-search'
+        elements.newMemberAddPicker = document.getElementById(
+            'new-team-member-add-picker'
         );
-        elements.newMemberResults = document.getElementById(
-            'new-team-member-results'
+        elements.newMemberAddTrigger = document.getElementById(
+            'new-team-member-add-trigger'
+        );
+        elements.newMemberAddMenu = document.getElementById(
+            'new-team-member-add-menu'
+        );
+        elements.newMemberAddSearch = elements.newMemberAddPicker?.querySelector(
+            '.team-member-add-search'
+        );
+        elements.newMemberAddList = elements.newMemberAddPicker?.querySelector(
+            '.team-member-add-list'
         );
         elements.newMemberList = document.getElementById(
             'new-team-member-list'
@@ -154,11 +166,20 @@
         elements.editTeamColorBadge = document.getElementById(
             'edit-team-color-badge'
         );
-        elements.editMemberSearch = document.getElementById(
-            'edit-team-member-search'
+        elements.editMemberAddPicker = document.getElementById(
+            'edit-team-member-add-picker'
         );
-        elements.editMemberResults = document.getElementById(
-            'edit-team-member-results'
+        elements.editMemberAddTrigger = document.getElementById(
+            'edit-team-member-add-trigger'
+        );
+        elements.editMemberAddMenu = document.getElementById(
+            'edit-team-member-add-menu'
+        );
+        elements.editMemberAddSearch = elements.editMemberAddPicker?.querySelector(
+            '.team-member-add-search'
+        );
+        elements.editMemberAddList = elements.editMemberAddPicker?.querySelector(
+            '.team-member-add-list'
         );
         elements.editMemberList = document.getElementById(
             'edit-team-member-list'
@@ -226,14 +247,6 @@
             loadTeams();
         });
 
-        elements.newMemberSearch?.addEventListener('input', (event) => {
-            debounceMemberSearch('new', event.target.value);
-        });
-
-        elements.editMemberSearch?.addEventListener('input', (event) => {
-            debounceMemberSearch('edit', event.target.value);
-        });
-
         elements.newMemberFilter?.addEventListener('input', () => {
             renderSelectedMembers('new');
         });
@@ -243,16 +256,6 @@
         });
 
         elements.teamsGrid?.addEventListener('click', handleTeamGridClick);
-
-        elements.newMemberResults?.addEventListener(
-            'click',
-            handleMemberResultClick
-        );
-
-        elements.editMemberResults?.addEventListener(
-            'click',
-            handleMemberResultClick
-        );
 
         elements.newMemberList?.addEventListener(
             'click',
@@ -284,6 +287,25 @@
 
         document.addEventListener('keydown', (event) => {
             if (event.key !== 'Escape') {
+                return;
+            }
+
+            const newMenuOpen =
+                elements.newMemberAddMenu &&
+                !elements.newMemberAddMenu.hidden;
+            const editMenuOpen =
+                elements.editMemberAddMenu &&
+                !elements.editMemberAddMenu.hidden;
+
+            if (newMenuOpen || editMenuOpen) {
+                if (newMenuOpen) {
+                    closeAddMemberMenu('new');
+                }
+
+                if (editMenuOpen) {
+                    closeAddMemberMenu('edit');
+                }
+
                 return;
             }
 
@@ -556,12 +578,18 @@
     function openNewTeamModal() {
         elements.newTeamForm.reset();
         elements.newTeamColor.value = '#2563eb';
-        elements.newMemberResults.innerHTML = '';
         if (elements.newMemberFilter) {
             elements.newMemberFilter.value = '';
         }
         state.selectedNewMembers.clear();
+        state.addMemberSearch.new = '';
+        closeAddMemberMenu('new');
         renderSelectedMembers('new');
+
+        void loadAllPeople().then(() => {
+            renderAddMemberPicker('new');
+        });
+
         updateTeamColorPreview('new');
 
         elements.newTeamModal.classList.add('active');
@@ -570,10 +598,11 @@
 
     function closeNewTeamModal() {
         elements.newTeamModal.classList.remove('active');
-        elements.newMemberResults.innerHTML = '';
         if (elements.newMemberFilter) {
             elements.newMemberFilter.value = '';
         }
+        closeAddMemberMenu('new');
+        state.addMemberSearch.new = '';
     }
 
     async function createTeam(event) {
@@ -636,12 +665,14 @@
         elements.editTeamModal.classList.add('active');
         elements.editTeamForm.classList.add('is-loading');
         elements.editTeamSubmit.disabled = true;
-        elements.editMemberResults.innerHTML = '';
         if (elements.editMemberFilter) {
             elements.editMemberFilter.value = '';
         }
+        state.addMemberSearch.edit = '';
+        closeAddMemberMenu('edit');
 
         try {
+            await loadAllPeople();
             const team = await apiRequest(`/${teamId}`);
 
             elements.editTeamId.value = String(team.id);
@@ -675,8 +706,9 @@
             });
 
             renderSelectedMembers('edit');
+            renderAddMemberPicker('edit');
             updateTeamColorPreview('edit');
-            elements.editTeamName.focus();
+            elements.editMemberAddTrigger?.focus();
         } catch (error) {
             console.error('Unable to load team:', error);
             closeEditTeamModal();
@@ -689,10 +721,11 @@
 
     function closeEditTeamModal() {
         elements.editTeamModal.classList.remove('active');
-        elements.editMemberResults.innerHTML = '';
         if (elements.editMemberFilter) {
             elements.editMemberFilter.value = '';
         }
+        closeAddMemberMenu('edit');
+        state.addMemberSearch.edit = '';
         state.selectedEditMembers.clear();
     }
 
@@ -711,7 +744,7 @@
 
         if (!name) {
             showMessage('Please enter a team name.', 'error');
-            elements.editTeamName.focus();
+            elements.editMemberAddTrigger?.focus();
             return;
         }
 
@@ -817,155 +850,261 @@
         }
     }
 
-    function debounceMemberSearch(mode, rawQuery) {
-        const query = rawQuery.trim();
+    async function peopleApiRequest(path = '') {
+        const url = `${apiConfig.peopleApiUrl}${path}`;
 
-        window.clearTimeout(state.memberSearchTimers[mode]);
+        const response = await fetch(url, {
+            credentials: 'same-origin',
+            headers: {
+                Accept: 'application/json',
+                'X-WP-Nonce': apiConfig.nonce,
+            },
+        });
 
-        const resultsElement =
-            mode === 'new'
-                ? elements.newMemberResults
-                : elements.editMemberResults;
+        const responseText = await response.text();
+        let data = null;
 
-        if (query.length < 2) {
-            resultsElement.innerHTML = '';
-            return;
+        if (responseText) {
+            try {
+                data = JSON.parse(responseText);
+            } catch {
+                data = {
+                    message: responseText,
+                };
+            }
         }
 
-        resultsElement.innerHTML =
-            '<p class="member-search-status">Searching...</p>';
+        if (!response.ok) {
+            const message =
+                data?.message || `Request failed with status ${response.status}`;
+            throw new Error(message);
+        }
 
-        state.memberSearchTimers[mode] = window.setTimeout(() => {
-            searchPeople(query, mode);
-        }, 300);
+        return data;
     }
 
-    async function searchPeople(query, mode) {
-        const resultsElement =
-            mode === 'new'
-                ? elements.newMemberResults
-                : elements.editMemberResults;
+    async function loadAllPeople() {
+        if (state.allPeopleLoaded) {
+            return state.allPeople;
+        }
 
-        try {
-            const searchParams = new URLSearchParams({
-                q: query,
+        const allPeople = [];
+        let page = 1;
+        let totalPages = 1;
+
+        do {
+            const params = new URLSearchParams({
+                page: String(page),
+                per_page: '100',
+                sort: 'last_name',
+                order: 'asc',
             });
 
-            const response = await apiRequest(
-                `/people?${searchParams.toString()}`
-            );
+            const response = await peopleApiRequest(`/people?${params.toString()}`);
+            const people = Array.isArray(response?.data) ? response.data : [];
 
-            const people = Array.isArray(response?.data)
-                ? response.data
-                : [];
+            allPeople.push(...people);
+            totalPages = Number(response?.pagination?.total_pages) || 1;
+            page += 1;
+        } while (page <= totalPages);
 
-            renderMemberSearchResults(people, mode);
-        } catch (error) {
-            console.error('Unable to search people:', error);
+        state.allPeople = allPeople;
+        state.allPeopleLoaded = true;
 
-            resultsElement.innerHTML = `
-                <p class="member-search-status error">
-                    ${escapeHtml(error.message)}
-                </p>
-            `;
-        }
+        return state.allPeople;
     }
 
-    function renderMemberSearchResults(people, mode) {
-        const resultsElement =
-            mode === 'new'
-                ? elements.newMemberResults
-                : elements.editMemberResults;
+    function getAddMemberElements(mode) {
+        if (mode === 'new') {
+            return {
+                picker: elements.newMemberAddPicker,
+                trigger: elements.newMemberAddTrigger,
+                menu: elements.newMemberAddMenu,
+                search: elements.newMemberAddSearch,
+                list: elements.newMemberAddList,
+            };
+        }
 
-        const selectedMembers =
-            mode === 'new'
-                ? state.selectedNewMembers
-                : state.selectedEditMembers;
+        return {
+            picker: elements.editMemberAddPicker,
+            trigger: elements.editMemberAddTrigger,
+            menu: elements.editMemberAddMenu,
+            search: elements.editMemberAddSearch,
+            list: elements.editMemberAddList,
+        };
+    }
 
-        const availablePeople = people.filter(
+    function getSelectedMembers(mode) {
+        return mode === 'new'
+            ? state.selectedNewMembers
+            : state.selectedEditMembers;
+    }
+
+    function getAvailablePeople(mode) {
+        const selectedMembers = getSelectedMembers(mode);
+
+        return state.allPeople.filter(
             (person) => !selectedMembers.has(Number(person.id))
         );
+    }
 
-        if (!availablePeople.length) {
-            resultsElement.innerHTML = `
-                <p class="member-search-status">
-                    No matching people were found.
-                </p>
-            `;
+    function personMatchesAddMemberSearch(person, query) {
+        if (!query) {
+            return true;
+        }
+
+        const haystack = [getPersonName(person), person.email || '']
+            .join(' ')
+            .toLowerCase();
+
+        return haystack.includes(query);
+    }
+
+    function closeAddMemberMenu(mode) {
+        const { trigger, menu, search } = getAddMemberElements(mode);
+
+        if (menu) {
+            menu.hidden = true;
+        }
+
+        if (trigger) {
+            trigger.setAttribute('aria-expanded', 'false');
+        }
+
+        if (search) {
+            search.value = '';
+        }
+
+        state.addMemberSearch[mode] = '';
+    }
+
+    function renderAddMemberPicker(mode) {
+        const { list } = getAddMemberElements(mode);
+
+        if (!list) {
             return;
         }
 
-        resultsElement.innerHTML = availablePeople
+        const query = (state.addMemberSearch[mode] || '').trim().toLowerCase();
+        const availablePeople = getAvailablePeople(mode).filter((person) =>
+            personMatchesAddMemberSearch(person, query)
+        );
+
+        if (!state.allPeopleLoaded) {
+            list.innerHTML =
+                '<li class="team-member-add-empty">Loading people...</li>';
+            return;
+        }
+
+        if (!availablePeople.length) {
+            list.innerHTML = query
+                ? '<li class="team-member-add-empty">No matching people found.</li>'
+                : '<li class="team-member-add-empty">Everyone is already on this team.</li>';
+            return;
+        }
+
+        list.innerHTML = availablePeople
             .map((person) => {
                 const fullName = getPersonName(person);
 
                 return `
-                    <button
-                        type="button"
-                        class="member-search-result"
-                        data-mode="${escapeAttribute(mode)}"
-                        data-person-id="${Number(person.id)}"
-                        data-first-name="${escapeAttribute(
-                            person.first_name || ''
-                        )}"
-                        data-last-name="${escapeAttribute(
-                            person.last_name || ''
-                        )}"
-                        data-email="${escapeAttribute(person.email || '')}"
-                        data-role="${escapeAttribute(person.role || '')}"
-                    >
-                        <strong>${escapeHtml(fullName)}</strong>
-                        <span>${escapeHtml(person.email || '')}</span>
-                        ${
-                            person.role
-                                ? `<small>${escapeHtml(person.role)}</small>`
-                                : ''
-                        }
-                    </button>
+                    <li class="team-member-add-option" role="option">
+                        <button
+                            type="button"
+                            class="team-member-add-option-btn"
+                            data-mode="${escapeAttribute(mode)}"
+                            data-person-id="${Number(person.id)}"
+                        >
+                            <strong>${escapeHtml(fullName)}</strong>
+                            ${
+                                person.email
+                                    ? `<span>${escapeHtml(person.email)}</span>`
+                                    : ''
+                            }
+                        </button>
+                    </li>
                 `;
             })
             .join('');
     }
 
-    function handleMemberResultClick(event) {
-        const result = event.target.closest('.member-search-result');
+    function addMemberFromPicker(mode, personId) {
+        const id = Number(personId);
+        const person = state.allPeople.find(
+            (item) => Number(item.id) === id
+        );
 
-        if (!result) {
+        if (!person) {
             return;
         }
 
-        const mode = result.dataset.mode;
-        const personId = Number(result.dataset.personId);
+        getSelectedMembers(mode).set(id, {
+            id,
+            first_name: person.first_name || '',
+            last_name: person.last_name || '',
+            email: person.email || '',
+            role: person.role || '',
+        });
 
-        if (!Number.isInteger(personId) || personId <= 0) {
-            return;
-        }
-
-        const person = {
-            id: personId,
-            first_name: result.dataset.firstName || '',
-            last_name: result.dataset.lastName || '',
-            email: result.dataset.email || '',
-            role: result.dataset.role || '',
-        };
-
-        const selectedMembers =
-            mode === 'new'
-                ? state.selectedNewMembers
-                : state.selectedEditMembers;
-
-        selectedMembers.set(personId, person);
         renderSelectedMembers(mode);
+        renderAddMemberPicker(mode);
+        closeAddMemberMenu(mode);
+    }
 
-        if (mode === 'new') {
-            elements.newMemberResults.innerHTML = '';
-            elements.newMemberSearch.value = '';
-            elements.newMemberSearch.focus();
-        } else {
-            elements.editMemberResults.innerHTML = '';
-            elements.editMemberSearch.value = '';
-            elements.editMemberSearch.focus();
-        }
+    function setupAddMemberPicker() {
+        ['new', 'edit'].forEach((mode) => {
+            const { picker, trigger, menu, search, list } =
+                getAddMemberElements(mode);
+
+            if (!picker || !trigger || !menu || !list) {
+                return;
+            }
+
+            trigger.addEventListener('click', (event) => {
+                event.stopPropagation();
+                const isOpen = !menu.hidden;
+                menu.hidden = isOpen;
+                trigger.setAttribute('aria-expanded', String(!isOpen));
+
+                if (!isOpen) {
+                    void loadAllPeople().then(() => {
+                        renderAddMemberPicker(mode);
+                        search?.focus();
+                    });
+                }
+            });
+
+            search?.addEventListener('input', (event) => {
+                state.addMemberSearch[mode] = event.target.value;
+                renderAddMemberPicker(mode);
+            });
+
+            search?.addEventListener('click', (event) => {
+                event.stopPropagation();
+            });
+
+            menu.addEventListener('click', (event) => {
+                event.stopPropagation();
+
+                const button = event.target.closest('.team-member-add-option-btn');
+
+                if (!button) {
+                    return;
+                }
+
+                addMemberFromPicker(button.dataset.mode, button.dataset.personId);
+            });
+        });
+
+        document.addEventListener('click', (event) => {
+            ['new', 'edit'].forEach((mode) => {
+                const { picker } = getAddMemberElements(mode);
+
+                if (picker && !picker.contains(event.target)) {
+                    closeAddMemberMenu(mode);
+                }
+            });
+        });
     }
 
     function getMemberListFilter(mode) {
@@ -1064,6 +1203,7 @@
 
         selectedMembers.delete(personId);
         renderSelectedMembers(mode);
+        renderAddMemberPicker(mode);
     }
 
     function getSelectedPeoplePayload(selectedMembers) {

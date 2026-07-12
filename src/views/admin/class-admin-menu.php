@@ -293,6 +293,7 @@ class AdminMenu {
                 'sweetdeskTeams',
                 [
                     'apiBase' => esc_url_raw(rest_url('sweetdesk/v1/teams')),
+                    'peopleApiUrl' => esc_url_raw(rest_url('sweetdesk/v1')),
                     'nonce'   => wp_create_nonce('wp_rest'),
                 ]
             );
