@@ -21,46 +21,113 @@ class SweetDesk_People_Service {
     }
 
     public function get_people(array $args): array {
-        $page = max(1, (int) $args['page']);
-        $per_page = min(100, max(1, (int) $args['per_page']));
+        $page = max(1, (int) ($args['page'] ?? 1));
+        $per_page = min(100, max(1, (int) ($args['per_page'] ?? 25)));
         $offset = ($page - 1) * $per_page;
 
         $roles = $this->csv_strings($args['roles'] ?? '');
         $team_ids = $this->csv_ints($args['team_ids'] ?? '');
         $client_ids = $this->csv_ints($args['client_ids'] ?? '');
 
-        $allowed_sort = ['first_name', 'last_name', 'email', 'role', 'created_at', 'updated_at'];
-        $sort = in_array($args['sort'], $allowed_sort, true) ? $args['sort'] : 'last_name';
-        $order = strtolower($args['order']) === 'desc' ? 'DESC' : 'ASC';
+        $allowed_sort = [
+            'first_name',
+            'last_name',
+            'email',
+            'role',
+            'created_at',
+            'updated_at',
+        ];
+
+        $requested_sort = $args['sort'] ?? 'last_name';
+        $sort = in_array($requested_sort, $allowed_sort, true)
+            ? $requested_sort
+            : 'last_name';
+
+        $order = strtolower($args['order'] ?? 'asc') === 'desc'
+            ? 'DESC'
+            : 'ASC';
 
         $joins = '';
         $where = 'WHERE 1=1';
         $params = [];
 
+        /*
+        * This join is only used when filtering by teams.
+        *
+        * Teams returned with each person are loaded separately after pagination.
+        * That prevents a person with multiple teams from creating duplicate rows
+        * or interfering with LIMIT/OFFSET pagination.
+        */
         if (!empty($team_ids)) {
-            $joins .= " INNER JOIN {$this->people_teams_table} pt_filter ON pt_filter.person_id = p.id ";
-            $where .= ' AND pt_filter.team_id IN (' . implode(',', array_fill(0, count($team_ids), '%d')) . ')';
+            $team_placeholders = implode(
+                ',',
+                array_fill(0, count($team_ids), '%d')
+            );
+
+            $joins .= "
+                INNER JOIN {$this->people_teams_table} pt_filter
+                    ON pt_filter.person_id = p.id
+            ";
+
+            $where .= "
+                AND pt_filter.team_id IN ({$team_placeholders})
+            ";
+
             $params = array_merge($params, $team_ids);
         }
 
         if (!empty($args['q'])) {
             $like = '%' . $this->db->esc_like($args['q']) . '%';
-            $where .= ' AND (p.first_name LIKE %s OR p.last_name LIKE %s OR p.email LIKE %s)';
+
+            $where .= '
+                AND (
+                    p.first_name LIKE %s
+                    OR p.last_name LIKE %s
+                    OR p.email LIKE %s
+                )
+            ';
+
             array_push($params, $like, $like, $like);
         }
 
         if (!empty($roles)) {
-            $where .= ' AND p.role IN (' . implode(',', array_fill(0, count($roles), '%s')) . ')';
+            $role_placeholders = implode(
+                ',',
+                array_fill(0, count($roles), '%s')
+            );
+
+            $where .= "
+                AND p.role IN ({$role_placeholders})
+            ";
+
             $params = array_merge($params, $roles);
         }
 
         if (!empty($client_ids)) {
-            $where .= ' AND p.client_id IN (' . implode(',', array_fill(0, count($client_ids), '%d')) . ')';
+            $client_placeholders = implode(
+                ',',
+                array_fill(0, count($client_ids), '%d')
+            );
+
+            $where .= "
+                AND p.client_id IN ({$client_placeholders})
+            ";
+
             $params = array_merge($params, $client_ids);
         }
 
-        if ($args['internal'] !== null && $args['internal'] !== '') {
-            $internal = filter_var($args['internal'], FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE);
+        $internal = null;
+
+        if (
+            array_key_exists('internal', $args)
+            && $args['internal'] !== null
+            && $args['internal'] !== ''
+        ) {
+            $internal = filter_var(
+                $args['internal'],
+                FILTER_VALIDATE_BOOLEAN,
+                FILTER_NULL_ON_FAILURE
+            );
 
             if ($internal === true) {
                 $where .= ' AND p.wp_user_id IS NOT NULL';
@@ -69,12 +136,33 @@ class SweetDesk_People_Service {
             }
         }
 
-        if ($args['is_active'] !== null && $args['is_active'] !== '') {
-            $active = filter_var($args['is_active'], FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE);
-            $where .= ' AND p.is_active = %d';
-            $params[] = $active ? 1 : 0;
+        $is_active = null;
+
+        if (
+            array_key_exists('is_active', $args)
+            && $args['is_active'] !== null
+            && $args['is_active'] !== ''
+        ) {
+            $is_active = filter_var(
+                $args['is_active'],
+                FILTER_VALIDATE_BOOLEAN,
+                FILTER_NULL_ON_FAILURE
+            );
+
+            /*
+            * Only add the condition when the provided value can actually be
+            * interpreted as a boolean.
+            */
+            if ($is_active !== null) {
+                $where .= ' AND p.is_active = %d';
+                $params[] = $is_active ? 1 : 0;
+            }
         }
 
+        /*
+        * Count distinct people because the optional filtering join may match
+        * multiple team assignments for the same person.
+        */
         $total_sql = "
             SELECT COUNT(DISTINCT p.id)
             FROM {$this->people_table} p
@@ -83,10 +171,15 @@ class SweetDesk_People_Service {
         ";
 
         $total = !empty($params)
-            ? (int) $this->db->get_var($this->db->prepare($total_sql, ...$params))
+            ? (int) $this->db->get_var(
+                $this->db->prepare($total_sql, ...$params)
+            )
             : (int) $this->db->get_var($total_sql);
 
-        $sql = "
+        /*
+        * Retrieve only the paginated people here.
+        */
+        $people_sql = "
             SELECT DISTINCT
                 p.id,
                 p.wp_user_id,
@@ -100,14 +193,91 @@ class SweetDesk_People_Service {
             FROM {$this->people_table} p
             {$joins}
             {$where}
-            ORDER BY p.{$sort} {$order}
+            ORDER BY p.{$sort} {$order}, p.id ASC
             LIMIT %d OFFSET %d
         ";
 
+        $people_params = array_merge(
+            $params,
+            [$per_page, $offset]
+        );
+
         $rows = $this->db->get_results(
-            $this->db->prepare($sql, ...array_merge($params, [$per_page, $offset])),
+            $this->db->prepare($people_sql, ...$people_params),
             ARRAY_A
         );
+
+        $people = array_map(
+            [$this, 'cast_person_row'],
+            $rows ?: []
+        );
+
+        /*
+        * Create a team collection for every returned person.
+        *
+        * This also ensures that people without teams return `"teams": []`.
+        */
+        $teams_by_person = [];
+
+        foreach ($people as $person) {
+            $teams_by_person[(int) $person['id']] = [];
+        }
+
+        $person_ids = array_keys($teams_by_person);
+
+        if (!empty($person_ids)) {
+            $person_placeholders = implode(
+                ',',
+                array_fill(0, count($person_ids), '%d')
+            );
+
+            $teams_sql = "
+                SELECT
+                    pt.person_id,
+                    t.id AS team_id,
+                    t.name,
+                    t.color
+                FROM {$this->people_teams_table} pt
+                INNER JOIN {$this->teams_table} t
+                    ON t.id = pt.team_id
+                WHERE pt.person_id IN ({$person_placeholders})
+                ORDER BY
+                    pt.person_id ASC,
+                    t.name ASC,
+                    t.id ASC
+            ";
+
+            $team_rows = $this->db->get_results(
+                $this->db->prepare($teams_sql, ...$person_ids),
+                ARRAY_A
+            );
+
+            foreach ($team_rows ?: [] as $team_row) {
+                $person_id = (int) $team_row['person_id'];
+
+                if (!isset($teams_by_person[$person_id])) {
+                    continue;
+                }
+
+                $teams_by_person[$person_id][] = [
+                    'team_id' => (int) $team_row['team_id'],
+                    'name'    => (string) $team_row['name'],
+                    'color'   => $team_row['color'] !== null
+                        ? (string) $team_row['color']
+                        : null,
+                ];
+            }
+        }
+
+        /*
+        * Attach teams to each person.
+        */
+        foreach ($people as &$person) {
+            $person_id = (int) $person['id'];
+            $person['teams'] = $teams_by_person[$person_id] ?? [];
+        }
+
+        unset($person);
 
         return [
             'success' => true,
@@ -123,19 +293,21 @@ class SweetDesk_People_Service {
                 return $person;
             }, $rows),
             'pagination' => [
-                'page' => $page,
-                'per_page' => $per_page,
-                'total' => $total,
+                'page'        => $page,
+                'per_page'    => $per_page,
+                'total'       => $total,
                 'total_pages' => (int) ceil($total / $per_page),
             ],
             'filters' => [
-                'q' => $args['q'],
-                'roles' => $roles,
-                'team_ids' => $team_ids,
+                'q'          => $args['q'] ?? '',
+                'roles'      => $roles,
+                'team_ids'   => $team_ids,
                 'client_ids' => $client_ids,
+                'internal'   => $internal,
+                'is_active'  => $is_active,
             ],
             'sorting' => [
-                'sort' => $sort,
+                'sort'  => $sort,
                 'order' => strtolower($order),
             ],
         ];

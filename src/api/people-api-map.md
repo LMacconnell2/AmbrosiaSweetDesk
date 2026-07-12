@@ -75,12 +75,13 @@ GET /wp-json/sweetdesk/v1/people
 
 # GET `/people`
 
-Retrieve a paginated/searchable list of people.
+Retrieve a paginated/searchable list of people, including their assigned teams.
 
 ## Accessed tables
 
 * `sweetdesk_people`
-* optionally `sweetdesk_people_teams` if filtering by `team_ids`
+* `sweetdesk_people_teams`
+* `sweetdesk_teams`
 
 ## Query params
 
@@ -111,6 +112,14 @@ From `sweetdesk_people`:
 * `avatar_url`
 * `is_active`
 
+From `sweetdesk_people_teams` and `sweetdesk_teams`:
+
+* `team_id`
+* `name`
+* `color`
+
+Each person contains a `teams` array. People without team assignments return an empty array.
+
 ## Example request
 
 ```http
@@ -132,7 +141,19 @@ GET /wp-json/sweetdesk/v1/people?q=john&roles=staff&team_ids=1,2&internal=true&p
       "email": "john@example.com",
       "role": "staff",
       "avatar_url": "https://example.com/avatar.jpg",
-      "is_active": true
+      "is_active": true,
+      "teams": [
+        {
+          "team_id": 1,
+          "name": "Support",
+          "color": "#3b82f6"
+        },
+        {
+          "team_id": 2,
+          "name": "Escalations",
+          "color": "#ef4444"
+        }
+      ]
     }
   ],
   "pagination": {
@@ -145,7 +166,9 @@ GET /wp-json/sweetdesk/v1/people?q=john&roles=staff&team_ids=1,2&internal=true&p
     "q": "john",
     "roles": ["staff"],
     "team_ids": [1, 2],
-    "internal": true
+    "client_ids": [],
+    "internal": true,
+    "is_active": null
   },
   "sorting": {
     "sort": "last_name",
