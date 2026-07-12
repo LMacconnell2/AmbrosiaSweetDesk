@@ -75,11 +75,31 @@
 
               <div class="form-group">
                   <label for="edit-team-color">Team Color</label>
-                  <input
-                      type="color"
-                      id="edit-team-color"
-                      value="#2563eb"
-                  >
+                  <div class="team-color-field">
+                      <button
+                          type="button"
+                          class="team-color-swatch"
+                          id="edit-team-color-trigger"
+                          aria-label="Choose team color"
+                      >
+                          <span class="team-color-swatch-fill" id="edit-team-color-preview"></span>
+                      </button>
+                      <input
+                          type="color"
+                          id="edit-team-color"
+                          class="team-color-input-native"
+                          value="#2563eb"
+                          tabindex="-1"
+                          aria-hidden="true"
+                      >
+                      <span class="team-color-badge-preview">
+                          <span
+                              class="team-badge team-color-badge-live"
+                              id="edit-team-color-badge"
+                              style="--team-color: #2563eb"
+                          >Team Name</span>
+                      </span>
+                  </div>
               </div>
 
               <div class="form-group">
@@ -180,11 +200,31 @@
 
               <div class="form-group">
                   <label for="new-team-color">Team Color</label>
-                  <input
-                      type="color"
-                      id="new-team-color"
-                      value="#2563eb"
-                  >
+                  <div class="team-color-field">
+                      <button
+                          type="button"
+                          class="team-color-swatch"
+                          id="new-team-color-trigger"
+                          aria-label="Choose team color"
+                      >
+                          <span class="team-color-swatch-fill" id="new-team-color-preview"></span>
+                      </button>
+                      <input
+                          type="color"
+                          id="new-team-color"
+                          class="team-color-input-native"
+                          value="#2563eb"
+                          tabindex="-1"
+                          aria-hidden="true"
+                      >
+                      <span class="team-color-badge-preview">
+                          <span
+                              class="team-badge team-color-badge-live"
+                              id="new-team-color-badge"
+                              style="--team-color: #2563eb"
+                          >Team Name</span>
+                      </span>
+                  </div>
               </div>
 
               <div class="form-group">

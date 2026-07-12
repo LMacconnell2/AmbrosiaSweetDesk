@@ -1,0 +1,19 @@
+---
+description: Mirror repo changes to the local WordPress plugin install for testing
+alwaysApply: true
+---
+
+# Sync to Local WordPress
+
+After making changes in this repo, copy them to the local WordPress plugin directory:
+
+**Source:** `C:\Users\mattc\OneDrive\Desktop\School\CSE199R\AmbrosiaSweetDesk`
+**Target:** `C:\Users\mattc\Local Sites\cse-199r-site\app\public\wp-content\plugins\AmbrosiaSweetDesk`
+
+Use robocopy (exclude `.git`, `node_modules`, `.cursor`):
+
+```powershell
+robocopy "C:\Users\mattc\OneDrive\Desktop\School\CSE199R\AmbrosiaSweetDesk" "C:\Users\mattc\Local Sites\cse-199r-site\app\public\wp-content\plugins\AmbrosiaSweetDesk" /E /XD .git node_modules .cursor /NFL /NDL /NJH /NJS /nc /ns /np
+```
+
+Do this at the end of implementation work unless the user says otherwise.

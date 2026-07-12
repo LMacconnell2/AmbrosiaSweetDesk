@@ -136,29 +136,6 @@ class SweetDesk_People_Service {
             }
         }
 
-        $is_active = null;
-
-        if (
-            array_key_exists('is_active', $args)
-            && $args['is_active'] !== null
-            && $args['is_active'] !== ''
-        ) {
-            $is_active = filter_var(
-                $args['is_active'],
-                FILTER_VALIDATE_BOOLEAN,
-                FILTER_NULL_ON_FAILURE
-            );
-
-            /*
-            * Only add the condition when the provided value can actually be
-            * interpreted as a boolean.
-            */
-            if ($is_active !== null) {
-                $where .= ' AND p.is_active = %d';
-                $params[] = $is_active ? 1 : 0;
-            }
-        }
-
         /*
         * Count distinct people because the optional filtering join may match
         * multiple team assignments for the same person.
@@ -272,26 +249,21 @@ class SweetDesk_People_Service {
         /*
         * Attach teams to each person.
         */
-        foreach ($people as &$person) {
-            $person_id = (int) $person['id'];
-            $person['teams'] = $teams_by_person[$person_id] ?? [];
-        }
-
-        unset($person);
-
         return [
             'success' => true,
-            'data' => array_map(function ($row) {
+            'data' => array_map(function ($row) use ($teams_by_person) {
                 $person = $this->cast_person_row($row);
-                $meta = $this->get_person_meta_assoc((int) $person['id']);
+                $person_id = (int) $person['id'];
+                $meta = $this->get_person_meta_assoc($person_id);
 
                 $person['meta'] = [
                     ['meta_key' => 'phone', 'meta_value' => $meta['phone'] ?? ''],
                     ['meta_key' => 'notes', 'meta_value' => $meta['notes'] ?? ''],
                 ];
+                $person['teams'] = $teams_by_person[$person_id] ?? [];
 
                 return $person;
-            }, $rows),
+            }, $rows ?: []),
             'pagination' => [
                 'page'        => $page,
                 'per_page'    => $per_page,
@@ -304,7 +276,6 @@ class SweetDesk_People_Service {
                 'team_ids'   => $team_ids,
                 'client_ids' => $client_ids,
                 'internal'   => $internal,
-                'is_active'  => $is_active,
             ],
             'sorting' => [
                 'sort'  => $sort,

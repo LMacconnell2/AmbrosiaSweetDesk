@@ -263,10 +263,28 @@ class SweetDesk_Client_Service {
 
             if ($existing_id) {
                 $result = $this->update_client((int) $existing_id, $client);
-                is_wp_error($result) ? $skipped++ : $updated++;
+
+                if (is_wp_error($result)) {
+                    $skipped++;
+                    $errors[] = [
+                        'index' => $index,
+                        'message' => $result->get_error_message(),
+                    ];
+                } else {
+                    $updated++;
+                }
             } else {
                 $result = $this->create_client($client);
-                is_wp_error($result) ? $skipped++ : $created++;
+
+                if (is_wp_error($result)) {
+                    $skipped++;
+                    $errors[] = [
+                        'index' => $index,
+                        'message' => $result->get_error_message(),
+                    ];
+                } else {
+                    $created++;
+                }
             }
         }
 

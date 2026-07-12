@@ -242,9 +242,17 @@ class AdminMenu {
             );
 
             wp_enqueue_script(
+                'sweetdesk-team-color-helpers',
+                plugin_dir_url(__FILE__) . '../../../assets/js/team-color-helpers.js',
+                [],
+                SWEETDESK_VERSION,
+                true
+            );
+
+            wp_enqueue_script(
                 'sweetdesk-people',
                 plugin_dir_url(__FILE__) . '../../../assets/js/people.js',
-                [],
+                ['sweetdesk-team-color-helpers'],
                 SWEETDESK_VERSION,
                 true
             );
@@ -265,9 +273,17 @@ class AdminMenu {
             );
 
             wp_enqueue_script(
+                'sweetdesk-team-color-helpers',
+                plugin_dir_url(__FILE__) . '../../../assets/js/team-color-helpers.js',
+                [],
+                SWEETDESK_VERSION,
+                true
+            );
+
+            wp_enqueue_script(
                 'sweetdesk-teams',
                 plugin_dir_url(__FILE__) . '../../../assets/js/teams.js',
-                [],
+                ['sweetdesk-team-color-helpers'],
                 SWEETDESK_VERSION,
                 true
             );

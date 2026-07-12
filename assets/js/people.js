@@ -1,19 +1,20 @@
 const SweetDeskPeople = {
     apiUrl: window.sweetdeskPeople?.apiUrl || '/wp-json/sweetdesk/v1',
     nonce: window.sweetdeskPeople?.nonce || '',
-    internalPeople: [],
-    clientPeople: [],
+    people: [],
     clients: [],
+    teams: [],
+    selectedTeamIds: [],
     editingPersonId: null,
     editingPerson: null,
     deletePersonId: null,
     deletePersonRow: null,
-    currentType: 'internal',
+    currentType: 'client',
+    currentPage: 1,
+    totalPages: 1,
+    perPage: 25,
     searchTimer: null,
-    sort: {
-        internal: { field: 'last_name', order: 'asc' },
-        client: { field: 'last_name', order: 'asc' }
-    }
+    sort: { field: 'last_name', order: 'asc' }
 };
 
 function sdApi(path, options = {}) {
@@ -52,10 +53,6 @@ function isClientContact(person) {
 }
 
 function getPersonFormType() {
-    if (SweetDeskPeople.editingPerson) {
-        return isClientContact(SweetDeskPeople.editingPerson) ? 'client' : 'internal';
-    }
-
     return SweetDeskPeople.currentType;
 }
 
@@ -68,31 +65,17 @@ function setFieldHidden(element, hidden) {
     element.classList.toggle('sd-form-hidden', hidden);
 }
 
-function setType(type, { isEdit = false } = {}) {
+function setType(type) {
     SweetDeskPeople.currentType = type;
 
-    const typeToggleField = document.getElementById('typeToggleField');
-    const companyField = document.getElementById('companyField');
-    const roleField = document.getElementById('roleField');
     const typeInternal = document.getElementById('typeInternal');
     const typeClient = document.getElementById('typeClient');
 
-    setFieldHidden(typeToggleField, isEdit);
-    setFieldHidden(companyField, type === 'internal');
-    setFieldHidden(roleField, type === 'client');
+    typeInternal?.classList.toggle('active', type === 'internal');
+    typeClient?.classList.toggle('active', type === 'client');
 
-    if (!isEdit) {
-        typeInternal?.classList.toggle('active', type === 'internal');
-        typeClient?.classList.toggle('active', type === 'client');
-    }
-
-    if (typeInternal) {
-        typeInternal.disabled = isEdit;
-    }
-
-    if (typeClient) {
-        typeClient.disabled = isEdit;
-    }
+    setFieldHidden(document.getElementById('companyField'), type === 'internal');
+    setFieldHidden(document.getElementById('roleField'), type === 'client');
 }
 
 function splitName(fullName) {
@@ -120,19 +103,12 @@ function getMetaValue(person, key) {
     return person.meta[key] || '';
 }
 
-function isPersonActive(person) {
-    return person.is_active !== false && person.is_active !== 0 && person.is_active !== '0';
-}
-
-function getSectionElement(section) {
-    const sections = document.querySelectorAll('.section');
-    return sections[section === 'internal' ? 0 : 1] || null;
+function getPeopleSectionElement() {
+    return document.querySelector('.section-people');
 }
 
 function personRowCheckbox(person) {
-    const active = isPersonActive(person) ? '1' : '0';
-
-    return `<input type="checkbox" class="person-row-check" data-person-id="${person.id}" data-is-active="${active}" aria-label="Select ${fullName(person)}" />`;
+    return `<input type="checkbox" class="person-row-check" data-person-id="${person.id}" aria-label="Select ${escapeHtml(fullName(person))}" />`;
 }
 
 function getClientName(clientId) {
@@ -142,6 +118,152 @@ function getClientName(clientId) {
 
     const client = SweetDeskPeople.clients.find(item => Number(item.id) === Number(clientId));
     return client?.name || '';
+}
+
+function escapeHtml(value) {
+    return String(value ?? '')
+        .replaceAll('&', '&amp;')
+        .replaceAll('<', '&lt;')
+        .replaceAll('>', '&gt;')
+        .replaceAll('"', '&quot;')
+        .replaceAll("'", '&#039;');
+}
+
+function getPersonTeams(person) {
+    return Array.isArray(person.teams) ? person.teams : [];
+}
+
+function getPrimaryTeamName(person) {
+    const teams = getPersonTeams(person);
+    return teams[0]?.name || '';
+}
+
+function renderTeamBadges(person, options = {}) {
+    const max = options.max ?? null;
+    const teams = getPersonTeams(person);
+
+    if (!teams.length) {
+        return '';
+    }
+
+    const visibleTeams = max ? teams.slice(0, max) : teams;
+    const overflow = max && teams.length > max ? teams.length - max : 0;
+
+    const badges = visibleTeams.map(team => {
+        const name = escapeHtml(team.name || 'Unnamed Team');
+
+        return `<span class="team-badge" style="${getTeamBadgeStyle(team.color)}">${name}</span>`;
+    }).join('');
+
+    const overflowBadge = overflow
+        ? `<span class="team-badge team-badge-overflow">+${overflow}</span>`
+        : '';
+
+    return `<span class="person-team-badges">${badges}${overflowBadge}</span>`;
+}
+
+function getTeamById(teamId) {
+    return SweetDeskPeople.teams.find(team => Number(team.id) === Number(teamId)) || null;
+}
+
+function getSelectedTeamIds() {
+    return [...SweetDeskPeople.selectedTeamIds];
+}
+
+function setSelectedTeamIds(teamIds) {
+    SweetDeskPeople.selectedTeamIds = [...new Set(
+        (teamIds || []).map(id => Number(id)).filter(id => id > 0)
+    )];
+    renderPersonTeamPicker();
+}
+
+function addSelectedTeam(teamId) {
+    const id = Number(teamId);
+
+    if (!id || SweetDeskPeople.selectedTeamIds.includes(id)) {
+        return;
+    }
+
+    SweetDeskPeople.selectedTeamIds.push(id);
+    renderPersonTeamPicker();
+}
+
+function removeSelectedTeam(teamId) {
+    const id = Number(teamId);
+    SweetDeskPeople.selectedTeamIds = SweetDeskPeople.selectedTeamIds.filter(item => item !== id);
+    renderPersonTeamPicker();
+}
+
+function renderPersonTeamPicker() {
+    const selectedContainer = document.getElementById('person-panel-teams-selected');
+    const addSelect = document.getElementById('person-panel-teams-add');
+
+    if (!selectedContainer || !addSelect) {
+        return;
+    }
+
+    const selectedIds = getSelectedTeamIds();
+    const availableTeams = SweetDeskPeople.teams.filter(
+        team => !selectedIds.includes(Number(team.id))
+    );
+
+    if (!selectedIds.length) {
+        selectedContainer.innerHTML = '<p class="person-team-picker-empty">No teams assigned.</p>';
+    } else {
+        selectedContainer.innerHTML = selectedIds.map(teamId => {
+            const team = getTeamById(teamId);
+            const name = escapeHtml(team?.name || `Team #${teamId}`);
+
+            return `
+                <span class="team-picker-chip" style="${getTeamBadgeStyle(team?.color)}">
+                    <span class="team-picker-chip-label">${name}</span>
+                    <button
+                        type="button"
+                        class="team-picker-chip-remove"
+                        data-team-id="${teamId}"
+                        aria-label="Remove ${name}"
+                    >✕</button>
+                </span>
+            `;
+        }).join('');
+    }
+
+    addSelect.innerHTML = `<option value="">Add a team...</option>`;
+
+    availableTeams.forEach(team => {
+        const option = document.createElement('option');
+        option.value = String(team.id);
+        option.textContent = team.name || `Team #${team.id}`;
+        addSelect.appendChild(option);
+    });
+
+    addSelect.disabled = availableTeams.length === 0;
+}
+
+function getPersonTeamIds(person) {
+    const teams = getPersonTeams(person);
+
+    if (teams.length) {
+        return teams.map(team => Number(team.team_id ?? team.id)).filter(Boolean);
+    }
+
+    if (Array.isArray(person.team_ids)) {
+        return person.team_ids.map(id => Number(id)).filter(Boolean);
+    }
+
+    return [];
+}
+
+async function loadTeamsForPicker() {
+    try {
+        const response = await sdApi('/teams?per_page=100');
+        SweetDeskPeople.teams = (response.data || []).sort((left, right) =>
+            (left.name || '').localeCompare(right.name || '', undefined, { sensitivity: 'base' })
+        );
+        renderPersonTeamPicker();
+    } catch (error) {
+        console.warn(error.message);
+    }
 }
 
 function resetPersonForm() {
@@ -154,28 +276,9 @@ function resetPersonForm() {
     document.getElementById('person-panel-phone').value = '';
     document.getElementById('person-panel-client').value = '';
     document.getElementById('person-panel-notes').value = '';
+    setSelectedTeamIds([]);
 
-    setType('internal');
-    setFieldHidden(document.getElementById('person-panel-toggle-active'), true);
-}
-
-function updateSidebarActiveButton() {
-    const button = document.getElementById('person-panel-toggle-active');
-    const person = SweetDeskPeople.editingPerson;
-
-    if (!button || !person) {
-        return;
-    }
-
-    setFieldHidden(button, false);
-
-    if (isPersonActive(person)) {
-        button.textContent = 'Deactivate Person';
-        button.dataset.action = 'deactivate';
-    } else {
-        button.textContent = 'Activate Person';
-        button.dataset.action = 'activate';
-    }
+    setType('client');
 }
 
 function openPersonSidebar(mode = 'create', person = {}) {
@@ -204,9 +307,9 @@ function openPersonSidebar(mode = 'create', person = {}) {
     document.getElementById('person-panel-phone').value = getMetaValue(person, 'phone');
     document.getElementById('person-panel-client').value = person.client_id ? String(person.client_id) : '';
     document.getElementById('person-panel-notes').value = getMetaValue(person, 'notes');
+    setSelectedTeamIds(getPersonTeamIds(person));
 
-    setType(personType, { isEdit: true });
-    updateSidebarActiveButton();
+    setType(personType);
 }
 
 function openNewPersonSidebar() {
@@ -237,13 +340,11 @@ function getPersonPayload(isEdit) {
         first_name: parsedName.first_name,
         last_name: parsedName.last_name,
         email,
-        is_active: isEdit && SweetDeskPeople.editingPerson
-            ? isPersonActive(SweetDeskPeople.editingPerson)
-            : true,
         meta: {
             phone,
             notes
-        }
+        },
+        team_ids: getSelectedTeamIds()
     };
 
     if (isInternal) {
@@ -256,9 +357,7 @@ function getPersonPayload(isEdit) {
             payload.wp_user_id = null;
         }
     } else {
-        payload.role = isEdit && SweetDeskPeople.editingPerson?.role
-            ? SweetDeskPeople.editingPerson.role
-            : 'client';
+        payload.role = 'client';
         payload.wp_user_id = null;
         payload.client_id = clientId ? Number(clientId) : null;
     }
@@ -315,8 +414,12 @@ async function confirmDeletePerson() {
             method: 'DELETE'
         });
 
-        SweetDeskPeople.deletePersonRow?.remove();
         closeDeletePersonModal();
+
+        if (SweetDeskPeople.people.length <= 1 && SweetDeskPeople.currentPage > 1) {
+            SweetDeskPeople.currentPage--;
+        }
+
         await loadPeople();
     } catch (error) {
         alert(error.message);
@@ -342,51 +445,30 @@ function personActionButtons(person) {
     `;
 }
 
-async function setPersonActive(id, isActive) {
-    await sdApi(`/people/${id}`, {
-        method: 'PUT',
-        body: JSON.stringify({ is_active: isActive })
-    });
-}
+async function bulkDeletePeople() {
+    const checked = getCheckedBoxes();
 
-async function toggleSidebarPersonActive() {
-    const id = SweetDeskPeople.editingPersonId;
-    const person = SweetDeskPeople.editingPerson;
-
-    if (!id || !person) {
+    if (!checked.length) {
         return;
     }
 
-    const makeActive = !isPersonActive(person);
+    const count = checked.length;
+    const confirmed = confirm(`Delete ${count} ${count === 1 ? 'person' : 'people'}? This cannot be undone.`);
 
-    try {
-        await setPersonActive(id, makeActive);
-        closePersonSidebar();
-        await loadPeople();
-    } catch (error) {
-        alert(error.message);
-    }
-}
-
-async function bulkSetPersonsActive(section, isActive) {
-    const sectionEl = getSectionElement(section);
-
-    if (!sectionEl) {
-        return;
-    }
-
-    const checks = [...sectionEl.querySelectorAll('.person-row-check:checked')].filter(checkbox => {
-        return checkbox.dataset.isActive === (isActive ? '0' : '1');
-    });
-
-    if (!checks.length) {
+    if (!confirmed) {
         return;
     }
 
     try {
         await Promise.all(
-            checks.map(checkbox => setPersonActive(Number(checkbox.dataset.personId), isActive))
+            checked.map(checkbox => sdApi(`/people/${checkbox.dataset.personId}`, {
+                method: 'DELETE'
+            }))
         );
+
+        if (SweetDeskPeople.people.length <= count && SweetDeskPeople.currentPage > 1) {
+            SweetDeskPeople.currentPage--;
+        }
 
         await loadPeople();
     } catch (error) {
@@ -394,8 +476,8 @@ async function bulkSetPersonsActive(section, isActive) {
     }
 }
 
-function getCheckedBoxes(section) {
-    const sectionEl = getSectionElement(section);
+function getCheckedBoxes() {
+    const sectionEl = getPeopleSectionElement();
 
     if (!sectionEl) {
         return [];
@@ -404,8 +486,8 @@ function getCheckedBoxes(section) {
     return [...sectionEl.querySelectorAll('.person-row-check:checked')];
 }
 
-function syncSelectAllCheckbox(section) {
-    const sectionEl = getSectionElement(section);
+function syncSelectAllCheckbox() {
+    const sectionEl = getPeopleSectionElement();
     const selectAll = sectionEl?.querySelector('.select-all-check');
     const rowChecks = sectionEl ? [...sectionEl.querySelectorAll('.person-row-check')] : [];
 
@@ -424,42 +506,22 @@ function syncSelectAllCheckbox(section) {
     selectAll.indeterminate = checkedCount > 0 && checkedCount < rowChecks.length;
 }
 
-function updateBulkActions(section) {
-    const bulkBar = document.getElementById(`${section}-bulk-actions`);
-    const deactivateBtn = document.getElementById(`${section}-bulk-deactivate`);
-    const activateBtn = document.getElementById(`${section}-bulk-activate`);
-    const checked = getCheckedBoxes(section);
+function updateBulkActions() {
+    const bulkBar = document.getElementById('people-bulk-actions');
+    const deleteBtn = document.getElementById('people-bulk-delete');
+    const checked = getCheckedBoxes();
 
     setFieldHidden(bulkBar, checked.length === 0);
 
-    if (!checked.length) {
-        syncSelectAllCheckbox(section);
-        return;
+    if (deleteBtn && checked.length > 0) {
+        deleteBtn.textContent = `Delete Selected (${checked.length})`;
     }
 
-    const activeCount = checked.filter(checkbox => checkbox.dataset.isActive === '1').length;
-    const inactiveCount = checked.length - activeCount;
-
-    setFieldHidden(deactivateBtn, activeCount === 0);
-    setFieldHidden(activateBtn, inactiveCount === 0);
-
-    if (deactivateBtn && activeCount > 0) {
-        deactivateBtn.textContent = activeCount === checked.length
-            ? `Deactivate Selected (${activeCount})`
-            : `Deactivate Selected (${activeCount})`;
-    }
-
-    if (activateBtn && inactiveCount > 0) {
-        activateBtn.textContent = inactiveCount === checked.length
-            ? `Activate Selected (${inactiveCount})`
-            : `Activate Selected (${inactiveCount})`;
-    }
-
-    syncSelectAllCheckbox(section);
+    syncSelectAllCheckbox();
 }
 
-function setupTableSelection(section) {
-    const sectionEl = getSectionElement(section);
+function setupTableSelection() {
+    const sectionEl = getPeopleSectionElement();
 
     if (!sectionEl || sectionEl.dataset.selectionBound === 'true') {
         return;
@@ -475,166 +537,146 @@ function setupTableSelection(section) {
             checkbox.checked = selectAll.checked;
         });
 
-        updateBulkActions(section);
+        updateBulkActions();
     });
 
     tbody?.addEventListener('change', event => {
         if (event.target.classList.contains('person-row-check')) {
-            updateBulkActions(section);
+            updateBulkActions();
         }
     });
 
-    document.getElementById(`${section}-bulk-deactivate`)?.addEventListener('click', () => {
-        bulkSetPersonsActive(section, false);
-    });
-
-    document.getElementById(`${section}-bulk-activate`)?.addEventListener('click', () => {
-        bulkSetPersonsActive(section, true);
+    document.getElementById('people-bulk-delete')?.addEventListener('click', () => {
+        bulkDeletePeople();
     });
 }
 
-function personNameCell(person, section) {
-    const name = fullName(person);
-    const showDeactivated = document.getElementById(
-        section === 'internal' ? 'internal-show-deactivated' : 'client-show-deactivated'
-    )?.checked;
-
-    if (!showDeactivated) {
-        return `<span class="person-name-cell"><span class="person-name-text">${name}</span></span>`;
-    }
-
-    const active = isPersonActive(person);
-    const badgeClass = active ? 'status-badge inactive is-reserved' : 'status-badge inactive';
-
-    return `<span class="person-name-cell"><span class="person-name-text">${name}</span><span class="${badgeClass}"${active ? ' aria-hidden="true"' : ''}>Deactivated</span></span>`;
+function personNameCell(person) {
+    const name = escapeHtml(fullName(person));
+    return `<span class="person-name-cell"><span class="person-name-text">${name}</span></span>`;
 }
 
-function renderInternalRow(person) {
-    const phone = getMetaValue(person, 'phone');
-    const inactiveClass = isPersonActive(person) ? '' : ' person-row-inactive';
+function renderPersonRow(person) {
+    const company = getClientName(person.client_id);
 
     return `
-        <tr class="${inactiveClass.trim()}">
+        <tr>
             <td class="col-check">${personRowCheckbox(person)}</td>
-            <td class="col-name">${personNameCell(person, 'internal')}</td>
-            <td>${person.role || ''}</td>
-            <td><a href="mailto:${person.email || ''}" class="email-link">${person.email || ''}</a></td>
-            <td>${phone || ''}</td>
+            <td class="col-name">${personNameCell(person)}</td>
+            <td>${escapeHtml(person.role || '')}</td>
+            <td>${escapeHtml(company)}</td>
+            <td class="col-teams">${renderTeamBadges(person, { max: 3 })}</td>
+            <td><a href="mailto:${escapeHtml(person.email || '')}" class="email-link">${escapeHtml(person.email || '')}</a></td>
+            <td>${escapeHtml(getMetaValue(person, 'phone') || '')}</td>
             <td>${personActionButtons(person)}</td>
         </tr>
     `;
 }
 
-function renderClientRow(person) {
-    const phone = getMetaValue(person, 'phone');
-    const company = getClientName(person.client_id) || getMetaValue(person, 'company');
-    const inactiveClass = isPersonActive(person) ? '' : ' person-row-inactive';
+function sortPeopleList(people) {
+    const { field, order } = SweetDeskPeople.sort;
+    const direction = order === 'asc' ? 1 : -1;
 
-    return `
-        <tr class="${inactiveClass.trim()}">
-            <td class="col-check">${personRowCheckbox(person)}</td>
-            <td class="col-name">${personNameCell(person, 'client')}</td>
-            <td>${company || ''}</td>
-            <td><a href="mailto:${person.email || ''}" class="email-link">${person.email || ''}</a></td>
-            <td>${phone || ''}</td>
-            <td>${personActionButtons(person)}</td>
-        </tr>
-    `;
-}
+    return [...people].sort((a, b) => {
+        let left;
+        let right;
 
-function getPeopleTables() {
-    const tables = document.querySelectorAll('.section table tbody');
+        if (field === 'company') {
+            left = getClientName(a.client_id).toLowerCase();
+            right = getClientName(b.client_id).toLowerCase();
+        } else if (field === 'teams') {
+            left = getPrimaryTeamName(a).toLowerCase();
+            right = getPrimaryTeamName(b).toLowerCase();
+        } else {
+            left = String(a[field] ?? '').toLowerCase();
+            right = String(b[field] ?? '').toLowerCase();
+        }
 
-    return {
-        internal: tables[0],
-        clients: tables[1]
-    };
+        if (left < right) return -1 * direction;
+        if (left > right) return 1 * direction;
+        return 0;
+    });
 }
 
 function renderPeople() {
-    const tables = getPeopleTables();
+    const tbody = document.getElementById('people-table-body');
 
-    if (!tables.internal || !tables.clients) {
+    if (!tbody) {
         return;
     }
 
-    tables.internal.innerHTML = SweetDeskPeople.internalPeople.length
-        ? SweetDeskPeople.internalPeople.map(renderInternalRow).join('')
-        : `<tr><td colspan="6">No Ambrosia personnel found.</td></tr>`;
+    const rows = sortPeopleList(SweetDeskPeople.people);
 
-    tables.clients.innerHTML = SweetDeskPeople.clientPeople.length
-        ? SweetDeskPeople.clientPeople.map(renderClientRow).join('')
-        : `<tr><td colspan="6">No client contacts found.</td></tr>`;
+    tbody.innerHTML = rows.length
+        ? rows.map(renderPersonRow).join('')
+        : `<tr><td colspan="8">No people found.</td></tr>`;
 
-    updateBulkActions('internal');
-    updateBulkActions('client');
-    syncSelectAllCheckbox('internal');
-    syncSelectAllCheckbox('client');
+    updateBulkActions();
+    syncSelectAllCheckbox();
 }
 
-function buildPeopleQuery(section) {
-    const isInternal = section === 'internal';
-    const searchInput = document.getElementById(isInternal ? 'internal-search' : 'client-search');
-    const filterSelect = document.getElementById(isInternal ? 'internal-role-filter' : 'client-company-filter');
-    const sortState = SweetDeskPeople.sort[section];
-    const showDeactivated = document.getElementById(
-        isInternal ? 'internal-show-deactivated' : 'client-show-deactivated'
-    )?.checked;
+function buildPeopleQuery() {
+    const sortState = SweetDeskPeople.sort;
 
     const params = new URLSearchParams({
-        page: '1',
-        per_page: '100',
-        sort: sortState.field,
+        page: String(SweetDeskPeople.currentPage),
+        per_page: String(SweetDeskPeople.perPage),
+        sort: sortState.field === 'company' || sortState.field === 'teams'
+            ? 'last_name'
+            : sortState.field,
         order: sortState.order
     });
 
-    if (!showDeactivated) {
-        params.set('is_active', '1');
-    }
-
-    const q = searchInput?.value?.trim();
+    const q = document.getElementById('people-search')?.value?.trim();
 
     if (q) {
         params.set('q', q);
     }
 
-    if (isInternal) {
-        const role = filterSelect?.value;
+    const role = document.getElementById('people-role-filter')?.value;
 
-        if (role) {
-            params.set('roles', role);
-        }
-    } else {
-        const clientId = filterSelect?.value;
+    if (role) {
+        params.set('roles', role);
+    }
 
-        if (clientId) {
-            params.set('client_ids', clientId);
-        }
+    const clientId = document.getElementById('people-company-filter')?.value;
+
+    if (clientId) {
+        params.set('client_ids', clientId);
     }
 
     return params;
 }
 
-async function loadPeopleSection(section) {
-    const params = buildPeopleQuery(section);
-    const response = await sdApi(`/people?${params.toString()}`);
-    const people = response.data || [];
+function updatePagination() {
+    const pageInfo = document.getElementById('sd-people-page-info');
+    const prevBtn = document.getElementById('sd-people-prev-page');
+    const nextBtn = document.getElementById('sd-people-next-page');
 
-    if (section === 'internal') {
-        SweetDeskPeople.internalPeople = people.filter(person => !isClientContact(person));
-    } else {
-        SweetDeskPeople.clientPeople = people.filter(person => isClientContact(person));
+    if (pageInfo) {
+        pageInfo.textContent = `Page ${SweetDeskPeople.currentPage} of ${SweetDeskPeople.totalPages}`;
+    }
+
+    if (prevBtn) {
+        prevBtn.disabled = SweetDeskPeople.currentPage <= 1;
+    }
+
+    if (nextBtn) {
+        nextBtn.disabled = SweetDeskPeople.currentPage >= SweetDeskPeople.totalPages;
     }
 }
 
 async function loadPeople() {
     try {
-        await Promise.all([
-            loadPeopleSection('internal'),
-            loadPeopleSection('client')
-        ]);
+        const params = buildPeopleQuery();
+        const response = await sdApi(`/people?${params.toString()}`);
+
+        SweetDeskPeople.people = response.data || [];
+        SweetDeskPeople.currentPage = Number(response?.pagination?.page) || 1;
+        SweetDeskPeople.totalPages = Number(response?.pagination?.total_pages) || 1;
 
         renderPeople();
+        updatePagination();
         populateRoleFilter();
     } catch (error) {
         alert(error.message);
@@ -642,17 +684,17 @@ async function loadPeople() {
 }
 
 function populateRoleFilter() {
-    const roleFilter = document.getElementById('internal-role-filter');
+    const roleFilter = document.getElementById('people-role-filter');
 
     if (!roleFilter) {
         return;
     }
 
-    const roles = [...new Set(
-        SweetDeskPeople.internalPeople
-            .map(person => person.role)
-            .filter(Boolean)
-    )].sort();
+    const knownRoles = ['client', 'manager', 'staff'];
+    const roles = [...new Set([
+        ...knownRoles,
+        ...SweetDeskPeople.people.map(person => person.role).filter(Boolean)
+    ])].sort();
 
     const current = roleFilter.value;
     roleFilter.innerHTML = `<option value="">All Roles</option>`;
@@ -674,7 +716,7 @@ async function loadClientsForFilters() {
         const response = await sdApi('/clients?per_page=100&sort=name&order=asc');
         SweetDeskPeople.clients = response.data || [];
 
-        const companyFilter = document.getElementById('client-company-filter');
+        const companyFilter = document.getElementById('people-company-filter');
         const clientSelect = document.getElementById('person-panel-client');
 
         if (companyFilter) {
@@ -715,13 +757,12 @@ async function loadClientsForFilters() {
 
 function getExportQueryParams() {
     const params = new URLSearchParams();
-    const internalQ = document.getElementById('internal-search')?.value?.trim();
-    const clientQ = document.getElementById('client-search')?.value?.trim();
-    const role = document.getElementById('internal-role-filter')?.value;
-    const clientId = document.getElementById('client-company-filter')?.value;
+    const q = document.getElementById('people-search')?.value?.trim();
+    const role = document.getElementById('people-role-filter')?.value;
+    const clientId = document.getElementById('people-company-filter')?.value;
 
-    if (internalQ || clientQ) {
-        params.set('q', internalQ || clientQ);
+    if (q) {
+        params.set('q', q);
     }
 
     if (role) {
@@ -786,7 +827,7 @@ async function importPeopleCsv(file) {
 }
 
 function setupPeopleImport() {
-    const importButton = document.querySelectorAll('.header-actions .btn-outline')[0];
+    const importButton = document.getElementById('sd-import-people');
 
     if (!importButton) {
         return;
@@ -817,6 +858,7 @@ function setupPeopleImport() {
             );
 
             input.value = '';
+            SweetDeskPeople.currentPage = 1;
             await loadPeople();
         } catch (error) {
             alert(error.message);
@@ -824,60 +866,103 @@ function setupPeopleImport() {
     });
 }
 
+function resetToFirstPageAndLoad() {
+    SweetDeskPeople.currentPage = 1;
+    loadPeople();
+}
+
 function setupPeopleSearch() {
-    ['internal-search', 'client-search'].forEach(id => {
-        document.getElementById(id)?.addEventListener('input', () => {
-            clearTimeout(SweetDeskPeople.searchTimer);
-            SweetDeskPeople.searchTimer = setTimeout(() => loadPeople(), 300);
-        });
+    document.getElementById('people-search')?.addEventListener('input', () => {
+        clearTimeout(SweetDeskPeople.searchTimer);
+        SweetDeskPeople.searchTimer = setTimeout(() => resetToFirstPageAndLoad(), 300);
     });
 
-    document.getElementById('internal-role-filter')?.addEventListener('change', () => loadPeople());
-    document.getElementById('client-company-filter')?.addEventListener('change', () => loadPeople());
-    document.getElementById('internal-show-deactivated')?.addEventListener('change', () => loadPeople());
-    document.getElementById('client-show-deactivated')?.addEventListener('change', () => loadPeople());
+    document.getElementById('people-role-filter')?.addEventListener('change', () => resetToFirstPageAndLoad());
+    document.getElementById('people-company-filter')?.addEventListener('change', () => resetToFirstPageAndLoad());
 }
 
 function setupPeopleSort() {
+    const sectionEl = getPeopleSectionElement();
+
+    if (!sectionEl) {
+        return;
+    }
+
     const sortMap = {
-        internal: {
-            1: 'last_name',
-            2: 'role',
-            3: 'email'
-        },
-        client: {
-            1: 'last_name',
-            2: 'last_name',
-            3: 'email'
-        }
+        1: 'last_name',
+        2: 'role',
+        3: 'company',
+        4: 'teams',
+        5: 'email'
     };
 
-    document.querySelectorAll('.section').forEach((sectionEl, index) => {
-        const section = index === 0 ? 'internal' : 'client';
-        const headers = sectionEl.querySelectorAll('thead th');
+    const headers = sectionEl.querySelectorAll('thead th');
 
-        headers.forEach((header, headerIndex) => {
-            const sortField = sortMap[section][headerIndex];
+    headers.forEach((header, headerIndex) => {
+        const sortField = sortMap[headerIndex];
 
-            if (!sortField) {
+        if (!sortField) {
+            return;
+        }
+
+        header.style.cursor = 'pointer';
+
+        header.addEventListener('click', () => {
+            const current = SweetDeskPeople.sort;
+
+            if (current.field === sortField) {
+                current.order = current.order === 'asc' ? 'desc' : 'asc';
+            } else {
+                current.field = sortField;
+                current.order = 'asc';
+            }
+
+            if (sortField === 'company' || sortField === 'teams') {
+                renderPeople();
                 return;
             }
 
-            header.style.cursor = 'pointer';
-
-            header.addEventListener('click', () => {
-                const current = SweetDeskPeople.sort[section];
-
-                if (current.field === sortField) {
-                    current.order = current.order === 'asc' ? 'desc' : 'asc';
-                } else {
-                    current.field = sortField;
-                    current.order = 'asc';
-                }
-
-                loadPeople();
-            });
+            loadPeople();
         });
+    });
+}
+
+function setupPagination() {
+    document.getElementById('sd-people-prev-page')?.addEventListener('click', () => {
+        if (SweetDeskPeople.currentPage > 1) {
+            SweetDeskPeople.currentPage--;
+            loadPeople();
+        }
+    });
+
+    document.getElementById('sd-people-next-page')?.addEventListener('click', () => {
+        if (SweetDeskPeople.currentPage < SweetDeskPeople.totalPages) {
+            SweetDeskPeople.currentPage++;
+            loadPeople();
+        }
+    });
+}
+
+function setupPersonTeamPicker() {
+    document.getElementById('person-panel-teams-add')?.addEventListener('change', event => {
+        const teamId = event.target.value;
+
+        if (!teamId) {
+            return;
+        }
+
+        addSelectedTeam(teamId);
+        event.target.value = '';
+    });
+
+    document.getElementById('person-panel-teams-selected')?.addEventListener('click', event => {
+        const button = event.target.closest('.team-picker-chip-remove');
+
+        if (!button) {
+            return;
+        }
+
+        removeSelectedTeam(button.dataset.teamId);
     });
 }
 
@@ -891,21 +976,21 @@ document.addEventListener('DOMContentLoaded', async () => {
     document.getElementById('typeInternal')?.addEventListener('click', () => setType('internal'));
     document.getElementById('typeClient')?.addEventListener('click', () => setType('client'));
 
-    setType('internal');
+    setType('client');
 
     document.getElementById('sd-new-person')?.addEventListener('click', openNewPersonSidebar);
     document.getElementById('person-panel-submit')?.addEventListener('click', savePerson);
-    document.getElementById('person-panel-toggle-active')?.addEventListener('click', toggleSidebarPersonActive);
 
-    const headerButtons = document.querySelectorAll('.header-actions .btn-outline');
-    headerButtons[1]?.addEventListener('click', exportPeopleCsv);
+    document.getElementById('sd-export-people')?.addEventListener('click', exportPeopleCsv);
 
     setupPeopleImport();
     setupPeopleSearch();
     setupPeopleSort();
-    setupTableSelection('internal');
-    setupTableSelection('client');
+    setupPagination();
+    setupPersonTeamPicker();
+    setupTableSelection();
 
+    await loadTeamsForPicker();
     await loadClientsForFilters();
     await loadPeople();
 });

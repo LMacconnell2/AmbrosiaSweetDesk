@@ -3,11 +3,11 @@
       <div class="page-header">
         <h1 class="page-title">Clients</h1>
         <div class="header-actions">
-          <button class="btn-outline" type="button">
+          <button class="btn-outline" type="button" id="sd-import-clients">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
             Import JSON
           </button>
-          <button class="btn-outline" type="button">
+          <button class="btn-outline" type="button" id="sd-export-clients">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/></svg>
             Export JSON
           </button>
@@ -38,13 +38,12 @@
         <table>
           <thead>
             <tr>
-              <th class="col-check"><input type="checkbox" /></th>
               <th>Client Name <span class="sort-icon">⇅</span></th>
-              <th>Industry <span class="sort-icon">⇅</span></th>
+              <th>Industry</th>
               <th>Primary Contact <span class="sort-icon">⇅</span></th>
               <th>Active Tickets <span class="sort-icon">⇅</span></th>
               <th>Total Tickets <span class="sort-icon">⇅</span></th>
-              <th>Status <span class="sort-icon">⇅</span></th>
+              <th>Status</th>
               <th>Actions</th>
             </tr>
           </thead>

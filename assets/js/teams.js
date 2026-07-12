@@ -113,6 +113,15 @@
         elements.newTeamDescription =
             document.getElementById('new-team-desc');
         elements.newTeamColor = document.getElementById('new-team-color');
+        elements.newTeamColorTrigger = document.getElementById(
+            'new-team-color-trigger'
+        );
+        elements.newTeamColorPreview = document.getElementById(
+            'new-team-color-preview'
+        );
+        elements.newTeamColorBadge = document.getElementById(
+            'new-team-color-badge'
+        );
         elements.newMemberSearch = document.getElementById(
             'new-team-member-search'
         );
@@ -133,6 +142,15 @@
         elements.editTeamDescription =
             document.getElementById('edit-team-desc');
         elements.editTeamColor = document.getElementById('edit-team-color');
+        elements.editTeamColorTrigger = document.getElementById(
+            'edit-team-color-trigger'
+        );
+        elements.editTeamColorPreview = document.getElementById(
+            'edit-team-color-preview'
+        );
+        elements.editTeamColorBadge = document.getElementById(
+            'edit-team-color-badge'
+        );
         elements.editMemberSearch = document.getElementById(
             'edit-team-member-search'
         );
@@ -156,10 +174,28 @@
         elements.newTeamClose?.addEventListener('click', closeNewTeamModal);
         elements.newTeamCancel?.addEventListener('click', closeNewTeamModal);
         elements.newTeamForm?.addEventListener('submit', createTeam);
+        elements.newTeamColor?.addEventListener('input', () => {
+            updateTeamColorPreview('new');
+        });
+        elements.newTeamName?.addEventListener('input', () => {
+            updateTeamColorPreview('new');
+        });
+        elements.newTeamColorTrigger?.addEventListener('click', () => {
+            elements.newTeamColor?.click();
+        });
 
         elements.editTeamClose?.addEventListener('click', closeEditTeamModal);
         elements.editTeamCancel?.addEventListener('click', closeEditTeamModal);
         elements.editTeamForm?.addEventListener('submit', updateTeam);
+        elements.editTeamColor?.addEventListener('input', () => {
+            updateTeamColorPreview('edit');
+        });
+        elements.editTeamName?.addEventListener('input', () => {
+            updateTeamColorPreview('edit');
+        });
+        elements.editTeamColorTrigger?.addEventListener('click', () => {
+            elements.editTeamColor?.click();
+        });
 
         elements.confirmDeleteTeam?.addEventListener(
             'click',
@@ -509,6 +545,7 @@
         elements.newMemberResults.innerHTML = '';
         state.selectedNewMembers.clear();
         renderSelectedMembers('new');
+        updateTeamColorPreview('new');
 
         elements.newTeamModal.classList.add('active');
         elements.newTeamName.focus();
@@ -615,6 +652,7 @@
             });
 
             renderSelectedMembers('edit');
+            updateTeamColorPreview('edit');
             elements.editTeamName.focus();
         } catch (error) {
             console.error('Unable to load team:', error);
@@ -1040,6 +1078,35 @@
         window.setTimeout(() => {
             notice.remove();
         }, 5000);
+    }
+
+    function updateTeamColorPreview(mode) {
+        const isNew = mode === 'new';
+        const colorInput = isNew
+            ? elements.newTeamColor
+            : elements.editTeamColor;
+        const swatchFill = isNew
+            ? elements.newTeamColorPreview
+            : elements.editTeamColorPreview;
+        const badge = isNew
+            ? elements.newTeamColorBadge
+            : elements.editTeamColorBadge;
+        const nameInput = isNew
+            ? elements.newTeamName
+            : elements.editTeamName;
+
+        if (!colorInput || !swatchFill || !badge) {
+            return;
+        }
+
+        const color = isValidHexColor(colorInput.value)
+            ? colorInput.value
+            : '#2563eb';
+        const label = nameInput?.value.trim() || 'Team Name';
+
+        swatchFill.style.backgroundColor = color;
+        badge.style.cssText = getTeamBadgeStyle(color);
+        badge.textContent = label;
     }
 
     function isValidHexColor(value) {

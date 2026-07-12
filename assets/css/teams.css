@@ -263,6 +263,75 @@ body {
     text-align: center;
 }
 
+.team-color-field {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.team-color-swatch {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 42px;
+    height: 42px;
+    padding: 3px;
+    border: 1.5px solid var(--border);
+    border-radius: 7px;
+    background: var(--surface);
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: border-color 0.15s;
+}
+
+.team-color-swatch:hover,
+.team-color-swatch:focus-visible {
+    border-color: var(--action);
+    outline: none;
+}
+
+.team-color-swatch-fill {
+    display: block;
+    width: 100%;
+    height: 100%;
+    border-radius: 4px;
+    background: var(--team-color, #2563eb);
+}
+
+.team-color-input-native {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+.team-color-badge-preview {
+    flex: 1;
+    min-width: 0;
+}
+
+.team-badge {
+    display: inline-flex;
+    align-items: center;
+    max-width: 100%;
+    padding: 3px 9px;
+    border-radius: 99px;
+    border: 1px solid var(--team-border-color, color-mix(in srgb, var(--team-color, #2563eb) 35%, transparent));
+    background: color-mix(in srgb, var(--team-color, #2563eb) 14%, white);
+    color: var(--team-text-color, color-mix(in srgb, var(--team-color, #2563eb) 78%, black));
+    font-size: 0.75rem;
+    font-weight: 600;
+    line-height: 1.2;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
 .is-loading {
     opacity: 0.65;
     pointer-events: none;

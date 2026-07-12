@@ -3,11 +3,11 @@
       <div class="page-header">
         <h1 class="page-title">People</h1>
         <div class="header-actions">
-          <button class="btn-outline" type="button">
+          <button class="btn-outline" type="button" id="sd-import-people">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
             Import CSV
           </button>
-          <button class="btn-outline" type="button">
+          <button class="btn-outline" type="button" id="sd-export-people">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/></svg>
             Export CSV
           </button>
@@ -18,87 +18,45 @@
         </div>
       </div>
 
-      <!-- Ambrosia Personnel -->
-      <div class="section">
-        <div class="section-header">
-          <div class="section-accent-bar blue"></div>
-          <h2 class="section-title">Ambrosia Personnel</h2>
-        </div>
+      <div class="section section-people">
         <div class="toolbar">
           <div class="search-wrap">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-4.35-4.35"/></svg>
-            <input type="text" id="internal-search" placeholder="Search Ambrosia personnel..." />
+            <input type="text" id="people-search" placeholder="Search people..." />
           </div>
           <div class="filter-wrap">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2a1 1 0 01-.293.707L13 13.414V19a1 1 0 01-.553.894l-4 2A1 1 0 017 21v-7.586L3.293 6.707A1 1 0 013 6V4z"/></svg>
             Filters:
-            <select id="internal-role-filter">
+            <select id="people-role-filter">
               <option value="">All Roles</option>
             </select>
-          </div>
-          <label class="filter-checkbox">
-            <input type="checkbox" id="internal-show-deactivated" />
-            Show deactivated people
-          </label>
-        </div>
-        <table>
-          <thead>
-            <tr>
-              <th class="col-check"><input type="checkbox" class="select-all-check" id="internal-select-all" aria-label="Select all Ambrosia personnel" /></th>
-              <th>Name <span class="sort-icon">⇅</span></th>
-              <th>Role <span class="sort-icon">⇅</span></th>
-              <th>Email <span class="sort-icon">⇅</span></th>
-              <th>Phone <span class="sort-icon">⇅</span></th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody></tbody>
-        </table>
-        <div class="table-bulk-actions sd-form-hidden" id="internal-bulk-actions">
-          <button type="button" class="btn-outline sd-form-hidden" id="internal-bulk-deactivate">Deactivate Selected</button>
-          <button type="button" class="btn-outline sd-form-hidden" id="internal-bulk-activate">Activate Selected</button>
-        </div>
-      </div>
-
-      <!-- Client Contacts -->
-      <div class="section">
-        <div class="section-header">
-          <div class="section-accent-bar purple"></div>
-          <h2 class="section-title">Client Contacts</h2>
-        </div>
-        <div class="toolbar">
-          <div class="search-wrap">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-4.35-4.35"/></svg>
-            <input type="text" id="client-search" placeholder="Search client contacts..." />
-          </div>
-          <div class="filter-wrap">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2a1 1 0 01-.293.707L13 13.414V19a1 1 0 01-.553.894l-4 2A1 1 0 017 21v-7.586L3.293 6.707A1 1 0 013 6V4z"/></svg>
-            Filters:
-            <select id="client-company-filter">
+            <select id="people-company-filter">
               <option value="">All Companies</option>
             </select>
           </div>
-          <label class="filter-checkbox">
-            <input type="checkbox" id="client-show-deactivated" />
-            Show deactivated people
-          </label>
         </div>
         <table>
           <thead>
             <tr>
-              <th class="col-check"><input type="checkbox" class="select-all-check" id="client-select-all" aria-label="Select all client contacts" /></th>
+              <th class="col-check"><input type="checkbox" class="select-all-check" id="people-select-all" aria-label="Select all people" /></th>
               <th>Name <span class="sort-icon">⇅</span></th>
+              <th>Role <span class="sort-icon">⇅</span></th>
               <th>Company <span class="sort-icon">⇅</span></th>
+              <th>Teams <span class="sort-icon">⇅</span></th>
               <th>Email <span class="sort-icon">⇅</span></th>
-              <th>Phone <span class="sort-icon">⇅</span></th>
+              <th>Phone</th>
               <th>Actions</th>
             </tr>
           </thead>
-          <tbody></tbody>
+          <tbody id="people-table-body"></tbody>
         </table>
-        <div class="table-bulk-actions sd-form-hidden" id="client-bulk-actions">
-          <button type="button" class="btn-outline sd-form-hidden" id="client-bulk-deactivate">Deactivate Selected</button>
-          <button type="button" class="btn-outline sd-form-hidden" id="client-bulk-activate">Activate Selected</button>
+        <div class="table-bulk-actions sd-form-hidden" id="people-bulk-actions">
+          <button type="button" class="btn-danger" id="people-bulk-delete">Delete Selected</button>
+        </div>
+        <div class="pagination-bar">
+          <button id="sd-people-prev-page" class="btn-outline" type="button">Previous</button>
+          <span id="sd-people-page-info">Page 1</span>
+          <button id="sd-people-next-page" class="btn-outline" type="button">Next</button>
         </div>
       </div>
     </main>
@@ -117,8 +75,8 @@
         <div class="form-group" id="typeToggleField">
           <label>Type</label>
           <div class="type-toggle">
-            <button type="button" class="active" id="typeInternal">Internal</button>
-            <button type="button" id="typeClient">Client</button>
+            <button type="button" id="typeInternal">Internal</button>
+            <button type="button" class="active" id="typeClient">Client</button>
           </div>
         </div>
         <div class="form-group">
@@ -139,6 +97,15 @@
             <option value="">None</option>
           </select>
         </div>
+        <div class="form-group" id="teamsField">
+          <label for="person-panel-teams-add">Teams</label>
+          <div class="person-team-picker">
+            <select id="person-panel-teams-add">
+              <option value="">Add a team...</option>
+            </select>
+            <div id="person-panel-teams-selected" class="person-team-picker-box" aria-live="polite"></div>
+          </div>
+        </div>
         <div class="form-group">
           <label for="person-panel-phone">Phone Number</label>
           <input type="tel" id="person-panel-phone" placeholder="555-0000" />
@@ -148,7 +115,6 @@
           <textarea id="person-panel-notes" placeholder="Additional notes..."></textarea>
         </div>
         <button type="button" class="btn-primary" id="person-panel-submit">Add Person</button>
-        <button type="button" class="btn-outline sd-form-hidden" id="person-panel-toggle-active">Deactivate Person</button>
         </div>
       </aside>
     </div>

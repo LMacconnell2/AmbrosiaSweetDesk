@@ -53,10 +53,33 @@ function getClientMeta(client, key) {
     return client.meta[key] || '';
 }
 
-function getPrimaryContact(client) {
+function getPersonName(person) {
+    return [person.first_name, person.last_name].filter(Boolean).join(' ');
+}
+
+function getPrimaryContactPerson(client) {
+    const primaryId = getClientMeta(client, 'primary_contact_id');
+
+    if (primaryId && client.people?.length) {
+        const linked = client.people.find(person => Number(person.id) === Number(primaryId));
+
+        if (linked) {
+            return linked;
+        }
+    }
+
     if (client.people?.length) {
-        const person = client.people[0];
-        return [person.first_name, person.last_name].filter(Boolean).join(' ');
+        return client.people[0];
+    }
+
+    return null;
+}
+
+function getPrimaryContact(client) {
+    const person = getPrimaryContactPerson(client);
+
+    if (person) {
+        return getPersonName(person);
     }
 
     return getClientMeta(client, 'primary_contact') || 'N/A';
@@ -106,19 +129,15 @@ function openClientSidebar(mode = 'create', data = {}) {
     document.getElementById('client-panel-notes').value = data.notes || '';
 
     const contactSelect = document.getElementById('client-panel-contact');
-    const linkedPerson = data.people?.[0];
+    const primaryId = getClientMeta(data, 'primary_contact_id');
+    const linkedPerson = getPrimaryContactPerson(data);
 
-    if (linkedPerson) {
+    if (primaryId) {
+        contactSelect.value = String(primaryId);
+    } else if (linkedPerson) {
         contactSelect.value = String(linkedPerson.id);
     } else {
-        const contactName = getClientMeta(data, 'primary_contact');
-
-        for (const option of contactSelect.options) {
-            if (option.textContent === contactName) {
-                contactSelect.value = option.value;
-                break;
-            }
-        }
+        contactSelect.value = '';
     }
 }
 
@@ -135,7 +154,7 @@ async function openEditClientSidebar(id) {
     }
 }
 
-function getClientPayload() {
+function getClientPayload(personId) {
     const contactSelect = document.getElementById('client-panel-contact');
     const contactOption = contactSelect.selectedOptions[0];
     const contactName = contactOption && contactOption.value ? contactOption.textContent : '';
@@ -148,6 +167,7 @@ function getClientPayload() {
         notes: document.getElementById('client-panel-notes').value,
         meta: {
             primary_contact: contactName,
+            primary_contact_id: personId ? String(personId) : '',
             industry: document.getElementById('client-panel-industry').value,
             account_status: document.getElementById('client-panel-status').value
         }
@@ -165,17 +185,18 @@ async function linkPrimaryContact(clientId, personId, previousPersonId) {
     if (personId) {
         await sdClientApi(`/people/${personId}`, {
             method: 'PUT',
-            body: JSON.stringify({ client_id: clientId })
+            body: JSON.stringify({ client_id: clientId, role: 'client' })
         });
     }
 }
 
 async function saveClient() {
-    const payload = getClientPayload();
-    const id = SweetDeskClients.editingClientId;
     const contactSelect = document.getElementById('client-panel-contact');
     const personId = contactSelect.value ? Number(contactSelect.value) : null;
-    const previousPersonId = SweetDeskClients.editingClientData?.people?.[0]?.id ?? null;
+    const previousPersonId = getClientMeta(SweetDeskClients.editingClientData || {}, 'primary_contact_id')
+        || SweetDeskClients.editingClientData?.people?.[0]?.id
+        || null;
+    const id = SweetDeskClients.editingClientId;
 
     try {
         let clientId = id;
@@ -183,12 +204,12 @@ async function saveClient() {
         if (id) {
             await sdClientApi(`/clients/${id}`, {
                 method: 'PUT',
-                body: JSON.stringify(payload)
+                body: JSON.stringify(getClientPayload(personId))
             });
         } else {
             const response = await sdClientApi('/clients', {
                 method: 'POST',
-                body: JSON.stringify(payload)
+                body: JSON.stringify(getClientPayload(personId))
             });
 
             clientId = response.data?.id;
@@ -200,6 +221,7 @@ async function saveClient() {
 
         closeClientSidebar();
         await loadClients();
+        await loadClientContacts();
     } catch (error) {
         alert(error.message);
     }
@@ -262,7 +284,6 @@ function renderClientRow(client) {
 
     return `
         <tr>
-            <td class="col-check"><input type="checkbox" /></td>
             <td class="col-name">${client.name || ''}</td>
             <td>${industry || ''}</td>
             <td>${getPrimaryContact(client)}</td>
@@ -289,26 +310,67 @@ function applyStatusFilter(clients) {
     });
 }
 
+function sortClients(clients) {
+    const { field, order } = SweetDeskClients.sort;
+    const direction = order === 'asc' ? 1 : -1;
+    const apiSortFields = ['name', 'email', 'id'];
+
+    if (apiSortFields.includes(field)) {
+        return clients;
+    }
+
+    return [...clients].sort((left, right) => {
+        let leftValue;
+        let rightValue;
+
+        switch (field) {
+            case 'primary_contact':
+                leftValue = getPrimaryContact(left).toLowerCase();
+                rightValue = getPrimaryContact(right).toLowerCase();
+                break;
+            case 'open_tickets':
+                leftValue = Number(left.open_tickets ?? 0);
+                rightValue = Number(right.open_tickets ?? 0);
+                break;
+            case 'total_tickets':
+                leftValue = Number(left.total_tickets ?? 0);
+                rightValue = Number(right.total_tickets ?? 0);
+                break;
+            default:
+                leftValue = String(left[field] ?? '').toLowerCase();
+                rightValue = String(right[field] ?? '').toLowerCase();
+        }
+
+        if (leftValue < rightValue) return -1 * direction;
+        if (leftValue > rightValue) return 1 * direction;
+        return 0;
+    });
+}
+
 function renderClients() {
     const tbody = document.querySelector('.table-wrap table tbody');
 
     if (!tbody) return;
 
-    const filtered = applyStatusFilter(SweetDeskClients.clients);
+    const filtered = sortClients(applyStatusFilter(SweetDeskClients.clients));
 
     tbody.innerHTML = filtered.length
         ? filtered.map(renderClientRow).join('')
-        : `<tr><td colspan="8">No clients found.</td></tr>`;
+        : `<tr><td colspan="7">No clients found.</td></tr>`;
 }
 
 async function loadClients() {
     const searchInput = document.getElementById('client-search');
     const q = searchInput?.value?.trim() || '';
+    const apiSortFields = ['name', 'email', 'id'];
+    const sortField = apiSortFields.includes(SweetDeskClients.sort.field)
+        ? SweetDeskClients.sort.field
+        : 'name';
 
     const params = new URLSearchParams({
         page: '1',
         per_page: '100',
-        sort: SweetDeskClients.sort.field,
+        sort: sortField,
         order: SweetDeskClients.sort.order
     });
 
@@ -323,20 +385,24 @@ async function loadClients() {
     }
 }
 
+function isClientContactPerson(person) {
+    return person.role === 'client' || Boolean(person.client_id);
+}
+
 async function loadClientContacts() {
     const contactSelect = document.getElementById('client-panel-contact');
 
     if (!contactSelect) return;
 
     try {
-        const response = await sdClientApi('/people?roles=client&per_page=100&sort=last_name&order=asc');
-        SweetDeskClients.people = response.data || [];
+        const response = await sdClientApi('/people?per_page=100&sort=last_name&order=asc');
+        SweetDeskClients.people = (response.data || []).filter(isClientContactPerson);
 
         const current = contactSelect.value;
         contactSelect.innerHTML = `<option value="">None</option>`;
 
         SweetDeskClients.people.forEach(person => {
-            const name = [person.first_name, person.last_name].filter(Boolean).join(' ');
+            const name = getPersonName(person);
 
             if (!name) return;
 
@@ -409,7 +475,7 @@ async function importClientsJson(file) {
 }
 
 function setupClientImport() {
-    const importButton = document.querySelectorAll('.header-actions .btn-outline')[0];
+    const importButton = document.getElementById('sd-import-clients');
 
     if (!importButton) return;
 
@@ -445,12 +511,14 @@ function setupClientImport() {
 
 function setupClientSort() {
     const sortMap = {
-        1: 'name',
-        4: 'name',
-        5: 'name'
+        0: 'name',
+        2: 'primary_contact',
+        3: 'open_tickets',
+        4: 'total_tickets'
     };
 
     const headers = document.querySelectorAll('.table-wrap thead th');
+    const clientSideSortFields = ['primary_contact', 'open_tickets', 'total_tickets'];
 
     headers.forEach((header, index) => {
         const sortField = sortMap[index];
@@ -467,6 +535,11 @@ function setupClientSort() {
             } else {
                 SweetDeskClients.sort.field = sortField;
                 SweetDeskClients.sort.order = 'asc';
+            }
+
+            if (clientSideSortFields.includes(sortField)) {
+                renderClients();
+                return;
             }
 
             loadClients();
@@ -497,8 +570,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         renderClients();
     });
 
-    const exportButton = document.querySelectorAll('.header-actions .btn-outline')[1];
-    exportButton?.addEventListener('click', exportClientsJson);
+    document.getElementById('sd-export-clients')?.addEventListener('click', exportClientsJson);
 
     setupClientImport();
     setupClientSort();

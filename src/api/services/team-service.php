@@ -315,7 +315,7 @@ class SweetDesk_Team_Service
             return [];
         }
 
-        $where = ['is_active = 1'];
+        $where = [];
         $values = [];
 
         $like = '%' . $this->wpdb->esc_like($params['q']) . '%';
