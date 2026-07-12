@@ -131,6 +131,9 @@
         elements.newMemberList = document.getElementById(
             'new-team-member-list'
         );
+        elements.newMemberFilter = document.getElementById(
+            'new-team-member-filter'
+        );
         elements.newTeamSubmit = document.getElementById('new-team-submit');
 
         elements.editTeamModal = document.getElementById('editTeamModal');
@@ -159,6 +162,9 @@
         );
         elements.editMemberList = document.getElementById(
             'edit-team-member-list'
+        );
+        elements.editMemberFilter = document.getElementById(
+            'edit-team-member-filter'
         );
         elements.editTeamSubmit = document.getElementById('edit-team-submit');
 
@@ -226,6 +232,14 @@
 
         elements.editMemberSearch?.addEventListener('input', (event) => {
             debounceMemberSearch('edit', event.target.value);
+        });
+
+        elements.newMemberFilter?.addEventListener('input', () => {
+            renderSelectedMembers('new');
+        });
+
+        elements.editMemberFilter?.addEventListener('input', () => {
+            renderSelectedMembers('edit');
         });
 
         elements.teamsGrid?.addEventListener('click', handleTeamGridClick);
@@ -543,6 +557,9 @@
         elements.newTeamForm.reset();
         elements.newTeamColor.value = '#2563eb';
         elements.newMemberResults.innerHTML = '';
+        if (elements.newMemberFilter) {
+            elements.newMemberFilter.value = '';
+        }
         state.selectedNewMembers.clear();
         renderSelectedMembers('new');
         updateTeamColorPreview('new');
@@ -554,6 +571,9 @@
     function closeNewTeamModal() {
         elements.newTeamModal.classList.remove('active');
         elements.newMemberResults.innerHTML = '';
+        if (elements.newMemberFilter) {
+            elements.newMemberFilter.value = '';
+        }
     }
 
     async function createTeam(event) {
@@ -617,6 +637,9 @@
         elements.editTeamForm.classList.add('is-loading');
         elements.editTeamSubmit.disabled = true;
         elements.editMemberResults.innerHTML = '';
+        if (elements.editMemberFilter) {
+            elements.editMemberFilter.value = '';
+        }
 
         try {
             const team = await apiRequest(`/${teamId}`);
@@ -667,6 +690,9 @@
     function closeEditTeamModal() {
         elements.editTeamModal.classList.remove('active');
         elements.editMemberResults.innerHTML = '';
+        if (elements.editMemberFilter) {
+            elements.editMemberFilter.value = '';
+        }
         state.selectedEditMembers.clear();
     }
 
@@ -942,6 +968,27 @@
         }
     }
 
+    function getMemberListFilter(mode) {
+        const filterElement =
+            mode === 'new'
+                ? elements.newMemberFilter
+                : elements.editMemberFilter;
+
+        return (filterElement?.value || '').trim().toLowerCase();
+    }
+
+    function personMatchesMemberFilter(person, query) {
+        if (!query) {
+            return true;
+        }
+
+        const haystack = [getPersonName(person), person.email || '']
+            .join(' ')
+            .toLowerCase();
+
+        return haystack.includes(query);
+    }
+
     function renderSelectedMembers(mode) {
         const selectedMembers =
             mode === 'new'
@@ -959,7 +1006,18 @@
             return;
         }
 
-        listElement.innerHTML = Array.from(selectedMembers.values())
+        const filterQuery = getMemberListFilter(mode);
+        const visibleMembers = Array.from(selectedMembers.values()).filter(
+            (person) => personMatchesMemberFilter(person, filterQuery)
+        );
+
+        if (!visibleMembers.length) {
+            listElement.innerHTML =
+                '<li class="member-empty">No members match your filter.</li>';
+            return;
+        }
+
+        listElement.innerHTML = visibleMembers
             .map((person) => {
                 const fullName = getPersonName(person);
 
@@ -979,8 +1037,9 @@
                             class="member-delete"
                             data-mode="${escapeAttribute(mode)}"
                             data-person-id="${Number(person.id)}"
+                            aria-label="Remove ${escapeAttribute(fullName)}"
                         >
-                            Remove
+                            ${deleteIcon}
                         </button>
                     </li>
                 `;

@@ -5,6 +5,7 @@ const SweetDeskPeople = {
     clients: [],
     teams: [],
     selectedTeamIds: [],
+    filterTeamIds: [],
     editingPersonId: null,
     editingPerson: null,
     deletePersonId: null,
@@ -240,6 +241,151 @@ function renderPersonTeamPicker() {
     addSelect.disabled = availableTeams.length === 0;
 }
 
+function getFilterTeamIds() {
+    return [...SweetDeskPeople.filterTeamIds];
+}
+
+function setFilterTeamIds(teamIds) {
+    SweetDeskPeople.filterTeamIds = [...new Set(
+        (teamIds || []).map(id => Number(id)).filter(id => id > 0)
+    )];
+    renderPeopleTeamFilter();
+}
+
+function getTeamFilterLabelText() {
+    const selectedIds = getFilterTeamIds();
+
+    if (!selectedIds.length) {
+        return 'All Teams';
+    }
+
+    const selectedTeams = selectedIds
+        .map(id => getTeamById(id))
+        .filter(Boolean)
+        .sort((left, right) =>
+            (left.name || '').localeCompare(right.name || '', undefined, { sensitivity: 'base' })
+        );
+
+    const firstName = selectedTeams[0]?.name || `Team #${selectedIds[0]}`;
+
+    if (selectedTeams.length === 1) {
+        return firstName;
+    }
+
+    return `${firstName} (+${selectedTeams.length - 1})`;
+}
+
+function updateTeamFilterLabel() {
+    const label = document.getElementById('people-team-filter-label');
+    const trigger = document.getElementById('people-team-filter-trigger');
+
+    if (!label) {
+        return;
+    }
+
+    const selectedIds = getFilterTeamIds();
+
+    if (!selectedIds.length) {
+        label.innerHTML = '<span class="people-team-filter-label-text">All Teams</span>';
+    } else {
+        const selectedTeams = selectedIds
+            .map(id => getTeamById(id))
+            .filter(Boolean)
+            .sort((left, right) =>
+                (left.name || '').localeCompare(right.name || '', undefined, { sensitivity: 'base' })
+            );
+
+        const firstName = escapeHtml(selectedTeams[0]?.name || `Team #${selectedIds[0]}`);
+
+        if (selectedTeams.length === 1) {
+            label.innerHTML = `<span class="people-team-filter-label-text">${firstName}</span>`;
+        } else {
+            const moreCount = selectedTeams.length - 1;
+            label.innerHTML = `
+                <span class="people-team-filter-label-text">${firstName}</span>
+                <span class="people-team-filter-label-more">(+${moreCount})</span>
+            `;
+        }
+    }
+
+    if (trigger) {
+        trigger.setAttribute('aria-label', `Filter by team: ${getTeamFilterLabelText()}`);
+    }
+}
+
+function toggleFilterTeam(teamId, selected) {
+    const id = Number(teamId);
+
+    if (!id) {
+        return;
+    }
+
+    if (selected) {
+        if (!SweetDeskPeople.filterTeamIds.includes(id)) {
+            SweetDeskPeople.filterTeamIds.push(id);
+        }
+    } else {
+        SweetDeskPeople.filterTeamIds = SweetDeskPeople.filterTeamIds.filter(item => item !== id);
+    }
+
+    updateTeamFilterLabel();
+
+    const checkbox = document.querySelector(
+        `#people-team-filter-list input[value="${id}"]`
+    );
+
+    if (checkbox) {
+        checkbox.checked = selected;
+    }
+
+    resetToFirstPageAndLoad();
+}
+
+function closePeopleTeamFilterMenu() {
+    const menu = document.getElementById('people-team-filter-menu');
+    const trigger = document.getElementById('people-team-filter-trigger');
+
+    if (menu) {
+        menu.hidden = true;
+    }
+
+    if (trigger) {
+        trigger.setAttribute('aria-expanded', 'false');
+    }
+}
+
+function renderPeopleTeamFilter() {
+    const list = document.getElementById('people-team-filter-list');
+
+    if (!list) {
+        return;
+    }
+
+    const selectedIds = getFilterTeamIds();
+
+    updateTeamFilterLabel();
+
+    if (!SweetDeskPeople.teams.length) {
+        list.innerHTML = '<li class="people-team-filter-empty">No teams available</li>';
+        return;
+    }
+
+    list.innerHTML = SweetDeskPeople.teams.map(team => {
+        const id = Number(team.id);
+        const name = escapeHtml(team.name || `Team #${id}`);
+        const checked = selectedIds.includes(id) ? 'checked' : '';
+
+        return `
+            <li class="people-team-filter-option" role="option">
+                <label>
+                    <input type="checkbox" value="${id}" ${checked}>
+                    <span>${name}</span>
+                </label>
+            </li>
+        `;
+    }).join('');
+}
+
 function getPersonTeamIds(person) {
     const teams = getPersonTeams(person);
 
@@ -261,6 +407,7 @@ async function loadTeamsForPicker() {
             (left.name || '').localeCompare(right.name || '', undefined, { sensitivity: 'base' })
         );
         renderPersonTeamPicker();
+        renderPeopleTeamFilter();
     } catch (error) {
         console.warn(error.message);
     }
@@ -645,6 +792,12 @@ function buildPeopleQuery() {
         params.set('client_ids', clientId);
     }
 
+    const teamIds = getFilterTeamIds();
+
+    if (teamIds.length) {
+        params.set('team_ids', teamIds.join(','));
+    }
+
     return params;
 }
 
@@ -771,6 +924,12 @@ function getExportQueryParams() {
 
     if (clientId) {
         params.set('client_ids', clientId);
+    }
+
+    const teamIds = getFilterTeamIds();
+
+    if (teamIds.length) {
+        params.set('team_ids', teamIds.join(','));
     }
 
     return params;
@@ -966,6 +1125,44 @@ function setupPersonTeamPicker() {
     });
 }
 
+function setupPeopleTeamFilter() {
+    const filter = document.getElementById('people-team-filter');
+    const trigger = document.getElementById('people-team-filter-trigger');
+    const menu = document.getElementById('people-team-filter-menu');
+    const list = document.getElementById('people-team-filter-list');
+
+    if (!filter || !trigger || !menu || !list) {
+        return;
+    }
+
+    trigger.addEventListener('click', event => {
+        event.stopPropagation();
+        const isOpen = !menu.hidden;
+        menu.hidden = isOpen;
+        trigger.setAttribute('aria-expanded', String(!isOpen));
+    });
+
+    list.addEventListener('change', event => {
+        const checkbox = event.target;
+
+        if (checkbox.type !== 'checkbox') {
+            return;
+        }
+
+        toggleFilterTeam(checkbox.value, checkbox.checked);
+    });
+
+    menu.addEventListener('click', event => {
+        event.stopPropagation();
+    });
+
+    document.addEventListener('click', event => {
+        if (!filter.contains(event.target)) {
+            closePeopleTeamFilterMenu();
+        }
+    });
+}
+
 document.getElementById('sd-delete-person-modal')?.addEventListener('click', function (e) {
     if (e.target === this) {
         closeDeletePersonModal();
@@ -988,6 +1185,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     setupPeopleSort();
     setupPagination();
     setupPersonTeamPicker();
+    setupPeopleTeamFilter();
     setupTableSelection();
 
     await loadTeamsForPicker();

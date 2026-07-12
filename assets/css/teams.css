@@ -156,15 +156,20 @@ body {
 }
 
 .team-card-actions button.email-btn {
-    color: var(--link);
+    color: var(--chrome);
+}
+
+.team-card-actions button.email-btn:hover {
+    color: var(--chrome-hover);
 }
 
 .team-card-actions button.delete-btn {
-    color: var(--status-error);
+    color: var(--action);
 }
 
 .team-card-actions button.delete-btn:hover {
-    background: var(--status-error-bg);
+    background: var(--brand-magenta-50);
+    color: var(--action-hover);
 }
 
 .team-card-actions button svg {
@@ -218,7 +223,7 @@ body {
 
 .member-search-result:hover,
 .member-search-result:focus {
-    border-color: #2271b1;
+    border-color: var(--action);
     background: #f6f7f7;
 }
 
@@ -240,6 +245,39 @@ body {
 
 .member-item small {
     color: #646970;
+}
+
+.member-list-filter {
+    width: 100%;
+    box-sizing: border-box;
+    margin-bottom: 0.5rem;
+}
+
+.member-list-scroll {
+    max-height: 220px;
+    overflow-y: auto;
+}
+
+.member-delete {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 6px;
+    border: none;
+    background: transparent;
+    border-radius: 6px;
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: color 0.15s ease;
+}
+
+.member-delete:hover {
+    color: var(--action);
+}
+
+.member-delete svg {
+    width: 18px;
+    height: 18px;
 }
 
 .member-empty,

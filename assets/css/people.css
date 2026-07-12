@@ -66,12 +66,130 @@
     background: var(--surface);
 }
 
+.section-people .filter-wrap {
+    --people-filter-width: 148px;
+}
+
 .section .filter-wrap select {
+    width: var(--people-filter-width);
+    min-width: var(--people-filter-width);
     background-color: var(--page-bg);
 }
 
-.section .filter-wrap select + select {
+.section .filter-wrap select + select,
+.section .filter-wrap select + .people-team-filter {
     margin-left: 8px;
+}
+
+.people-team-filter {
+    position: relative;
+    display: inline-block;
+    width: var(--people-filter-width);
+    flex-shrink: 0;
+}
+
+.people-team-filter-trigger {
+    box-sizing: border-box;
+    display: inline-flex;
+    align-items: center;
+    width: 100%;
+    min-width: 0;
+    max-width: none;
+    font-family: inherit;
+    font-size: 0.875rem;
+    line-height: 1.25;
+    border: 1.5px solid var(--border);
+    border-radius: 7px;
+    padding: 9px 30px 9px 10px;
+    background-color: var(--page-bg);
+    color: var(--text-primary);
+    outline: none;
+    cursor: pointer;
+    appearance: none;
+    -webkit-appearance: none;
+    background-image: var(--select-chevron);
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    background-size: 12px;
+    text-align: left;
+}
+
+.people-team-filter-trigger:hover,
+.people-team-filter-trigger:focus {
+    border-color: var(--action);
+}
+
+.people-team-filter-label {
+    display: inline-flex;
+    align-items: center;
+    min-width: 0;
+    max-width: 100%;
+    gap: 2px;
+}
+
+.people-team-filter-label-text {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    min-width: 0;
+}
+
+.people-team-filter-label-more {
+    flex-shrink: 0;
+    white-space: nowrap;
+}
+
+.people-team-filter-menu {
+    position: absolute;
+    top: calc(100% + 4px);
+    right: 0;
+    left: auto;
+    z-index: 20;
+    width: calc(var(--people-filter-width) * 2);
+    max-width: none;
+    max-height: 240px;
+    overflow-y: auto;
+    border: 1.5px solid var(--border);
+    border-radius: 7px;
+    background: var(--surface);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+}
+
+.people-team-filter-list {
+    list-style: none;
+    margin: 0;
+    padding: 6px 0;
+}
+
+.people-team-filter-option label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 7px 12px;
+    font-size: 0.84rem;
+    color: var(--text-primary);
+    cursor: pointer;
+}
+
+.people-team-filter-option label:hover {
+    background: var(--surface-subtle);
+}
+
+.people-team-filter-option input[type="checkbox"] {
+    margin: 0;
+    flex-shrink: 0;
+}
+
+.people-team-filter-option span {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.people-team-filter-empty {
+    padding: 8px 12px;
+    font-size: 0.84rem;
+    color: var(--text-muted);
 }
 
 .filter-checkbox {
@@ -289,13 +407,18 @@
 }
 
 a.email-link {
-    color: var(--link);
+    color: var(--text-muted);
     text-decoration: none;
     font-size: 0.875rem;
 }
 
 a.email-link:hover {
+    color: var(--link);
     text-decoration: underline;
+}
+
+.section-people table td:nth-child(7) {
+    color: var(--text-muted);
 }
 
 .form-group[hidden],

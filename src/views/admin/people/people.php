@@ -33,6 +33,26 @@
             <select id="people-company-filter">
               <option value="">All Companies</option>
             </select>
+            <div class="people-team-filter" id="people-team-filter">
+              <button
+                type="button"
+                class="people-team-filter-trigger"
+                id="people-team-filter-trigger"
+                aria-haspopup="listbox"
+                aria-expanded="false"
+                aria-controls="people-team-filter-menu"
+              >
+                <span class="people-team-filter-label" id="people-team-filter-label">All Teams</span>
+              </button>
+              <div class="people-team-filter-menu" id="people-team-filter-menu" hidden>
+                <ul
+                  class="people-team-filter-list"
+                  id="people-team-filter-list"
+                  role="listbox"
+                  aria-multiselectable="true"
+                ></ul>
+              </div>
+            </div>
           </div>
         </div>
         <table>

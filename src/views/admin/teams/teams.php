@@ -123,10 +123,20 @@
               <div class="form-group">
                   <label>Selected Members</label>
 
-                  <ul
-                      class="member-list"
-                      id="edit-team-member-list"
-                  ></ul>
+                  <input
+                      type="search"
+                      id="edit-team-member-filter"
+                      class="member-list-filter"
+                      placeholder="Filter selected members..."
+                      autocomplete="off"
+                  >
+
+                  <div class="member-list-scroll">
+                      <ul
+                          class="member-list"
+                          id="edit-team-member-list"
+                      ></ul>
+                  </div>
               </div>
 
               <div class="modal-actions">
@@ -248,10 +258,20 @@
               <div class="form-group">
                   <label>Selected Members</label>
 
-                  <ul
-                      class="member-list"
-                      id="new-team-member-list"
-                  ></ul>
+                  <input
+                      type="search"
+                      id="new-team-member-filter"
+                      class="member-list-filter"
+                      placeholder="Filter selected members..."
+                      autocomplete="off"
+                  >
+
+                  <div class="member-list-scroll">
+                      <ul
+                          class="member-list"
+                          id="new-team-member-list"
+                      ></ul>
+                  </div>
               </div>
 
               <div class="modal-actions">
