@@ -23,14 +23,15 @@
  * --------- --------  ----------------------------------------------------------------------------------------------------
  *  0. 0. 1  5-20-2026  Refactor for better code ogranization and maintanability.
  *  0. 0. 2  7-10-2026  Database schema updates and implementation of core API endpoints.
- */
+ *  0. 0. 3  7-13-2026  Implementation Settings API routes and DB schema updates
+ */.
 
 if (!defined('ABSPATH')) {
     exit;
 }
 
 define('SWEETDESK_VERSION', '0.0.2');
-define('SWEETDESK_DB_VERSION', '1.1.0');
+define('SWEETDESK_DB_VERSION', '1.2.0');
 
 define('SWEETDESK_FILE', __FILE__);
 define('SWEETDESK_PATH', plugin_dir_path(__FILE__));
