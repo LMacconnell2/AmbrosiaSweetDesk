@@ -48,7 +48,7 @@ class SweetDesk_API {
         (new SweetDesk_Settings_Status_Routes())
             ->register_routes();
 
-        (new SeetDesk_Settings_Fields_Routes())
+        (new SweetDesk_Settings_Fields_Routes())
             ->register_routes();
 
         (new SweetDesk_Email_Settings_Routes())

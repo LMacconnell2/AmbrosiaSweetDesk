@@ -512,3 +512,110 @@ body {
     font-size: 0.875rem;
     color: var(--text-muted);
 }
+/* ADDED CSS 7/13/2026 */
+.tab-heading-row,
+.config-section-header,
+.field-heading-row {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+.tab-description,
+.config-section-description,
+.field-description {
+    display: block;
+    margin-top: 5px;
+    color: #646970;
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+.settings-message {
+    margin: 16px 0;
+    padding: 10px 14px;
+    border-left: 4px solid #00a32a;
+    background: #edfaef;
+}
+
+.settings-message.error {
+    border-left-color: #d63638;
+    background: #fcf0f1;
+    color: #8a2424;
+}
+
+.additional-email-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin: 12px 0;
+}
+
+.additional-email-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.additional-email-input {
+    flex: 1;
+}
+
+.config-item-content {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.config-item-name {
+    font-weight: 600;
+}
+
+.config-item-meta {
+    color: #646970;
+    font-size: 12px;
+}
+
+.config-item-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.config-item.inactive {
+    opacity: 0.65;
+}
+
+.config-list-empty {
+    padding: 16px;
+    color: #646970;
+    font-style: italic;
+}
+
+.inline-edit-number {
+    width: 100px;
+}
+
+.inline-checkbox {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    white-space: nowrap;
+}
+
+.add-field-row {
+    flex-wrap: wrap;
+}
+
+.toggle {
+    appearance: none;
+    border: 0;
+    cursor: pointer;
+}
+
+.btn-add-link:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+}

@@ -8,23 +8,23 @@
     <!-- Left nav -->
     <aside class="settings-nav">
       <nav>
-        <button class="nav-item active" data-tab="notifications" onclick="switchTab('notifications')">
+        <button class="nav-item active" data-tab="notifications">
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg>
           Notifications
         </button>
-        <button class="nav-item" data-tab="ticket-config" onclick="switchTab('ticket-config')">
+        <button type="button" class="nav-item" data-tab="ticket-config">
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"/></svg>
           Ticket Configuration
         </button>
-        <button class="nav-item" data-tab="integrations" onclick="switchTab('integrations')">
+        <button type="button" class="nav-item" data-tab="integrations">
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"/></svg>
           Integrations
         </button>
-        <button class="nav-item" data-tab="licenses" onclick="switchTab('licenses')">
+        <button type="button" class="nav-item" data-tab="licenses">
           <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-id-card-icon lucide-id-card"><path d="M16 10h2"/><path d="M16 14h2"/><path d="M6.17 15a3 3 0 0 1 5.66 0"/><circle cx="9" cy="11" r="2"/><rect x="2" y="5" width="20" height="14" rx="2"/></svg>
           Licenses
         </button>
-        <button class="nav-item" data-tab="profile" onclick="switchTab('profile')">
+        <button type="button" class="nav-item" data-tab="profile">
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
           Profile
         </button>
@@ -36,77 +36,127 @@
 
       <!-- Notifications Tab -->
       <div class="tab-panel active" id="tab-notifications">
-        <h2 class="tab-title">Notification Settings</h2>
+        <div class="tab-heading-row">
+          <div>
+            <h2 class="tab-title">Notification Settings</h2>
+            <p class="tab-description">
+              Manage where SweetDesk sends your email notifications.
+            </p>
+          </div>
 
-        <div class="setting-row" id="row-email-notifications">
-          <div class="setting-row-text">
-            <span class="setting-label">Email Notifications</span>
-            <span class="setting-desc">Receive email updates for ticket assignments</span>
-          </div>
-          <!--
-            role="switch" tells screen readers this is an on/off toggle.
-            aria-checked reflects the current state, updated by JS.
-            aria-labelledby points to the label text so screen readers announce it properly.
-            tabindex="0" makes it keyboard-focusable like a native input.
-          -->
-          <div class="toggle"
-               id="toggle-email"
-               role="switch"
-               aria-checked="true"
-               aria-labelledby="label-toggle-email"
-               tabindex="0"
-               data-onchange="toggleEmailConfig">
-            <div class="toggle-thumb"></div>
-          </div>
+          <button
+            type="button"
+            class="btn-primary"
+            id="saveNotificationSettings"
+          >
+            Save Changes
+          </button>
         </div>
 
-        <!-- Email Integration (revealed when Email Notifications is checked) -->
-        <div class="email-config" id="emailConfig">
+        <div
+          class="settings-message"
+          id="notificationMessage"
+          role="status"
+          aria-live="polite"
+          hidden
+        ></div>
+
+        <div class="email-config open" id="emailConfig">
           <div class="email-config-inner">
             <div class="form-group">
-              <label for="email-provider">Email Provider</label>
-              <select id="email-provider">
-                <option>Gmail</option>
-                <option>Outlook</option>
-                <option>Other</option>
-              </select>
+              <label for="wordpress-email">WordPress Account Email</label>
+
+              <input
+                type="email"
+                id="wordpress-email"
+                disabled
+                aria-describedby="wordpress-email-description"
+              />
+
+              <span
+                class="field-description"
+                id="wordpress-email-description"
+              >
+                This address is managed through your WordPress profile.
+              </span>
             </div>
+
             <div class="form-group">
-              <label for="connected-email">Connected Email</label>
-              <input type="email" id="connected-email" placeholder="Not connected" />
+              <div class="field-heading-row">
+                <div>
+                  <label>Additional Notification Emails</label>
+
+                  <span class="field-description">
+                    SweetDesk will send notifications to these addresses in
+                    addition to your WordPress account email.
+                  </span>
+                </div>
+
+                <button
+                  type="button"
+                  class="btn-add-link"
+                  id="addEmailBtn"
+                >
+                  + Add Email
+                </button>
+              </div>
+
+              <div
+                class="additional-email-list"
+                id="additionalEmailList"
+              ></div>
+
+              <span class="field-description">
+                You may add up to five additional email addresses.
+              </span>
             </div>
-            <button class="btn-primary btn-connect">Connect Email</button>
           </div>
         </div>
 
         <div class="setting-row">
           <div class="setting-row-text">
-            <span class="setting-label">Ticket Updates</span>
-            <span class="setting-desc">Get notified when tickets you're assigned to are updated</span>
+            <span class="setting-label" id="label-toggle-tickets">
+              Ticket Updates
+            </span>
+
+            <span class="setting-desc">
+              Receive notifications for ticket changes, assignments, and replies.
+            </span>
           </div>
-          <div class="toggle"
-               id="toggle-tickets"
-               role="switch"
-               aria-checked="true"
-               aria-labelledby="label-toggle-tickets"
-               tabindex="0">
-            <div class="toggle-thumb"></div>
-          </div>
+
+          <button
+            type="button"
+            class="toggle"
+            id="toggle-tickets"
+            role="switch"
+            aria-checked="true"
+            aria-labelledby="label-toggle-tickets"
+          >
+            <span class="toggle-thumb"></span>
+          </button>
         </div>
 
         <div class="setting-row">
           <div class="setting-row-text">
-            <span class="setting-label">Team Mentions</span>
-            <span class="setting-desc">Notifications when someone mentions you or your team</span>
+            <span class="setting-label" id="label-toggle-mentions">
+              Team Mentions
+            </span>
+
+            <span class="setting-desc">
+              Receive a notification when you or one of your teams is mentioned.
+            </span>
           </div>
-          <div class="toggle"
-               id="toggle-mentions"
-               role="switch"
-               aria-checked="true"
-               aria-labelledby="label-toggle-mentions"
-               tabindex="0">
-            <div class="toggle-thumb"></div>
-          </div>
+
+          <button
+            type="button"
+            class="toggle"
+            id="toggle-mentions"
+            role="switch"
+            aria-checked="true"
+            aria-labelledby="label-toggle-mentions"
+          >
+            <span class="toggle-thumb"></span>
+          </button>
         </div>
       </div>
 
@@ -114,40 +164,147 @@
       <div class="tab-panel" id="tab-ticket-config">
         <h2 class="tab-title">Ticket Configuration</h2>
 
+        <div
+          class="settings-message"
+          id="ticketConfigMessage"
+          role="status"
+          aria-live="polite"
+          hidden
+        ></div>
+
         <div class="config-section">
-          <h3 class="config-section-title">Custom Status Options</h3>
-          <ul class="config-list" id="statusList">
-            <li class="config-item"><span>Open</span><button class="btn-remove" onclick="removeItem(this)">Remove</button></li>
-            <li class="config-item"><span>Pending</span><button class="btn-remove" onclick="removeItem(this)">Remove</button></li>
-            <li class="config-item"><span>In Progress</span><button class="btn-remove" onclick="removeItem(this)">Remove</button></li>
-            <li class="config-item"><span>Waiting on Customer</span><button class="btn-remove" onclick="removeItem(this)">Remove</button></li>
-            <li class="config-item"><span>Resolved</span><button class="btn-remove" onclick="removeItem(this)">Remove</button></li>
-            <li class="config-item"><span>Closed</span><button class="btn-remove" onclick="removeItem(this)">Remove</button></li>
-          </ul>
-          <div class="add-row" id="addStatusRow" style="display:none;">
-            <input type="text" id="newStatusInput" placeholder="Status name..." />
-            <button class="btn-add-confirm" onclick="confirmAddStatus()">Add</button>
-            <button class="btn-add-cancel" onclick="cancelAddStatus()">Cancel</button>
+          <div class="config-section-header">
+            <div>
+              <h3 class="config-section-title">Custom Status Options</h3>
+
+              <p class="config-section-description">
+                Configure the statuses available when creating or editing tickets.
+              </p>
+            </div>
+
+            <button
+              type="button"
+              class="btn-add-link"
+              id="addStatusBtn"
+            >
+              + Add Status
+            </button>
           </div>
-          <button class="btn-add-link" id="addStatusBtn" onclick="showAddStatus()">+ Add Status</button>
+
+          <ul class="config-list" id="statusList"></ul>
+
+          <div class="add-row" id="addStatusRow" hidden>
+            <input
+              type="text"
+              id="newStatusInput"
+              maxlength="100"
+              placeholder="Status name..."
+            />
+
+            <input
+              type="number"
+              id="newStatusSortOrder"
+              min="0"
+              value="0"
+              placeholder="Sort order"
+            />
+
+            <button
+              type="button"
+              class="btn-add-confirm"
+              id="confirmAddStatusBtn"
+            >
+              Add
+            </button>
+
+            <button
+              type="button"
+              class="btn-add-cancel"
+              id="cancelAddStatusBtn"
+            >
+              Cancel
+            </button>
+          </div>
         </div>
 
         <div class="config-section">
-          <h3 class="config-section-title">Custom Fields</h3>
-          <ul class="config-list" id="fieldList">
-            <li class="config-item" data-type="integer"><span>Estimated Hours</span><button class="btn-edit-link" onclick="editField(this)">Edit</button></li>
-          </ul>
-          <div class="add-row" id="addFieldRow" style="display:none;">
-            <input type="text" id="newFieldInput" placeholder="Field name..." />
-            <select id="newFieldType" class="placeholder">
-              <option value="" disabled selected hidden>field type</option>
-              <option value="string">Text</option>
-              <option value="integer">Number</option>
-            </select>
-            <button class="btn-add-confirm" onclick="confirmAddField()">Add</button>
-            <button class="btn-add-cancel" onclick="cancelAddField()">Cancel</button>
+          <div class="config-section-header">
+            <div>
+              <h3 class="config-section-title">Custom Fields</h3>
+
+              <p class="config-section-description">
+                Add custom data fields to SweetDesk tickets.
+              </p>
+            </div>
+
+            <button
+              type="button"
+              class="btn-add-link"
+              id="addFieldBtn"
+            >
+              + Add Custom Field
+            </button>
           </div>
-          <button class="btn-add-link" id="addFieldBtn" onclick="showAddField()">+ Add Custom Field</button>
+
+          <ul class="config-list" id="fieldList"></ul>
+
+          <div class="add-row add-field-row" id="addFieldRow" hidden>
+            <input
+              type="text"
+              id="newFieldInput"
+              maxlength="150"
+              placeholder="Field name..."
+            />
+
+            <select id="newFieldType">
+              <option value="text">Text</option>
+              <option value="textarea">Long Text</option>
+              <option value="number">Number</option>
+              <option value="email">Email</option>
+              <option value="url">URL</option>
+              <option value="date">Date</option>
+              <option value="datetime">Date and Time</option>
+              <option value="checkbox">Checkbox</option>
+              <option value="select">Select</option>
+            </select>
+
+            <label class="inline-checkbox">
+              <input type="checkbox" id="newFieldRequired" />
+              Required
+            </label>
+
+            <input
+              type="number"
+              id="newFieldSortOrder"
+              min="0"
+              value="0"
+              placeholder="Sort order"
+            />
+
+            <div id="newFieldOptionsGroup" hidden>
+              <input
+                type="text"
+                id="newFieldOptions"
+                placeholder="Options separated by commas"
+              />
+            </div>
+
+            <button
+              type="button"
+              class="btn-add-confirm"
+              id="confirmAddFieldBtn"
+            >
+              Add
+            </button>
+
+            <button
+              type="button"
+              class="btn-add-cancel"
+              id="cancelAddFieldBtn"
+            >
+              Cancel
+            </button>
+          </div>
         </div>
       </div>
 

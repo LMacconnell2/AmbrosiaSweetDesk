@@ -168,43 +168,43 @@ class AdminMenu {
 
         if ($hook === 'toplevel_page_sweetdesk') {
 
+            $plugin_url = plugin_dir_url(__FILE__) . '../../../';
+
             wp_enqueue_style(
                 'sweetdesk-badge-helpers',
-                plugin_dir_url(__FILE__) . '../../../assets/css/badge-helpers.css',
+                $plugin_url . 'assets/css/badge-helpers.css',
                 ['sweetdesk-components'],
                 SWEETDESK_VERSION
             );
 
             wp_enqueue_style(
                 'sweetdesk-tickets',
-                plugin_dir_url(__FILE__) . '../../../assets/css/tickets-list.css',
+                $plugin_url . 'assets/css/tickets-list.css',
                 ['sweetdesk-badge-helpers'],
                 SWEETDESK_VERSION
             );
 
             wp_enqueue_script(
                 'sweetdesk-badge-helpers',
-                plugin_dir_url(__FILE__) . '../../../assets/js/badge-helpers.js',
+                $plugin_url . 'assets/js/badge-helpers.js',
                 [],
                 SWEETDESK_VERSION,
                 true
             );
 
-            $this->enqueue_message_editor(
-                'sweetdesk-tickets',
-                'tickets.js',
-                ['sweetdesk-badge-helpers']
-            );
+            $this->enqueue_ticket_scripts();
 
             wp_localize_script(
-                'sweetdesk-tickets',
+                'sweetdesk-tickets-state',
                 'SweetDesk',
                 [
-                    'apiUrl' => rest_url('sweetdesk/v1'),
+                    'apiUrl' => esc_url_raw(
+                        rest_url('sweetdesk/v1')
+                    ),
                     'nonce' => wp_create_nonce('wp_rest'),
                     'ticketDetailBase' => admin_url(
                         'admin.php?page=sweetdesk-ticket-detail&ticket_id='
-                    )
+                    ),
                 ]
             );
         }
@@ -333,6 +333,17 @@ class AdminMenu {
                 SWEETDESK_VERSION,
                 true
             );
+
+            wp_localize_script(
+                'sweetdesk-settings',
+                'sweetdeskSettings',
+                [
+                    'restUrl' => esc_url_raw(
+                        rest_url('sweetdesk/v1/settings/')
+                    ),
+                    'nonce' => wp_create_nonce('wp_rest'),
+                ]
+            );
         }
 
         if ($hook === 'admin_page_sweetdesk-ticket-detail') {
@@ -404,5 +415,151 @@ class AdminMenu {
 
     public function ticketDetailPage() {
         include plugin_dir_path(__FILE__) . 'tickets/ticket-detail.php';
+    }
+
+    private function enqueue_ticket_scripts(): void
+    {
+        $plugin_url = plugin_dir_url(__FILE__) . '../../../';
+
+        /*
+        * Load Quill and the shared SweetDesk editor.
+        */
+        wp_enqueue_style(
+            'quill-snow',
+            $plugin_url . 'assets/vendor/quill/quill.snow.css',
+            [],
+            '1.3.7'
+        );
+
+        wp_enqueue_style(
+            'sweetdesk-quill-editor',
+            $plugin_url . 'assets/css/sweetdesk-editor.css',
+            [
+                'quill-snow',
+                'sweetdesk-theme',
+            ],
+            SWEETDESK_VERSION
+        );
+
+        wp_enqueue_script(
+            'quill',
+            $plugin_url . 'assets/vendor/quill/quill.min.js',
+            [],
+            '1.3.7',
+            true
+        );
+
+        wp_enqueue_script(
+            'sweetdesk-editor',
+            $plugin_url . 'assets/js/sweetdesk-editor.js',
+            ['quill'],
+            SWEETDESK_VERSION,
+            true
+        );
+
+        /*
+        * Shared ticket state.
+        *
+        * This is loaded first because all other ticket modules use
+        * window.SweetDeskTickets.
+        */
+        wp_enqueue_script(
+            'sweetdesk-tickets-state',
+            $plugin_url . 'assets/js/tickets/tickets-state.js',
+            [
+                'sweetdesk-editor',
+                'sweetdesk-badge-helpers',
+            ],
+            SWEETDESK_VERSION,
+            true
+        );
+
+        /*
+        * Ticket REST API functions.
+        */
+        wp_enqueue_script(
+            'sweetdesk-tickets-api',
+            $plugin_url . 'assets/js/tickets/tickets-api.js',
+            ['sweetdesk-tickets-state'],
+            SWEETDESK_VERSION,
+            true
+        );
+
+        /*
+        * Ticket table and pagination rendering.
+        */
+        wp_enqueue_script(
+            'sweetdesk-tickets-renderer',
+            $plugin_url . 'assets/js/tickets/tickets-renderer.js',
+            [
+                'sweetdesk-tickets-state',
+                'sweetdesk-badge-helpers',
+            ],
+            SWEETDESK_VERSION,
+            true
+        );
+
+        /*
+        * Search, filtering, sorting, and query-builder behavior.
+        */
+        wp_enqueue_script(
+            'sweetdesk-tickets-filters',
+            $plugin_url . 'assets/js/tickets/tickets-filters.js',
+            [
+                'sweetdesk-tickets-state',
+                'sweetdesk-tickets-api',
+            ],
+            SWEETDESK_VERSION,
+            true
+        );
+
+        /*
+        * Create, edit, and delete modal behavior.
+        */
+        wp_enqueue_script(
+            'sweetdesk-tickets-modal',
+            $plugin_url . 'assets/js/tickets/tickets-modal.js',
+            [
+                'sweetdesk-tickets-state',
+                'sweetdesk-tickets-api',
+                'sweetdesk-editor',
+            ],
+            SWEETDESK_VERSION,
+            true
+        );
+
+        /*
+        * Ticket import and export behavior.
+        */
+        wp_enqueue_script(
+            'sweetdesk-tickets-transfer',
+            $plugin_url . 'assets/js/tickets/tickets-transfer.js',
+            [
+                'sweetdesk-tickets-state',
+                'sweetdesk-tickets-api',
+            ],
+            SWEETDESK_VERSION,
+            true
+        );
+
+        /*
+        * Main page coordinator.
+        *
+        * This must load last because it initializes all other modules.
+        */
+        wp_enqueue_script(
+            'sweetdesk-tickets-list',
+            $plugin_url . 'assets/js/tickets/tickets-list.js',
+            [
+                'sweetdesk-tickets-state',
+                'sweetdesk-tickets-api',
+                'sweetdesk-tickets-renderer',
+                'sweetdesk-tickets-filters',
+                'sweetdesk-tickets-modal',
+                'sweetdesk-tickets-transfer',
+            ],
+            SWEETDESK_VERSION,
+            true
+        );
     }
 }

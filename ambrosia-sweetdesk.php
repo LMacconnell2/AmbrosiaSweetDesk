@@ -8,7 +8,7 @@
  * Plugin Name:       Ambrosia SweetDesk
  * Plugin URI:        https://ambrosia.digital/ambrosia-sweetdesk
  * Description:       This plugin provides a comprehensive help desk solution for WordPress, allowing you to manage customer support tickets, teams, and analytics all from your WordPress dashboard.
- * Version:           0.0.2
+ * Version:           0.0.3
  * Author:            Logan MacConnell, Matthew C, Art Smith
  * Author URI:        https://ambrosia.digital
  * License:           
@@ -24,7 +24,7 @@
  *  0. 0. 1  5-20-2026  Refactor for better code ogranization and maintanability.
  *  0. 0. 2  7-10-2026  Database schema updates and implementation of core API endpoints.
  *  0. 0. 3  7-13-2026  Implementation Settings API routes and DB schema updates
- */.
+ */
 
 if (!defined('ABSPATH')) {
     exit;
