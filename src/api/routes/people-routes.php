@@ -13,6 +13,49 @@ class SweetDesk_People_Routes
     {
         $controller = new SweetDesk_People_Controller();
 
+        register_rest_route(
+            'sweetdesk/v1',
+            '/people/lookup',
+            [
+                [
+                    'methods' => WP_REST_Server::READABLE,
+                    'callback' => [$controller, 'get_people_lookup'],
+                    'permission_callback' => [$controller, 'permissions_check'],
+                    'args' => [
+                        'q' => [
+                            'required' => false,
+                            'type' => 'string',
+                            'sanitize_callback' => 'sanitize_text_field',
+                        ],
+                        'internal' => [
+                            'required' => false,
+                            'type' => 'boolean',
+                            'sanitize_callback' => 'rest_sanitize_boolean',
+                        ],
+                        'roles' => [
+                            'required' => false,
+                            'type' => 'string',
+                            'sanitize_callback' => 'sanitize_text_field',
+                        ],
+                        'client_ids' => [
+                            'required' => false,
+                            'type' => 'string',
+                            'sanitize_callback' => 'sanitize_text_field',
+                        ],
+                        'limit' => [
+                            'required' => false,
+                            'type' => 'integer',
+                            'default' => 100,
+                            'sanitize_callback' => 'absint',
+                            'validate_callback' => static function ($value) {
+                                return $value >= 1 && $value <= 500;
+                            },
+                        ],
+                    ],
+                ],
+            ]
+        );
+
         register_rest_route('sweetdesk/v1', '/people', [
             [
                 'methods' => WP_REST_Server::READABLE,

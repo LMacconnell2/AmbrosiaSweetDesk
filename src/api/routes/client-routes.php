@@ -13,6 +13,34 @@ class SweetDesk_Client_Routes
     {
         $controller = new SweetDesk_Client_Controller();
 
+        register_rest_route(
+            'sweetdesk/v1',
+            '/clients/lookup',
+            [
+                [
+                    'methods' => WP_REST_Server::READABLE,
+                    'callback' => [$controller, 'get_clients_lookup'],
+                    'permission_callback' => [$controller, 'permissions_check'],
+                    'args' => [
+                        'q' => [
+                            'required' => false,
+                            'type' => 'string',
+                            'sanitize_callback' => 'sanitize_text_field',
+                        ],
+                        'limit' => [
+                            'required' => false,
+                            'type' => 'integer',
+                            'default' => 100,
+                            'sanitize_callback' => 'absint',
+                            'validate_callback' => static function ($value) {
+                                return $value >= 1 && $value <= 500;
+                            },
+                        ],
+                    ],
+                ],
+            ]
+        );
+
         register_rest_route('sweetdesk/v1', '/clients', [
             [
                 'methods' => WP_REST_Server::READABLE,

@@ -884,4 +884,219 @@ class SweetDesk_People_Service {
             array_map('trim', explode(',', $value))
         )));
     }
+
+    public function get_people_lookup(array $filters = []): array
+    {
+        global $wpdb;
+
+        $people_table = $wpdb->prefix . 'sweetdesk_people';
+
+        $where = [];
+        $values = [];
+
+        /*
+        * Only return active people by default.
+        *
+        * The current People API describes is_active as a legacy field, but
+        * excluding inactive records is appropriate for an assignment lookup.
+        */
+        $where[] = 'is_active = 1';
+
+        /*
+        * Search first name, last name, or the concatenated display name.
+        */
+        $search = isset($filters['q'])
+            ? sanitize_text_field($filters['q'])
+            : '';
+
+        if ($search !== '') {
+            $search_term = '%' . $wpdb->esc_like($search) . '%';
+
+            $where[] = '
+                (
+                    first_name LIKE %s
+                    OR last_name LIKE %s
+                    OR CONCAT_WS(" ", first_name, last_name) LIKE %s
+                )
+            ';
+
+            $values[] = $search_term;
+            $values[] = $search_term;
+            $values[] = $search_term;
+        }
+
+        /*
+        * Internal people have a linked WordPress user ID.
+        */
+        if (
+            array_key_exists('internal', $filters) &&
+            $filters['internal'] !== null
+        ) {
+            if ($filters['internal']) {
+                $where[] = 'wp_user_id IS NOT NULL';
+            } else {
+                $where[] = 'wp_user_id IS NULL';
+            }
+        }
+
+        /*
+        * Optional role filtering.
+        *
+        * Expected format:
+        * roles=staff,manager
+        */
+        $roles = $this->parse_lookup_strings(
+            $filters['roles'] ?? null
+        );
+
+        if (!empty($roles)) {
+            $role_placeholders = implode(
+                ', ',
+                array_fill(0, count($roles), '%s')
+            );
+
+            $where[] = "role IN ({$role_placeholders})";
+
+            foreach ($roles as $role) {
+                $values[] = $role;
+            }
+        }
+
+        /*
+        * Optional client filtering.
+        *
+        * Expected format:
+        * client_ids=1,4,8
+        */
+        $client_ids = $this->parse_lookup_ids(
+            $filters['client_ids'] ?? null
+        );
+
+        if (!empty($client_ids)) {
+            $client_placeholders = implode(
+                ', ',
+                array_fill(0, count($client_ids), '%d')
+            );
+
+            $where[] = "client_id IN ({$client_placeholders})";
+
+            foreach ($client_ids as $client_id) {
+                $values[] = $client_id;
+            }
+        }
+
+        $limit = isset($filters['limit'])
+            ? absint($filters['limit'])
+            : 100;
+
+        $limit = max(1, min($limit, 500));
+
+        $sql = "
+            SELECT
+                id,
+                first_name,
+                last_name,
+                TRIM(
+                    CONCAT_WS(
+                        ' ',
+                        NULLIF(first_name, ''),
+                        NULLIF(last_name, '')
+                    )
+                ) AS display_name
+            FROM {$people_table}
+        ";
+
+        if (!empty($where)) {
+            $sql .= ' WHERE ' . implode(' AND ', $where);
+        }
+
+        $sql .= '
+            ORDER BY
+                last_name ASC,
+                first_name ASC,
+                id ASC
+            LIMIT %d
+        ';
+
+        $values[] = $limit;
+
+        $prepared_sql = $wpdb->prepare($sql, $values);
+
+        $results = $wpdb->get_results(
+            $prepared_sql,
+            ARRAY_A
+        );
+
+        if ($wpdb->last_error) {
+            throw new RuntimeException(
+                'Database error while retrieving people lookup.'
+            );
+        }
+
+        return array_map(
+            static function (array $person): array {
+                return [
+                    'id' => (int) $person['id'],
+                    'first_name' => $person['first_name'] ?? '',
+                    'last_name' => $person['last_name'] ?? '',
+                    'display_name' => $person['display_name'] ?? '',
+                ];
+            },
+            $results ?: []
+        );
+    }
+
+    private function parse_lookup_ids($value): array
+    {
+        if ($value === null || $value === '') {
+            return [];
+        }
+
+        $items = is_array($value)
+            ? $value
+            : explode(',', (string) $value);
+
+        $ids = array_map(
+            'absint',
+            $items
+        );
+
+        $ids = array_filter(
+            $ids,
+            static fn(int $id): bool => $id > 0
+        );
+
+        return array_values(
+            array_unique($ids)
+        );
+    }
+
+    private function parse_lookup_strings($value): array
+    {
+        if ($value === null || $value === '') {
+            return [];
+        }
+
+        $items = is_array($value)
+            ? $value
+            : explode(',', (string) $value);
+
+        $items = array_map(
+            static function ($item): string {
+                return sanitize_key(
+                    trim((string) $item)
+                );
+            },
+            $items
+        );
+
+        $items = array_filter(
+            $items,
+            static fn(string $item): bool => $item !== ''
+        );
+
+        return array_values(
+            array_unique($items)
+        );
+    }
 }

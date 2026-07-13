@@ -49,72 +49,122 @@
         };
     }
 
-    async function loadStatuses(forceRefresh = false) {
-        const lookups = Tickets.state.lookups;
+    function normalizePerson(person) {
+        const firstName = person.first_name || '';
+        const lastName = person.last_name || '';
 
-        if (!forceRefresh && lookups.statuses.length) {
-            return lookups.statuses;
-        }
-
-        if (!forceRefresh && lookups.statusesPromise) {
-            return lookups.statusesPromise;
-        }
-
-        lookups.statusesPromise = Tickets.api.getTicketStatuses()
-            .then(result => {
-                lookups.statuses = (result.data || [])
-                    .map(normalizeStatus)
-                    .filter(status => status.is_active && status.slug)
-                    .sort((a, b) => a.sort_order - b.sort_order || a.name.localeCompare(b.name));
-
-                return lookups.statuses;
-            })
-            .finally(() => {
-                lookups.statusesPromise = null;
-            });
-
-        return lookups.statusesPromise;
+        return {
+            id: Number(person.id),
+            first_name: firstName,
+            last_name: lastName,
+            display_name: person.display_name || `${firstName} ${lastName}`.trim()
+        };
     }
 
-    async function loadCustomFields(forceRefresh = false) {
+    function normalizeClient(client) {
+        return {
+            id: Number(client.id),
+            name: client.name || ''
+        };
+    }
+
+    function loadCached({ forceRefresh, valuesKey, promiseKey, request, normalize, filter, sort }) {
         const lookups = Tickets.state.lookups;
 
-        if (!forceRefresh && lookups.customFields.length) {
-            return lookups.customFields;
+        if (!forceRefresh && lookups[valuesKey].length) {
+            return Promise.resolve(lookups[valuesKey]);
         }
 
-        if (!forceRefresh && lookups.customFieldsPromise) {
-            return lookups.customFieldsPromise;
+        if (!forceRefresh && lookups[promiseKey]) {
+            return lookups[promiseKey];
         }
 
-        lookups.customFieldsPromise = Tickets.api.getTicketFields()
+        lookups[promiseKey] = request()
             .then(result => {
-                lookups.customFields = (result.data || [])
-                    .map(normalizeCustomField)
-                    .filter(field => field.is_active && field.field_key)
-                    .sort((a, b) => a.sort_order - b.sort_order || a.name.localeCompare(b.name));
+                let values = (result.data || []).map(normalize);
 
-                return lookups.customFields;
+                if (filter) {
+                    values = values.filter(filter);
+                }
+
+                if (sort) {
+                    values.sort(sort);
+                }
+
+                lookups[valuesKey] = values;
+                return values;
             })
             .finally(() => {
-                lookups.customFieldsPromise = null;
+                lookups[promiseKey] = null;
             });
 
-        return lookups.customFieldsPromise;
+        return lookups[promiseKey];
+    }
+
+    function loadStatuses(forceRefresh = false) {
+        return loadCached({
+            forceRefresh,
+            valuesKey: 'statuses',
+            promiseKey: 'statusesPromise',
+            request: Tickets.api.getTicketStatuses,
+            normalize: normalizeStatus,
+            filter: status => status.is_active && status.slug,
+            sort: (a, b) => a.sort_order - b.sort_order || a.name.localeCompare(b.name)
+        });
+    }
+
+    function loadCustomFields(forceRefresh = false) {
+        return loadCached({
+            forceRefresh,
+            valuesKey: 'customFields',
+            promiseKey: 'customFieldsPromise',
+            request: Tickets.api.getTicketFields,
+            normalize: normalizeCustomField,
+            filter: field => field.is_active && field.field_key,
+            sort: (a, b) => a.sort_order - b.sort_order || a.name.localeCompare(b.name)
+        });
+    }
+
+    function loadPeople(forceRefresh = false) {
+        return loadCached({
+            forceRefresh,
+            valuesKey: 'people',
+            promiseKey: 'peoplePromise',
+            request: Tickets.api.getPeopleLookup,
+            normalize: normalizePerson,
+            filter: person => person.id > 0 && person.display_name,
+            sort: (a, b) => a.display_name.localeCompare(b.display_name)
+        });
+    }
+
+    function loadClients(forceRefresh = false) {
+        return loadCached({
+            forceRefresh,
+            valuesKey: 'clients',
+            promiseKey: 'clientsPromise',
+            request: Tickets.api.getClientsLookup,
+            normalize: normalizeClient,
+            filter: client => client.id > 0 && client.name,
+            sort: (a, b) => a.name.localeCompare(b.name)
+        });
     }
 
     async function loadAll(forceRefresh = false) {
-        const [statuses, customFields] = await Promise.all([
+        const [statuses, customFields, people, clients] = await Promise.all([
             loadStatuses(forceRefresh),
-            loadCustomFields(forceRefresh)
+            loadCustomFields(forceRefresh),
+            loadPeople(forceRefresh),
+            loadClients(forceRefresh)
         ]);
 
-        return { statuses, customFields };
+        return { statuses, customFields, people, clients };
     }
 
     Tickets.lookups = {
         loadStatuses,
         loadCustomFields,
+        loadPeople,
+        loadClients,
         loadAll
     };
 })(window);

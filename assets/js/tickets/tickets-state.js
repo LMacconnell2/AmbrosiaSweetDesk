@@ -3,7 +3,7 @@
 
     const Tickets = window.SweetDeskTickets = window.SweetDeskTickets || {};
 
-    const state = {
+    Tickets.state = {
         tickets: [],
         currentPage: 1,
         totalPages: 1,
@@ -14,10 +14,12 @@
         lookups: {
             statuses: [],
             customFields: [],
+            people: [],
+            clients: [],
             statusesPromise: null,
-            customFieldsPromise: null
+            customFieldsPromise: null,
+            peoplePromise: null,
+            clientsPromise: null
         }
     };
-
-    Tickets.state = state;
 })(window);

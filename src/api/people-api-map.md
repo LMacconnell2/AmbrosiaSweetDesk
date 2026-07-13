@@ -643,6 +643,73 @@ id,wp_user_id,client_id,first_name,last_name,email,role,avatar_url,is_active,tea
 
 ---
 
+# GET `/people/lookup`
+## Query parameters:
+Parameter      | Type          | Description|
+---------------------------------------------------------------
+q              | string        | Search on first or last name.
+internal       | boolean       | true = only WordPress users
+client_ids     | CSV integers  | Limit lookup to one or more clients
+roles          | CSV strings   | Example: staff, manager
+limit          | integer       | Default 50
+
+## Returned fields:
+From sweetdesk_people:
+- id
+- first_name
+- last_name
+- display_name
+## Example Requests:
+basic: GET /wp-json/sweetdesk/v1/people/lookup
+seach example: GET /wp-json/sweetdesk/v1/people/lookup?q=john
+internal users: GET /wp-json/sweetdesk/v1/people/lookup?internal=true
+{
+    "success": true,
+    "data": [
+        {
+            "id": 3,
+            "first_name": "John",
+            "last_name": "Smith",
+            "display_name": "John Smith"
+        },
+        {
+            "id": 7,
+            "first_name": "Jane",
+            "last_name": "Doe",
+            "display_name": "Jane Doe"
+        },
+        {
+            "id": 12,
+            "first_name": "Mark",
+            "last_name": "Wilson"
+            "display_name": "Mark Wilson"
+        }
+    ]
+}
+
+## Example SQL:
+(Lets concatonate the first name and last name in the query itself.)
+SELECT
+    id,
+    first_name,
+    last_name
+FROM {$wpdb->prefix}sweetdesk_people
+WHERE is_active = 1
+ORDER BY
+    first_name ASC,
+    last_name ASC
+LIMIT %d
+
+IF SEARCHING:
+WHERE
+(
+    first_name LIKE %s
+    OR
+    last_name LIKE %s
+)
+
+## Example Response:
+
 # Final recommended route list
 
 ```txt

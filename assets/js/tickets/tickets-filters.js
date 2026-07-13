@@ -12,12 +12,7 @@
         priority: {
             operators: ['equals', 'not equals'],
             type: 'select',
-            values: [
-                { value: 'urgent', label: 'Urgent' },
-                { value: 'high', label: 'High' },
-                { value: 'normal', label: 'Normal' },
-                { value: 'low', label: 'Low' }
-            ]
+            values: ['urgent', 'high', 'normal', 'low']
         },
         title: { operators: ['contains', 'equals'], type: 'text' },
         client: { operators: ['contains', 'equals'], type: 'text' },
@@ -25,13 +20,6 @@
         date_opened: { operators: ['before', 'after', 'on'], type: 'date' },
         latest_response: { operators: ['before', 'after', 'on'], type: 'date' }
     };
-
-    function syncStatusConfig() {
-        fieldConfig.status.values = Tickets.state.lookups.statuses.map(status => ({
-            value: status.slug,
-            label: status.name
-        }));
-    }
 
     function buildApiParams() {
         const state = Tickets.state;
@@ -105,13 +93,15 @@
                 .join('');
 
             if (config.type === 'select') {
+                const values = fieldSelect.value === 'status'
+                    ? Tickets.state.lookups.statuses.map(status => ({ value: status.slug, label: status.name }))
+                    : config.values.map(value => ({ value, label: value.replace(/_/g, ' ') }));
+
                 valueContainer.innerHTML = `
                     <select class="sd-value">
                         <option value="">Any</option>
-                        ${config.values.map(option => `
-                            <option value="${Tickets.renderer.escapeHtml(option.value)}">
-                                ${Tickets.renderer.escapeHtml(option.label)}
-                            </option>
+                        ${values.map(item => `
+                            <option value="${Tickets.renderer.escapeHtml(item.value)}">${Tickets.renderer.escapeHtml(item.label)}</option>
                         `).join('')}
                     </select>
                 `;
@@ -134,8 +124,6 @@
     function bindEvents() {
         const queryBuilder = document.querySelector('.sweetdesk-ticket-query-builder');
         let searchTimeout;
-
-        syncStatusConfig();
 
         queryBuilder?.addEventListener('click', event => {
             const addButton = event.target.closest('.sd-add-filter');
@@ -169,7 +157,6 @@
 
     Tickets.filters = {
         fieldConfig,
-        syncStatusConfig,
         buildApiParams,
         applyFilters,
         setupQueryRow,

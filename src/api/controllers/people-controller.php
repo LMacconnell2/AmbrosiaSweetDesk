@@ -76,4 +76,44 @@ class SweetDesk_People_Controller {
     {
         return SweetDesk_Portal_Access::rest_require_staff();
     }
+
+    public function get_people_lookup(WP_REST_Request $request)
+    {
+        try {
+            $filters = [
+                'q' => $request->get_param('q'),
+                'internal' => $request->has_param('internal')
+                    ? rest_sanitize_boolean($request->get_param('internal'))
+                    : null,
+                'roles' => $request->get_param('roles'),
+                'client_ids' => $request->get_param('client_ids'),
+                'limit' => $request->get_param('limit') ?: 100,
+            ];
+
+            $people = $this->service->get_people_lookup($filters);
+
+            return new WP_REST_Response(
+                [
+                    'success' => true,
+                    'data' => $people,
+                    'count' => count($people),
+                ],
+                200
+            );
+        } catch (InvalidArgumentException $exception) {
+            return new WP_Error(
+                'sweetdesk_invalid_people_lookup_request',
+                $exception->getMessage(),
+                ['status' => 400]
+            );
+        } catch (Throwable $exception) {
+            return new WP_Error(
+                'sweetdesk_people_lookup_failed',
+                'Unable to retrieve the people lookup.',
+                [
+                    'status' => 500,
+                ]
+            );
+        }
+    }
 }
