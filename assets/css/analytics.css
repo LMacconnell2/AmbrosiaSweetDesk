@@ -46,11 +46,9 @@
     background: var(--surface-subtle);
 }
 
-.sd-export-btn .dashicons {
-    font-size: 16px;
+.sd-export-btn svg {
     width: 16px;
     height: 16px;
-    line-height: 1;
 }
 
 /* ── Admin view toggle ── */
