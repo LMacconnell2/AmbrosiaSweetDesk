@@ -33,7 +33,14 @@
         });
     }
 
-    function init() {
+    async function init() {
+        try {
+            await Tickets.lookups.loadAll();
+        } catch (error) {
+            console.error(error);
+            alert(error.message || 'Failed to load ticket settings.');
+        }
+
         Tickets.filters.bindEvents();
         Tickets.modal.bindEvents();
         Tickets.transfer.bindEvents();

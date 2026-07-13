@@ -42,6 +42,16 @@
             return parseJsonResponse(response, 'Failed to load tickets.');
         },
 
+        async getTicketStatuses() {
+            const response = await apiFetch('/settings/tickets/status');
+            return parseJsonResponse(response, 'Failed to load ticket statuses.');
+        },
+
+        async getTicketFields() {
+            const response = await apiFetch('/settings/tickets/fields');
+            return parseJsonResponse(response, 'Failed to load ticket fields.');
+        },
+
         async getTicket(ticketId) {
             const response = await apiFetch(`/tickets/${ticketId}`);
             return parseJsonResponse(response, 'Failed to load ticket.');

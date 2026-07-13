@@ -486,6 +486,17 @@ class AdminMenu {
         );
 
         /*
+        * Ticket Lookup API functions.
+        */
+        wp_enqueue_script(
+            'sweetdesk-tickets-lookup',
+            $plugin_url . 'assets/js/tickets/tickets-lookup.js',
+            ['sweetdesk-tickets-state'],
+            SWEETDESK_VERSION,
+            true
+        );
+
+        /*
         * Ticket table and pagination rendering.
         */
         wp_enqueue_script(

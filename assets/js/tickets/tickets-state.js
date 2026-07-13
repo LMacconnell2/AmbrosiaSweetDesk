@@ -10,7 +10,13 @@
         perPage: 25,
         modalMode: 'create',
         currentTicketId: null,
-        ticketToDelete: null
+        ticketToDelete: null,
+        lookups: {
+            statuses: [],
+            customFields: [],
+            statusesPromise: null,
+            customFieldsPromise: null
+        }
     };
 
     Tickets.state = state;
