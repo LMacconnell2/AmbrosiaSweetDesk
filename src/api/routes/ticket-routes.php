@@ -16,9 +16,10 @@ class SweetDesk_Ticket_Routes {
                     SweetDesk_Ticket_Controller::class,
                     'get_tickets'
                 ],
-                'permission_callback' => function () {
-                    return current_user_can('read');
-                }
+                'permission_callback' => [
+                    SweetDesk_Portal_Access::class,
+                    'rest_require_staff'
+                ]
             ]
         );
 
@@ -31,9 +32,10 @@ class SweetDesk_Ticket_Routes {
                     SweetDesk_Ticket_Controller::class,
                     'create_ticket'
                 ],
-                'permission_callback' => function () {
-                    return current_user_can('read');
-                }
+                'permission_callback' => [
+                    SweetDesk_Portal_Access::class,
+                    'rest_require_logged_in'
+                ]
             ]
         );
 
@@ -46,9 +48,10 @@ class SweetDesk_Ticket_Routes {
                     SweetDesk_Ticket_Controller::class,
                     'update_ticket'
                 ],
-                'permission_callback' => function () {
-                    return current_user_can('read');
-                }
+                'permission_callback' => [
+                    SweetDesk_Portal_Access::class,
+                    'rest_require_staff'
+                ]
             ]
         );
 
@@ -61,9 +64,10 @@ class SweetDesk_Ticket_Routes {
                     SweetDesk_Ticket_Controller::class,
                     'update_assignee'
                 ],
-                'permission_callback' => function () {
-                    return current_user_can('read');
-                }
+                'permission_callback' => [
+                    SweetDesk_Portal_Access::class,
+                    'rest_require_staff'
+                ]
             ]
         );
 
@@ -76,9 +80,10 @@ class SweetDesk_Ticket_Routes {
                     SweetDesk_Ticket_Controller::class,
                     'update_status'
                 ],
-                'permission_callback' => function () {
-                    return current_user_can('read');
-                }
+                'permission_callback' => [
+                    SweetDesk_Portal_Access::class,
+                    'rest_require_staff'
+                ]
             ]
         );
 
@@ -91,9 +96,10 @@ class SweetDesk_Ticket_Routes {
                     SweetDesk_Ticket_Controller::class,
                     'delete_ticket'
                 ],
-                'permission_callback' => function () {
-                    return current_user_can('delete_posts');
-                }
+                'permission_callback' => [
+                    SweetDesk_Portal_Access::class,
+                    'rest_require_staff'
+                ]
             ]
         );
 
@@ -106,9 +112,10 @@ class SweetDesk_Ticket_Routes {
                     SweetDesk_Ticket_Controller::class,
                     'get_ticket'
                 ],
-                'permission_callback' => function () {
-                    return current_user_can('read');
-                }
+                'permission_callback' => [
+                    SweetDesk_Portal_Access::class,
+                    'rest_require_staff'
+                ]
             ]
         );
 
@@ -121,11 +128,10 @@ class SweetDesk_Ticket_Routes {
                     SweetDesk_Ticket_Controller::class,
                     'export_tickets'
                 ],
-                'permission_callback' => function () {
-                    return current_user_can(
-                        'manage_options'
-                    );
-                }
+                'permission_callback' => [
+                    SweetDesk_Portal_Access::class,
+                    'rest_require_staff'
+                ]
             ]
         );
 
@@ -138,11 +144,10 @@ class SweetDesk_Ticket_Routes {
                     SweetDesk_Ticket_Controller::class,
                     'import_tickets'
                 ],
-                'permission_callback' => function () {
-                    return current_user_can(
-                        'manage_options'
-                    );
-                }
+                'permission_callback' => [
+                    SweetDesk_Portal_Access::class,
+                    'rest_require_staff'
+                ]
             ]
         );
 
@@ -155,9 +160,10 @@ class SweetDesk_Ticket_Routes {
                     SweetDesk_Ticket_Controller::class,
                     'create_message'
                 ],
-                'permission_callback' => function () {
-                    return current_user_can('read');
-                }
+                'permission_callback' => [
+                    SweetDesk_Portal_Access::class,
+                    'rest_require_staff'
+                ]
             ]
         );
 
@@ -170,9 +176,10 @@ class SweetDesk_Ticket_Routes {
                     SweetDesk_Ticket_Controller::class,
                     'get_messages'
                 ],
-                'permission_callback' => function () {
-                    return current_user_can('read');
-                }
+                'permission_callback' => [
+                    SweetDesk_Portal_Access::class,
+                    'rest_require_staff'
+                ]
             ]
         );
 
@@ -185,9 +192,10 @@ class SweetDesk_Ticket_Routes {
                     SweetDesk_Ticket_Controller::class,
                     'update_message'
                 ],
-                'permission_callback' => function () {
-                    return current_user_can('read');
-                }
+                'permission_callback' => [
+                    SweetDesk_Portal_Access::class,
+                    'rest_require_staff'
+                ]
             ]
         );
 
@@ -200,9 +208,10 @@ class SweetDesk_Ticket_Routes {
                     SweetDesk_Ticket_Controller::class,
                     'delete_message'
                 ],
-                'permission_callback' => function () {
-                    return current_user_can('read');
-                }
+                'permission_callback' => [
+                    SweetDesk_Portal_Access::class,
+                    'rest_require_staff'
+                ]
             ]
         );
     }
