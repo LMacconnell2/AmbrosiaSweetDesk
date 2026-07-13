@@ -490,7 +490,7 @@ class AdminMenu {
         */
         wp_enqueue_script(
             'sweetdesk-tickets-lookup',
-            $plugin_url . 'assets/js/tickets/tickets-lookup.js',
+            $plugin_url . 'assets/js/tickets/tickets-lookups.js',
             ['sweetdesk-tickets-state'],
             SWEETDESK_VERSION,
             true
