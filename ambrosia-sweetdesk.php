@@ -75,3 +75,20 @@ add_action(
     'run_sweetdesk',
     10
 );
+
+add_action(
+    'wp_mail_failed',
+    static function (WP_Error $error): void {
+        if (
+            !defined('WP_DEBUG') ||
+            !WP_DEBUG
+        ) {
+            return;
+        }
+
+        error_log(
+            'SweetDesk wp_mail failure: ' .
+            $error->get_error_message()
+        );
+    }
+);
