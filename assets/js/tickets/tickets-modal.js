@@ -14,10 +14,6 @@
         }
     }
 
-    function escapeAttribute(value) {
-        return Tickets.renderer.escapeHtml(String(value ?? ''));
-    }
-
     function setInitialMessageSectionVisible(visible) {
         const section = document.getElementById('sd-ticket-initial-message-section');
         if (section) {
@@ -34,38 +30,63 @@
         });
     }
 
-    function renderStatusOptions(selectedStatus = '') {
-        const statusSelect = document.getElementById('sd-ticket-status');
-        if (!statusSelect) {
+    function optionHtml(value, label, selectedValue) {
+        const selected = String(value) === String(selectedValue) ? ' selected' : '';
+        return `<option value="${Tickets.renderer.escapeHtml(String(value))}"${selected}>${Tickets.renderer.escapeHtml(label)}</option>`;
+    }
+
+    function renderStatusOptions(selectedValue = '') {
+        const select = document.getElementById('sd-ticket-status');
+        if (!select) {
             return;
         }
 
         const statuses = Tickets.state.lookups.statuses;
-        statusSelect.innerHTML = statuses.map(status => `
-            <option value="${escapeAttribute(status.slug)}">
-                ${Tickets.renderer.escapeHtml(status.name)}
-            </option>
-        `).join('');
+        let html = statuses.map(status => optionHtml(status.slug, status.name, selectedValue)).join('');
 
-        const desiredStatus = selectedStatus || statuses[0]?.slug || '';
-        statusSelect.value = desiredStatus;
-
-        if (desiredStatus && statusSelect.value !== desiredStatus) {
-            statusSelect.insertAdjacentHTML('beforeend', `
-                <option value="${escapeAttribute(desiredStatus)}">
-                    ${Tickets.renderer.escapeHtml(desiredStatus.replace(/[_-]/g, ' '))}
-                </option>
-            `);
-            statusSelect.value = desiredStatus;
+        if (selectedValue && !statuses.some(status => status.slug === selectedValue)) {
+            html += optionHtml(selectedValue, selectedValue.replace(/[_-]/g, ' '), selectedValue);
         }
+
+        select.innerHTML = html || '<option value="">No statuses available</option>';
     }
 
-    function customFieldValueMap(savedFields = []) {
-        if (!Array.isArray(savedFields)) {
-            return savedFields || {};
+    function renderClientOptions(selectedValue = '') {
+        const select = document.getElementById('sd-ticket-client');
+        if (!select) {
+            return;
         }
 
-        return savedFields.reduce((values, field) => {
+        const clients = Tickets.state.lookups.clients;
+        let html = '<option value="">No client</option>';
+        html += clients.map(client => optionHtml(client.id, client.name, selectedValue)).join('');
+
+        if (selectedValue && !clients.some(client => String(client.id) === String(selectedValue))) {
+            html += optionHtml(selectedValue, `Client #${selectedValue}`, selectedValue);
+        }
+
+        select.innerHTML = html;
+    }
+
+    function renderAssigneeOptions(selectedValue = '') {
+        const select = document.getElementById('sd-ticket-assignee');
+        if (!select) {
+            return;
+        }
+
+        const people = Tickets.state.lookups.people;
+        let html = '<option value="">Unassigned</option>';
+        html += people.map(person => optionHtml(person.id, person.display_name, selectedValue)).join('');
+
+        if (selectedValue && !people.some(person => String(person.id) === String(selectedValue))) {
+            html += optionHtml(selectedValue, `Person #${selectedValue}`, selectedValue);
+        }
+
+        select.innerHTML = html;
+    }
+
+    function savedFieldValues(fields = []) {
+        return fields.reduce((values, field) => {
             const key = field.meta_key || field.field_key;
             if (key) {
                 values[key] = field.meta_value ?? field.value ?? '';
@@ -74,123 +95,79 @@
         }, {});
     }
 
-    function renderFieldControl(field, savedValue) {
-        const key = escapeAttribute(field.field_key);
+    function renderCustomFieldInput(field, value) {
+        const escapedKey = Tickets.renderer.escapeHtml(field.field_key);
         const required = field.is_required ? ' required' : '';
-        const requiredLabel = field.is_required ? ' *' : '';
-        const value = savedValue ?? '';
-        let control = '';
+        const requiredMark = field.is_required ? ' *' : '';
+        const escapedValue = Tickets.renderer.escapeHtml(String(value ?? ''));
+        let input;
 
         switch (field.field_type) {
             case 'textarea':
-                control = `
-                    <textarea
-                        class="sd-custom-field"
-                        data-meta-key="${key}"
-                        ${required}
-                    >${Tickets.renderer.escapeHtml(value)}</textarea>
-                `;
+                input = `<textarea class="sd-custom-field" data-meta-key="${escapedKey}"${required}>${escapedValue}</textarea>`;
                 break;
-
             case 'select':
-                control = `
-                    <select
-                        class="sd-custom-field"
-                        data-meta-key="${key}"
-                        ${required}
-                    >
-                        <option value="">Select an option</option>
-                        ${field.options.map(option => `
-                            <option
-                                value="${escapeAttribute(option)}"
-                                ${String(option) === String(value) ? 'selected' : ''}
-                            >
-                                ${Tickets.renderer.escapeHtml(option)}
-                            </option>
-                        `).join('')}
-                    </select>
-                `;
+                input = `<select class="sd-custom-field" data-meta-key="${escapedKey}"${required}>
+                    <option value="">Select an option</option>
+                    ${field.options.map(option => optionHtml(option, option, value)).join('')}
+                </select>`;
                 break;
-
             case 'checkbox':
-                control = `
-                    <label class="sd-checkbox-label">
-                        <input
-                            type="checkbox"
-                            class="sd-custom-field"
-                            data-meta-key="${key}"
-                            value="1"
-                            ${['1', 'true', 'yes', 'on'].includes(String(value).toLowerCase()) ? 'checked' : ''}
-                            ${required}
-                        >
-                        Yes
-                    </label>
-                `;
+                input = `<input type="checkbox" class="sd-custom-field" data-meta-key="${escapedKey}" value="1"${String(value) === '1' || value === true ? ' checked' : ''}${required}>`;
                 break;
-
-            default: {
-                const supportedTypes = ['text', 'number', 'date', 'email', 'url'];
-                const inputType = supportedTypes.includes(field.field_type)
-                    ? field.field_type
-                    : 'text';
-
-                control = `
-                    <input
-                        type="${inputType}"
-                        class="sd-custom-field"
-                        data-meta-key="${key}"
-                        value="${escapeAttribute(value)}"
-                        ${required}
-                    >
-                `;
-            }
+            case 'number':
+            case 'date':
+            case 'email':
+            case 'url':
+                input = `<input type="${field.field_type}" class="sd-custom-field" data-meta-key="${escapedKey}" value="${escapedValue}"${required}>`;
+                break;
+            default:
+                input = `<input type="text" class="sd-custom-field" data-meta-key="${escapedKey}" value="${escapedValue}"${required}>`;
         }
 
-        return `
-            <div class="sd-form-group">
-                <label>${Tickets.renderer.escapeHtml(field.name)}${requiredLabel}</label>
-                ${control}
-            </div>
-        `;
+        return `<div class="sd-form-group"><label>${Tickets.renderer.escapeHtml(field.name)}${requiredMark}</label>${input}</div>`;
     }
 
-    function renderCustomFields(savedFields = []) {
+    function renderCustomFields(existingFields = []) {
         const container = document.getElementById('sd-custom-fields-container');
         if (!container) {
             return;
         }
 
-        const values = customFieldValueMap(savedFields);
-        const definitions = Tickets.state.lookups.customFields;
-
-        container.innerHTML = definitions
-            .map(field => renderFieldControl(field, values[field.field_key]))
+        const values = savedFieldValues(existingFields);
+        container.innerHTML = Tickets.state.lookups.customFields
+            .map(field => renderCustomFieldInput(field, values[field.field_key]))
             .join('');
     }
 
     function resetForm() {
         setValue('sd-ticket-title', '');
-        setValue('sd-ticket-client', '');
-        setValue('sd-ticket-assignee', '');
+        renderClientOptions('');
+        renderAssigneeOptions('');
+        const defaultStatus = Tickets.state.lookups.statuses[0]?.slug || 'open';
+        renderStatusOptions(defaultStatus);
         setValue('sd-ticket-priority', 'normal');
         setValue('sd-ticket-reply-type', 'public');
-        renderStatusOptions();
         renderCustomFields();
     }
 
     function populateForm(data) {
-        const ticket = data.ticket;
+        const ticket = data.ticket || {};
         setValue('sd-ticket-title', ticket.title);
-        setValue('sd-ticket-client', ticket.client_id);
-        setValue('sd-ticket-assignee', ticket.assigned_to);
+        renderClientOptions(ticket.client_id || '');
+        renderAssigneeOptions(ticket.assigned_to || '');
+        renderStatusOptions(ticket.status || Tickets.state.lookups.statuses[0]?.slug || 'open');
         setValue('sd-ticket-priority', ticket.priority || 'normal');
-        renderStatusOptions(ticket.status);
         renderCustomFields(data.custom_fields || []);
+    }
+
+    async function ensureLookups() {
+        await Tickets.lookups.loadAll();
     }
 
     async function openCreateModal() {
         try {
-            await Tickets.lookups.loadAll();
+            await ensureLookups();
             Tickets.state.modalMode = 'create';
             Tickets.state.currentTicketId = null;
             resetForm();
@@ -201,15 +178,15 @@
             initEditor(true);
         } catch (error) {
             console.error(error);
-            alert(error.message || 'Failed to load ticket form settings.');
+            alert(error.message || 'Failed to load ticket form options.');
         }
     }
 
     async function openEditModal(ticketId) {
         try {
-            const [, data] = await Promise.all([
-                Tickets.lookups.loadAll(),
-                Tickets.api.getTicket(ticketId)
+            const [data] = await Promise.all([
+                Tickets.api.getTicket(ticketId),
+                ensureLookups()
             ]);
 
             Tickets.state.modalMode = 'edit';
@@ -222,7 +199,7 @@
             document.getElementById('sd-create-ticket-modal').classList.add('active');
         } catch (error) {
             console.error(error);
-            alert(error.message);
+            alert(error.message || 'Failed to load ticket.');
         }
     }
 
@@ -246,17 +223,13 @@
 
     function validateCustomFields() {
         for (const field of document.querySelectorAll('.sd-custom-field[required]')) {
-            const isInvalid = field.type === 'checkbox'
-                ? !field.checked
-                : !field.value.trim();
-
-            if (isInvalid) {
-                field.reportValidity();
+            const empty = field.type === 'checkbox' ? !field.checked : !field.value.trim();
+            if (empty) {
                 field.focus();
+                alert('Please complete all required custom fields.');
                 return false;
             }
         }
-
         return true;
     }
 
@@ -269,12 +242,12 @@
             return;
         }
 
-        if (!validateCustomFields()) {
+        if (state.modalMode === 'create' && SweetDeskEditor.isEmpty('sd-ticket-body')) {
+            alert('Initial message is required.');
             return;
         }
 
-        if (state.modalMode === 'create' && SweetDeskEditor.isEmpty('sd-ticket-body')) {
-            alert('Initial message is required.');
+        if (!validateCustomFields()) {
             return;
         }
 
@@ -364,8 +337,6 @@
     }
 
     Tickets.modal = {
-        renderStatusOptions,
-        renderCustomFields,
         openCreateModal,
         openEditModal,
         closeModal,
@@ -373,7 +344,11 @@
         closeDeleteModal,
         confirmDelete,
         saveTicket,
-        bindEvents
+        bindEvents,
+        renderClientOptions,
+        renderAssigneeOptions,
+        renderStatusOptions,
+        renderCustomFields
     };
 
     window.openTicketModal = mode => mode === 'edit' ? null : openCreateModal();

@@ -557,7 +557,33 @@ Content-Type: application/json
   }
 }
 ```
+# GET `/clients/lookup`
 
+Retrieve a lightweight client list for dropdowns, autocomplete fields, and
+ticket client assignment.
+
+## Accessed tables
+
+* `sweetdesk_clients`
+
+## Query parameters
+
+| Parameter | Type    | Description                         |
+|-----------|---------|-------------------------------------|
+| `q`       | string  | Searches the client name            |
+| `limit`   | integer | Default `100`; maximum `500`         |
+
+## Returned fields
+
+From `sweetdesk_clients`:
+
+* `id`
+* `name`
+
+## Example request
+
+```http
+GET /wp-json/sweetdesk/v1/clients/lookup
 ---
 
 # Final route list

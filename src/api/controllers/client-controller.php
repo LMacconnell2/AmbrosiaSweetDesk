@@ -66,4 +66,41 @@ class SweetDesk_Client_Controller {
     {
         return current_user_can('read');
     }
+
+    public function get_clients_lookup(WP_REST_Request $request)
+    {
+        try {
+            $filters = [
+                'q' => $request->get_param('q'),
+                'limit' => $request->get_param('limit') ?: 100,
+            ];
+
+            $clients = $this->service->get_clients_lookup($filters);
+
+            return new WP_REST_Response(
+                [
+                    'success' => true,
+                    'data' => $clients,
+                    'count' => count($clients),
+                ],
+                200
+            );
+        } catch (InvalidArgumentException $exception) {
+            return new WP_Error(
+                'sweetdesk_invalid_clients_lookup_request',
+                $exception->getMessage(),
+                [
+                    'status' => 400,
+                ]
+            );
+        } catch (Throwable $exception) {
+            return new WP_Error(
+                'sweetdesk_clients_lookup_failed',
+                'Unable to retrieve the client lookup.',
+                [
+                    'status' => 500,
+                ]
+            );
+        }
+    }
 }

@@ -42,6 +42,11 @@
             return parseJsonResponse(response, 'Failed to load tickets.');
         },
 
+        async getTicket(ticketId) {
+            const response = await apiFetch(`/tickets/${ticketId}`);
+            return parseJsonResponse(response, 'Failed to load ticket.');
+        },
+
         async getTicketStatuses() {
             const response = await apiFetch('/settings/tickets/status');
             return parseJsonResponse(response, 'Failed to load ticket statuses.');
@@ -49,12 +54,22 @@
 
         async getTicketFields() {
             const response = await apiFetch('/settings/tickets/fields');
-            return parseJsonResponse(response, 'Failed to load ticket fields.');
+            return parseJsonResponse(response, 'Failed to load custom ticket fields.');
         },
 
-        async getTicket(ticketId) {
-            const response = await apiFetch(`/tickets/${ticketId}`);
-            return parseJsonResponse(response, 'Failed to load ticket.');
+        async getPeopleLookup() {
+            const params = new URLSearchParams({
+                internal: 'true',
+                limit: '500'
+            });
+            const response = await apiFetch(`/people/lookup?${params}`);
+            return parseJsonResponse(response, 'Failed to load ticket assignees.');
+        },
+
+        async getClientsLookup() {
+            const params = new URLSearchParams({ limit: '500' });
+            const response = await apiFetch(`/clients/lookup?${params}`);
+            return parseJsonResponse(response, 'Failed to load clients.');
         },
 
         async createTicket(payload) {
@@ -66,7 +81,7 @@
         },
 
         async updateTicket(ticketId, payload) {
-            const response = await apiFetch(`/tickets/${ticketId}`, {
+            const response = await apiFetch(`/edit-ticket/${ticketId}`, {
                 method: 'PUT',
                 body: JSON.stringify(payload)
             });

@@ -459,4 +459,83 @@ class SweetDesk_Client_Service {
 
         return $row;
     }
+
+    public function get_clients_lookup(array $filters = []): array
+    {
+        global $wpdb;
+
+        $clients_table =
+            $wpdb->prefix . 'sweetdesk_clients';
+
+        $where = [];
+        $values = [];
+
+        $search = isset($filters['q'])
+            ? sanitize_text_field($filters['q'])
+            : '';
+
+        if ($search !== '') {
+            $search_term =
+                '%' . $wpdb->esc_like($search) . '%';
+
+            $where[] = 'name LIKE %s';
+            $values[] = $search_term;
+        }
+
+        $limit = isset($filters['limit'])
+            ? absint($filters['limit'])
+            : 100;
+
+        $limit = max(
+            1,
+            min($limit, 500)
+        );
+
+        $sql = "
+            SELECT
+                id,
+                name
+            FROM {$clients_table}
+        ";
+
+        if (!empty($where)) {
+            $sql .=
+                ' WHERE ' . implode(' AND ', $where);
+        }
+
+        $sql .= '
+            ORDER BY
+                name ASC,
+                id ASC
+            LIMIT %d
+        ';
+
+        $values[] = $limit;
+
+        $prepared_sql = $wpdb->prepare(
+            $sql,
+            $values
+        );
+
+        $results = $wpdb->get_results(
+            $prepared_sql,
+            ARRAY_A
+        );
+
+        if ($wpdb->last_error) {
+            throw new RuntimeException(
+                'Database error while retrieving the client lookup.'
+            );
+        }
+
+        return array_map(
+            static function (array $client): array {
+                return [
+                    'id' => (int) $client['id'],
+                    'name' => $client['name'] ?? '',
+                ];
+            },
+            $results ?: []
+        );
+    }
 }

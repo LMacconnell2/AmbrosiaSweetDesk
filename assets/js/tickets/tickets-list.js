@@ -37,8 +37,7 @@
         try {
             await Tickets.lookups.loadAll();
         } catch (error) {
-            console.error(error);
-            alert(error.message || 'Failed to load ticket settings.');
+            console.error('Failed to load ticket lookups:', error);
         }
 
         Tickets.filters.bindEvents();

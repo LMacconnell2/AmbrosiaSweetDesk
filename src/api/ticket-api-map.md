@@ -106,7 +106,7 @@ From sweetdesk_tickets:
 - sweetdesk_tickets
 - sweetdesk_ticket_meta
 ### The fields to be added to via this API route are as follows: 
-To swetdesk_tickets:
+To sweetdesk_tickets:
 - id
 - client_id
 - assigned_to
