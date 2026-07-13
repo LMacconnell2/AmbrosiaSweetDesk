@@ -64,7 +64,6 @@ GET /wp-json/sweetdesk/v1/people
     &team_ids=1,2,3
     &client_ids=1,2,4
     &internal=true
-    &is_active=1
     &page=1
     &per_page=25
     &sort=last_name
@@ -92,7 +91,6 @@ Retrieve a paginated/searchable list of people, including their assigned teams.
 | `team_ids`   | CSV integers | Filters people assigned to one or more teams                             |
 | `client_ids` | CSV integers | Filters people linked to one or more clients                             |
 | `internal`   |      boolean | `true` = people with `wp_user_id`; `false` = people without `wp_user_id` |
-| `is_active`  |  boolean/int | `1`, `0`, `true`, or `false`                                             |
 | `page`       |      integer | Default `1`                                                              |
 | `per_page`   |      integer | Default `25`                                                             |
 | `sort`       |       string | `first_name`, `last_name`, `email`, `role`, `created_at`, `updated_at`   |
@@ -110,7 +108,7 @@ From `sweetdesk_people`:
 * `email`
 * `role`
 * `avatar_url`
-* `is_active`
+* `is_active` (legacy column; defaults to `1` on create/import — not used for CRM removal)
 
 From `sweetdesk_people_teams` and `sweetdesk_teams`:
 
@@ -167,8 +165,7 @@ GET /wp-json/sweetdesk/v1/people?q=john&roles=staff&team_ids=1,2&internal=true&p
     "roles": ["staff"],
     "team_ids": [1, 2],
     "client_ids": [],
-    "internal": true,
-    "is_active": null
+    "internal": true
   },
   "sorting": {
     "sort": "last_name",
@@ -476,7 +473,9 @@ Content-Type: application/json
 
 # DELETE `/people/:id`
 
-Delete a person.
+Remove a person from the CRM (hard delete).
+
+This is the supported way to delete people. The UI uses this endpoint for single-row delete and bulk delete.
 
 ## Affected tables
 
@@ -484,7 +483,7 @@ Delete a person.
 * `sweetdesk_people_meta`
 * `sweetdesk_people_teams`
 
-## Recommended behavior
+## Behavior
 
 Before deleting the person:
 
@@ -492,13 +491,7 @@ Before deleting the person:
 2. Delete from `sweetdesk_people_meta`
 3. Delete from `sweetdesk_people`
 
-You may eventually want soft deletes instead:
-
-```sql
-is_active = 0
-```
-
-For now, this route can perform a hard delete.
+Historical records in other tables (for example ticket messages or activity) may still reference the deleted `person_id`.
 
 ## Example request
 
@@ -605,7 +598,6 @@ GET /wp-json/sweetdesk/v1/people/export
     &team_ids=1,2,3
     &client_ids=1,2,4
     &internal=true
-    &is_active=1
 ```
 
 ## Exported fields

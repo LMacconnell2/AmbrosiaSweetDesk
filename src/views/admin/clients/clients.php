@@ -3,13 +3,13 @@
       <div class="page-header">
         <h1 class="page-title">Clients</h1>
         <div class="header-actions">
-          <button class="btn-outline" type="button">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/></svg>
-            Import CSV
-          </button>
-          <button class="btn-outline" type="button">
+          <button class="btn-outline" type="button" id="sd-import-clients">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
-            Export CSV
+            Import JSON
+          </button>
+          <button class="btn-outline" type="button" id="sd-export-clients">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/></svg>
+            Export JSON
           </button>
           <button id="sd-new-client" class="btn-primary" type="button">
             <span class="dashicons dashicons-plus-alt2"></span>
@@ -21,15 +21,15 @@
       <div class="toolbar">
         <div class="search-wrap">
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-4.35-4.35"/></svg>
-          <input type="text" placeholder="Search clients..." />
+          <input type="text" id="client-search" placeholder="Search clients..." />
         </div>
         <div class="filter-wrap">
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2a1 1 0 01-.293.707L13 13.414V19a1 1 0 01-.553.894l-4 2A1 1 0 017 21v-7.586L3.293 6.707A1 1 0 013 6V4z"/></svg>
           Filters:
-          <select>
-            <option>All Statuses</option>
-            <option>Active</option>
-            <option>Inactive</option>
+          <select id="client-status-filter">
+            <option value="">All Statuses</option>
+            <option value="active">Active</option>
+            <option value="inactive">Inactive</option>
           </select>
         </div>
       </div>
@@ -38,78 +38,16 @@
         <table>
           <thead>
             <tr>
-              <th class="col-check"><input type="checkbox" /></th>
               <th>Client Name <span class="sort-icon">⇅</span></th>
-              <th>Industry <span class="sort-icon">⇅</span></th>
+              <th>Industry</th>
               <th>Primary Contact <span class="sort-icon">⇅</span></th>
               <th>Active Tickets <span class="sort-icon">⇅</span></th>
               <th>Total Tickets <span class="sort-icon">⇅</span></th>
-              <th>Status <span class="sort-icon">⇅</span></th>
+              <th>Status</th>
               <th>Actions</th>
             </tr>
           </thead>
-          <tbody>
-            <tr>
-              <td class="col-check"><input type="checkbox" /></td>
-              <td class="col-name">Acme Corp</td>
-              <td>Technology</td>
-              <td>Bob Johnson</td>
-              <td>3</td>
-              <td>15</td>
-              <td><span class="status-badge active">Active</span></td>
-              <td>
-                <div class="row-actions">
-                  <button class="sd-action-btn sd-edit-btn" onclick="openEditClientSidebar('Acme Corp', 'Bob Johnson', '')"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg></button>
-                  <button type="button" class="sd-action-btn sd-delete-btn" onclick="openDeleteClientModal('Acme Corp', this)"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg></button>
-                </div>
-              </td>
-            </tr>
-            <tr>
-              <td class="col-check"><input type="checkbox" /></td>
-              <td class="col-name">TechStart Inc</td>
-              <td>Software</td>
-              <td>Mike Chen</td>
-              <td>5</td>
-              <td>22</td>
-              <td><span class="status-badge active">Active</span></td>
-              <td>
-                <div class="row-actions">
-                  <button class="sd-action-btn sd-edit-btn" onclick="openEditClientSidebar('TechStart Inc', 'Mike Chen', '')"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg></button>
-                  <button type="button" class="sd-action-btn sd-delete-btn" onclick="openDeleteClientModal('TechStart Inc', this)"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg></button>
-                </div>
-              </td>
-            </tr>
-            <tr>
-              <td class="col-check"><input type="checkbox" /></td>
-              <td class="col-name">Globex Solutions</td>
-              <td>Consulting</td>
-              <td>Sarah Davis</td>
-              <td>1</td>
-              <td>8</td>
-              <td><span class="status-badge active">Active</span></td>
-              <td>
-                <div class="row-actions">
-                  <button class="sd-action-btn sd-edit-btn" onclick="openEditClientSidebar('Globex Solutions', 'Sarah Davis', '')"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg></button>
-                  <button type="button" class="sd-action-btn sd-delete-btn" onclick="openDeleteClientModal('Globex Solutions', this)"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg></button>
-                </div>
-              </td>
-            </tr>
-            <tr>
-              <td class="col-check"><input type="checkbox" /></td>
-              <td class="col-name">Initech LLC</td>
-              <td>Finance</td>
-              <td>N/A</td>
-              <td>0</td>
-              <td>3</td>
-              <td><span class="status-badge inactive">Inactive</span></td>
-              <td>
-                <div class="row-actions">
-                  <button class="sd-action-btn sd-edit-btn" onclick="openEditClientSidebar('Initech LLC', '', '')"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg></button>
-                  <button type="button" class="sd-action-btn sd-delete-btn" onclick="openDeleteClientModal('Initech LLC', this)"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg></button>
-                </div>
-              </td>
-            </tr>
-          </tbody>
+          <tbody></tbody>
         </table>
       </div>
     </main>
@@ -130,12 +68,32 @@
           <input type="text" id="client-panel-name" placeholder="Company name" />
         </div>
         <div class="form-group">
+          <label for="client-panel-email">Email</label>
+          <input type="email" id="client-panel-email" placeholder="support@company.com" />
+        </div>
+        <div class="form-group">
+          <label for="client-panel-phone">Phone</label>
+          <input type="tel" id="client-panel-phone" placeholder="555-0000" />
+        </div>
+        <div class="form-group">
+          <label for="client-panel-website">Website</label>
+          <input type="url" id="client-panel-website" placeholder="https://company.com" />
+        </div>
+        <div class="form-group">
+          <label for="client-panel-industry">Industry</label>
+          <input type="text" id="client-panel-industry" placeholder="e.g. Technology" />
+        </div>
+        <div class="form-group">
+          <label for="client-panel-status">Status</label>
+          <select id="client-panel-status">
+            <option value="active">Active</option>
+            <option value="inactive">Inactive</option>
+          </select>
+        </div>
+        <div class="form-group">
           <label for="client-panel-contact">Primary Contact</label>
           <select id="client-panel-contact">
             <option value="">None</option>
-            <option>Bob Johnson</option>
-            <option>Mike Chen</option>
-            <option>Sarah Davis</option>
           </select>
         </div>
         <div class="form-group">
