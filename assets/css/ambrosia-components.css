@@ -344,8 +344,17 @@ td.col-name {
     transition: color 0.15s ease;
 }
 
-.sd-action-btn:hover,
-.row-actions button:hover {
+.sd-edit-btn:hover {
+    color: var(--chrome);
+    background: transparent;
+}
+
+.sd-delete-btn:hover {
+    color: var(--action);
+    background: transparent;
+}
+
+.row-actions button:hover:not(.sd-edit-btn):not(.sd-delete-btn) {
     color: var(--action);
     background: transparent;
 }

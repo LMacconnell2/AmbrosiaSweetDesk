@@ -74,6 +74,6 @@ class SweetDesk_People_Controller {
 
     public function permissions_check(WP_REST_Request $request)
     {
-        return current_user_can('read');
+        return SweetDesk_Portal_Access::rest_require_staff();
     }
 }

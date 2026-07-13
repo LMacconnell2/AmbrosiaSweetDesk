@@ -306,6 +306,94 @@ class SweetDesk_People_Service {
         ];
     }
 
+    /**
+     * Resolve the SweetDesk person for the logged-in WordPress user.
+     * Looks up by wp_user_id, then email; creates a new person if none exists.
+     */
+    public function get_or_create_person_for_current_user(): array|WP_Error {
+        if (!is_user_logged_in()) {
+            return new WP_Error(
+                'sweetdesk_not_logged_in',
+                'You must be logged in to submit a ticket.',
+                ['status' => 401]
+            );
+        }
+
+        $wp_user_id = get_current_user_id();
+        $wp_user = wp_get_current_user();
+
+        if (!$wp_user || !$wp_user->ID) {
+            return new WP_Error(
+                'sweetdesk_not_logged_in',
+                'You must be logged in to submit a ticket.',
+                ['status' => 401]
+            );
+        }
+
+        $person = $this->db->get_row(
+            $this->db->prepare(
+                "SELECT * FROM {$this->people_table} WHERE wp_user_id = %d LIMIT 1",
+                $wp_user_id
+            ),
+            ARRAY_A
+        );
+
+        if ($person) {
+            return $this->cast_person_row($person);
+        }
+
+        $email = sanitize_email($wp_user->user_email);
+
+        if ($email) {
+            $person = $this->db->get_row(
+                $this->db->prepare(
+                    "SELECT * FROM {$this->people_table} WHERE email = %s LIMIT 1",
+                    $email
+                ),
+                ARRAY_A
+            );
+
+            if ($person) {
+                if (empty($person['wp_user_id'])) {
+                    $this->db->update(
+                        $this->people_table,
+                        ['wp_user_id' => $wp_user_id],
+                        ['id' => (int) $person['id']],
+                        ['%d'],
+                        ['%d']
+                    );
+                    $person['wp_user_id'] = $wp_user_id;
+                }
+
+                return $this->cast_person_row($person);
+            }
+        }
+
+        $first_name = sanitize_text_field($wp_user->first_name);
+        $last_name = sanitize_text_field($wp_user->last_name);
+
+        if ($first_name === '' && $last_name === '') {
+            $name_parts = preg_split('/\s+/', trim($wp_user->display_name), 2);
+            $first_name = sanitize_text_field($name_parts[0] ?? '');
+            $last_name = sanitize_text_field($name_parts[1] ?? '');
+        }
+
+        $result = $this->create_person([
+            'wp_user_id' => $wp_user_id,
+            'email' => $email,
+            'first_name' => $first_name,
+            'last_name' => $last_name,
+            'role' => 'client',
+            'is_active' => 1,
+        ]);
+
+        if (is_wp_error($result)) {
+            return $result;
+        }
+
+        return $result['data'];
+    }
+
     public function create_person(array $data): array|WP_Error {
         $person_data = $this->sanitize_person_data($data);
 

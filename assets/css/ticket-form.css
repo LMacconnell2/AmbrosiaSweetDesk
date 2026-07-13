@@ -1,0 +1,90 @@
+.sweetdesk-ticket-form.sweetdesk-tickets-page {
+    max-width: 760px;
+    margin: 0 auto;
+    background: var(--surface-page);
+    box-sizing: border-box;
+}
+
+body.sweetdesk-portal {
+    margin: 0;
+    min-height: 100vh;
+    background: var(--surface-page);
+}
+
+.sweetdesk-portal__main {
+    min-height: 100vh;
+}
+
+.sweetdesk-ticket-form__user {
+    display: inline-flex;
+    align-items: center;
+    color: var(--text-secondary);
+    font-size: 0.875rem;
+    font-weight: 500;
+}
+
+.sweetdesk-ticket-form__subtitle {
+    margin: -8px 0 22px;
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+}
+
+.sd-ticket-form-panel {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 22px 24px 24px;
+    box-shadow: 0 1px 2px var(--shadow-sm);
+}
+
+.sweetdesk-ticket-form__body {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.sweetdesk-ticket-form__actions {
+    display: flex;
+    justify-content: flex-start;
+    margin-top: 4px;
+}
+
+.sweetdesk-ticket-form__notice {
+    border-radius: 8px;
+    padding: 14px 16px;
+    margin-bottom: 18px;
+}
+
+.sweetdesk-ticket-form__notice p {
+    margin: 0 0 12px;
+}
+
+.sweetdesk-ticket-form__notice p:last-child {
+    margin-bottom: 0;
+}
+
+.sweetdesk-ticket-form__notice--warning {
+    background: #FFF7ED;
+    border: 1px solid #FED7AA;
+    color: var(--status-warning);
+}
+
+.sweetdesk-ticket-form__notice--success {
+    background: var(--status-success-bg);
+    border: 1px solid #BBF7D0;
+    color: var(--status-success-text);
+}
+
+.sweetdesk-ticket-form__notice--error {
+    background: var(--status-error-bg);
+    border: 1px solid #FECACA;
+    color: var(--status-error);
+}
+
+.sweetdesk-ticket-form .sweetdesk-quill-editor {
+    min-height: 180px;
+}
+
+.sweetdesk-ticket-form .header-actions .btn-outline {
+    text-decoration: none;
+}

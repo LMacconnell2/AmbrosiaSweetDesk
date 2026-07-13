@@ -271,6 +271,9 @@ class SweetDesk_Ticket_Service {
 
         global $wpdb;
 
+        require_once SWEETDESK_PATH .
+            'src/api/services/people-service.php';
+
         $tickets_table =
             $wpdb->prefix .
             'sweetdesk_tickets';
@@ -282,6 +285,76 @@ class SweetDesk_Ticket_Service {
         $messages_table =
             $wpdb->prefix .
             'sweetdesk_ticket_messages';
+
+        $is_client_submission =
+            !current_user_can('manage_options');
+
+        if ($is_client_submission) {
+
+            if (!is_user_logged_in()) {
+
+                return [
+                    'success' => false,
+                    'message' => 'You must be logged in to submit a ticket.'
+                ];
+            }
+
+            $people_service =
+                new SweetDesk_People_Service();
+
+            $person =
+                $people_service->get_or_create_person_for_current_user();
+
+            if (is_wp_error($person)) {
+
+                return [
+                    'success' => false,
+                    'message' => $person->get_error_message()
+                ];
+            }
+
+            $title =
+                sanitize_text_field(
+                    $data['title'] ?? ''
+                );
+
+            $priority =
+                sanitize_text_field(
+                    $data['priority'] ?? 'normal'
+                );
+
+            $message =
+                wp_kses_post(
+                    $data['message'] ?? ''
+                );
+
+            if (empty($title)) {
+
+                return [
+                    'success' => false,
+                    'message' => 'Title is required.'
+                ];
+            }
+
+            if (empty(trim(wp_strip_all_tags($message)))) {
+
+                return [
+                    'success' => false,
+                    'message' => 'Initial message is required.'
+                ];
+            }
+
+            $client_id =
+                !empty($person['client_id'])
+                    ? (int) $person['client_id']
+                    : 0;
+
+            $assigned_to = 0;
+            $created_by = (int) $person['id'];
+            $status = 'open';
+            $custom_fields = [];
+
+        } else {
 
         $client_id =
             absint(
@@ -327,6 +400,8 @@ class SweetDesk_Ticket_Service {
                 'success' => false,
                 'message' => 'Title is required.'
             ];
+        }
+
         }
 
         $wpdb->insert(

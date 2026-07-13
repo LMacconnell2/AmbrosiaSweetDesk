@@ -24,6 +24,12 @@
     color: var(--text-primary);
 }
 
+/* Some themes set strong { font-weight: inherit }, which hides Quill bold. */
+.sweetdesk-quill-editor .ql-editor strong,
+.sweetdesk-quill-editor .ql-editor b {
+    font-weight: 700;
+}
+
 .sweetdesk-quill-editor .ql-editor.ql-blank::before {
     color: var(--text-muted);
     font-style: normal;
