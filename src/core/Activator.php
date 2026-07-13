@@ -36,6 +36,8 @@ class SweetDesk_Activator
         require_once $schema_path . 'ticket-table.php';
         require_once $schema_path . 'ticket-meta-table.php';
         require_once $schema_path . 'ticket-messages-table.php';
+        require_once $schema_path . 'status-table.php';
+        require_once $schema_path . 'ticket-fields-table.php';
     }
 
     public static function update_schema(): void
@@ -57,5 +59,20 @@ class SweetDesk_Activator
 
         dbDelta(sweetdesk_create_attachments_table_sql());
         dbDelta(sweetdesk_create_activity_table_sql());
+
+        dbDelta(sweetdesk_create_statuses_table_sql());
+        dbDelta(sweetdesk_create_ticket_fields_table_sql());
+    }
+
+    private static function add_settings_capabilities(): void
+    {
+        $administrator = get_role('administrator');
+
+        if (!$administrator) {
+            return;
+        }
+
+        $administrator->add_cap('sweetdesk_manage_settings');
+        $administrator->add_cap('sweetdesk_delete_settings');
     }
 }
