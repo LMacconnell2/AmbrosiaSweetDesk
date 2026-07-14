@@ -38,6 +38,7 @@ class SweetDesk_Activator
         require_once $schema_path . 'ticket-messages-table.php';
         require_once $schema_path . 'status-table.php';
         require_once $schema_path . 'ticket-fields-table.php';
+        require_once $schema_path . 'feedback-table.php';
     }
 
     public static function update_schema(): void
@@ -62,6 +63,7 @@ class SweetDesk_Activator
 
         dbDelta(sweetdesk_create_statuses_table_sql());
         dbDelta(sweetdesk_create_ticket_fields_table_sql());
+        dbDelta(sweetdesk_create_feedback_table_sql());
     }
 
     private static function add_settings_capabilities(): void

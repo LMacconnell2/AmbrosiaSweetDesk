@@ -25,6 +25,9 @@ class SweetDesk_API {
         require_once SWEETDESK_PATH .
             'src/api/routes/settings-email-routes.php';
 
+        require_once SWEETDESK_PATH .
+            'src/api/routes/analytics-routes.php';
+
         add_action(
             'rest_api_init',
             [ __CLASS__, 'register_routes' ]
@@ -52,6 +55,9 @@ class SweetDesk_API {
             ->register_routes();
 
         (new SweetDesk_Email_Settings_Routes())
+            ->register_routes();
+
+        (new SweetDesk_Analytics_Routes())
             ->register_routes();
     }
 }

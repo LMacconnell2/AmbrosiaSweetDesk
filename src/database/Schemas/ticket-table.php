@@ -1,53 +1,52 @@
 <?php
 
-function sweetdesk_create_ticket_table_sql() {
+if (!defined('ABSPATH')) {
+    exit;
+}
 
+function sweetdesk_create_ticket_table_sql(): string
+{
     global $wpdb;
 
     $table = $wpdb->prefix . 'sweetdesk_tickets';
-
     $charset_collate = $wpdb->get_charset_collate();
 
     return "
-    CREATE TABLE {$table} (
+        CREATE TABLE {$table} (
+            id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
 
-        id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+            client_id BIGINT UNSIGNED NULL,
+            assigned_to BIGINT UNSIGNED NULL,
+            created_by BIGINT UNSIGNED NULL,
 
-        client_id BIGINT UNSIGNED NULL,
-        assigned_to BIGINT UNSIGNED NULL,
-        created_by BIGINT UNSIGNED NULL,
+            title VARCHAR(255) NOT NULL,
+            description LONGTEXT NULL,
 
-        title VARCHAR(255) NOT NULL,
+            status VARCHAR(50) NOT NULL DEFAULT 'open',
+            priority VARCHAR(50) NOT NULL DEFAULT 'normal',
+            source VARCHAR(50) NULL,
 
-        description LONGTEXT NULL,
+            due_date DATETIME NULL,
 
-        status VARCHAR(50) NOT NULL DEFAULT 'open',
+            created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
-        priority VARCHAR(50) NOT NULL DEFAULT 'normal',
+            updated_at DATETIME NOT NULL
+                DEFAULT CURRENT_TIMESTAMP
+                ON UPDATE CURRENT_TIMESTAMP,
 
-        source VARCHAR(50) NULL,
+            resolved_at DATETIME NULL,
 
-        due_date DATETIME NULL,
+            PRIMARY KEY (id),
 
-        created_at DATETIME NOT NULL
-            DEFAULT CURRENT_TIMESTAMP,
-
-        updated_at DATETIME NOT NULL
-            DEFAULT CURRENT_TIMESTAMP
-            ON UPDATE CURRENT_TIMESTAMP,
-
-        KEY idx_client_id (client_id),
-
-        KEY idx_assigned_to (assigned_to),
-
-        KEY idx_created_by (created_by),
-
-        KEY idx_status (status),
-
-        KEY idx_priority (priority),
-
-        KEY idx_created_at (created_at)
-
-    ) {$charset_collate};
+            KEY idx_client_id (client_id),
+            KEY idx_assigned_to (assigned_to),
+            KEY idx_created_by (created_by),
+            KEY idx_status (status),
+            KEY idx_priority (priority),
+            KEY idx_created_at (created_at),
+            KEY idx_resolved_at (resolved_at),
+            KEY idx_status_resolved_at (status, resolved_at),
+            KEY idx_assigned_resolved_at (assigned_to, resolved_at)
+        ) {$charset_collate};
     ";
 }

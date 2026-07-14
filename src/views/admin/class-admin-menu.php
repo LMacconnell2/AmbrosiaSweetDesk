@@ -315,6 +315,19 @@ class AdminMenu {
                 SWEETDESK_VERSION,
                 true
             );
+
+            wp_localize_script(
+                'sweetdesk-analytics',
+                'sweetdeskAnalytics',
+                [
+                    'restRoot' => esc_url_raw(rest_url()),
+                    'nonce' => wp_create_nonce('wp_rest'),
+                    'ticketPageUrl' => admin_url(
+                        'admin.php?page=sweetdesk-tickets'
+                    ),
+                    'oldestTicketLimit' => 3,
+                ]
+            );
         }
 
         if ($hook === 'sweetdesk_page_sweetdesk-settings') {
